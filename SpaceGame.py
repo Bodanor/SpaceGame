@@ -71,10 +71,10 @@ def dessineBouton(list_text, nombre_boutons):
 
     for index, text in enumerate(list_text):
 
-        if largeurfenetre / 2 - 70 <= mouse[0] <= largeurfenetre / 2 + 70 and hauteurfenetre / 2 - 20 <= mouse[
-            1] <= hauteurfenetre / 2 + 20:
+        if largeurfenetre / 2 - 70 <= mouse[0] <= largeurfenetre / 2 + 70 and (hauteurfenetre / 2 - 20) + (hauteur/2*index)<= mouse[
+            1] <= (hauteurfenetre / 2 + 20) +(hauteur/2*index):
             pygame.draw.rect(fenetre, BOUTON_COULEUR_CLAIR,
-                             [(largeurfenetre / 2) - 70, (hauteurfenetre / 2) - 20, 140, 40])
+                             [(largeurfenetre / 2) - 70, ((hauteurfenetre / 2) - 20) + (hauteur/2*index), 140, 40])
 
         else:
             pygame.draw.rect(fenetre, BOUTON_COULEUR_FONCE,
