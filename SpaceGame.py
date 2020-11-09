@@ -38,8 +38,8 @@ NOMBRES_TEXTES_MENU = len(TEXTES)
 VAISSEAU_LARGEUR = 60
 VAISSEAU_HAUTEUR = 51
 
-largeur = fenetre.get_width()
-hauteur = fenetre.get_height()
+largeurfenetre = fenetre.get_width()
+hauteurfenetre = fenetre.get_height()
 
 
 
@@ -65,13 +65,27 @@ def chargerToutesImages():
 
 
 def dessineBouton(list_text, nombre_boutons):
-    
 
-    for text in list_text:
+    hauteur = hauteurfenetre / nombre_boutons
+
+
+    for index, text in enumerate(list_text):
+
+        if largeurfenetre / 2 - 70 <= mouse[0] <= largeurfenetre / 2 + 70 and hauteurfenetre / 2 - 20 <= mouse[
+            1] <= hauteurfenetre / 2 + 20:
+            pygame.draw.rect(fenetre, BOUTON_COULEUR_CLAIR,
+                             [(largeurfenetre / 2) - 70, (hauteurfenetre / 2) - 20, 140, 40])
+
+        else:
+            pygame.draw.rect(fenetre, BOUTON_COULEUR_FONCE,
+                             [(largeurfenetre / 2) - 70, ((hauteurfenetre / 2) - 20) + (hauteur/2*index), 140, 40])
+
+
+
 
         text_afficher = POLICE_ECRITURE_BOUTON.render(text, True, BLANC)
 
-        fenetre.blit(text_afficher, ((largeur / 2) - text_afficher.get_width() // 2, (hauteur / 2) - text_afficher.get_height() // 2))
+        fenetre.blit(text_afficher, ((largeurfenetre / 2) - text_afficher.get_width() // 2, (hauteurfenetre / 2) - (text_afficher.get_height()-(hauteur*index))// 2))
 
 
 print("Chargement des Images ...")
@@ -89,18 +103,12 @@ while True:
             pygame.quit()
 
         if evenement.type == pygame.MOUSEBUTTONDOWN:
-            if largeur/2-70 <= mouse[0] <= largeur/2+70 and hauteur/2-20 <= mouse[1] <= hauteur/2+20:
+            if largeurfenetre/2-70 <= mouse[0] <= largeurfenetre/2+70 and hauteurfenetre/2-20 <= mouse[1] <= hauteurfenetre/2+20:
                 pygame.quit()
 
     fenetre.fill(NOIR)
 
     mouse = pygame.mouse.get_pos()
-
-    if largeur / 2-70 <= mouse[0] <= largeur / 2 + 70 and hauteur / 2-20 <= mouse[1] <= hauteur / 2 + 20:
-        pygame.draw.rect(fenetre, BOUTON_COULEUR_CLAIR, [(largeur / 2)-70, (hauteur / 2)-20, 140, 40])
-
-    else:
-        pygame.draw.rect(fenetre, BOUTON_COULEUR_FONCE, [(largeur / 2)-70, (hauteur / 2)-20, 140, 40])
 
 
     dessineBouton(TEXTES, NOMBRES_TEXTES_MENU)
