@@ -7,7 +7,6 @@ pygame.init()
 iconejeu = pygame.image.load('Images/vaisseau_sans_flamme.png')
 pygame.display.set_icon(iconejeu)
 
-
 #Dictionnaire contennant le nom donner et le nom du fichier (permet le chargement de toute les images:
 Images = {}
 
@@ -31,7 +30,7 @@ POLICE_ECRITURE_BOUTON = pygame.font.SysFont('Corbel',36)
 
 
 #Liste Des textes pour menus :
-TEXTES = ['Jouer', 'Multijoueur','Quitter']
+TEXTES = ['Jouer','Quitter']
 NOMBRES_TEXTES_MENU = len(TEXTES)
 
 #Variables pour la taille du vaisseau :
@@ -50,7 +49,20 @@ def chargerToutesImages():
                              ('planete1', 'planete1.png'),
                              ('planete2','planete2.png'),
                              ('planete3','planete3.png'),
-                             ('planete4','planete4.png')):
+                             ('planete4','planete4.png'),
+                             ('planete5','planete5.png'),
+                             ('planete6','planete6.png'),
+                             ('planete7', 'planete7.png'),
+                             ('planete8', 'planete8.png'),
+                             ('planete9', 'planete9.png'),
+                             ('planete10', 'planete10.png'),
+                             ('planete11', 'planete11.png'),
+                             ('planete12', 'planete12.png'),
+                             ('planete13', 'planete13.png'),
+                             ('planete14', 'planete14.png'),
+                             ('planete15', 'planete15.png'),
+                             ('planete16', 'planete16.png')):
+
         chemin = 'Images/' +nom_fichier
         if nom == 'vaisseau_sans_flammes' or nom == 'vaisseau_avec_flammes':
             image = pygame.image.load(chemin).convert_alpha(fenetre)
@@ -64,34 +76,30 @@ def chargerToutesImages():
 
 
 
-def dessineBouton(list_text, nombre_boutons):
-
-    hauteur = hauteurfenetre / nombre_boutons
-
-
-    for index, text in enumerate(list_text):
-
-        if largeurfenetre / 2 - 70 <= mouse[0] <= largeurfenetre / 2 + 70 and (hauteurfenetre / 2 - 20) + (hauteur/2*index)<= mouse[
-            1] <= (hauteurfenetre / 2 + 20) +(hauteur/2*index):
-            pygame.draw.rect(fenetre, BOUTON_COULEUR_CLAIR,
-                             [(largeurfenetre / 2) - 70, ((hauteurfenetre / 2) - 20) + (hauteur/2*index), 140, 40])
-
-        else:
-            pygame.draw.rect(fenetre, BOUTON_COULEUR_FONCE,
-                             [(largeurfenetre / 2) - 70, ((hauteurfenetre / 2) - 20) + (hauteur/2*index), 140, 40])
-
-
-
-
-        text_afficher = POLICE_ECRITURE_BOUTON.render(text, True, BLANC)
-
-        fenetre.blit(text_afficher, ((largeurfenetre / 2) - text_afficher.get_width() // 2, (hauteurfenetre / 2) - (text_afficher.get_height()-(hauteur*index))// 2))
-
-
 print("Chargement des Images ...")
 chargerToutesImages()
 print("Images Chargée !")
 
+def afficherBoutonMenu():
+
+    hauteur = hauteurfenetre / NOMBRES_TEXTES_MENU
+
+    for index, text in enumerate(TEXTES):
+
+        if largeurfenetre / 2 - 70 <= mouse[0] <= largeurfenetre / 2 + 70 and (hauteurfenetre / 2 - 20) + (
+                hauteur / 2 * index) <= mouse[
+            1] <= (hauteurfenetre / 2 + 20) + (hauteur / 2 * index):
+            pygame.draw.rect(fenetre, BOUTON_COULEUR_CLAIR,
+                             [(largeurfenetre / 2) - 70, ((hauteurfenetre / 2) - 20) + (hauteur / 2 * index), 140, 40])
+
+        else:
+            pygame.draw.rect(fenetre, BOUTON_COULEUR_FONCE,
+                             [(largeurfenetre / 2) - 70, ((hauteurfenetre / 2) - 20) + (hauteur / 2 * index), 140, 40])
+
+        text_afficher = POLICE_ECRITURE_BOUTON.render(text, True, BLANC)
+
+        fenetre.blit(text_afficher, ((largeurfenetre / 2) - text_afficher.get_width() // 2,
+                                     (hauteurfenetre / 2) - (text_afficher.get_height() - (hauteur * index)) // 2))
 
 
 #SECTIONS BOUCLE INTRO:
@@ -99,20 +107,22 @@ print("Images Chargée !")
 while True:
 
     for evenement in pygame.event.get():
-        if evenement.type == pygame.QUIT:
-            pygame.quit()
 
         if evenement.type == pygame.MOUSEBUTTONDOWN:
-            if largeurfenetre/2-70 <= mouse[0] <= largeurfenetre/2+70 and hauteurfenetre/2-20 <= mouse[1] <= hauteurfenetre/2+20:
+            if largeurfenetre / 2 - 70 <= mouse[0] <= largeurfenetre / 2 + 70 and hauteurfenetre / 2 - 20 <= mouse[
+                1] <= hauteurfenetre / 2 + 20:
                 pygame.quit()
 
-    fenetre.fill(NOIR)
+            if largeurfenetre / 2 - 70 <= mouse[0] <= largeurfenetre / 2 + 70 and (hauteurfenetre / 2 - 20) + 133 <= \
+                    mouse[
+                        1] <= (hauteurfenetre / 2 + 20) + 266:
+                pygame.quit()
 
+
+    fenetre.fill(NOIR)
     mouse = pygame.mouse.get_pos()
 
-
-    dessineBouton(TEXTES, NOMBRES_TEXTES_MENU)
-
+    afficherBoutonMenu()
 
     pygame.display.update()
 
