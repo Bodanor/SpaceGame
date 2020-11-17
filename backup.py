@@ -9,9 +9,6 @@ FENETRE_HAUTEUR = 720
 VAISSEAU_LARGEUR = 60
 VAISSEAU_HAUTEUR = 51
 
-PLANETE_LARGEUR = 180
-PLANETE_HAUTEUR = 180
-
 POSE_PLANETE = ('Planete1', 'Planete2','Planete3', 'Planete4','Planete5', 'Planete6','Planete7', 'Planete8','Planete9', 'Planete10','Planete11', 'Planete12','Planete13', 'Planete14','Planete15', 'Planete16')
 POSE_VAISSEAU = ('vaisseau_sans_flamme', 'vaisseau_avec_flamme')
 
@@ -66,6 +63,7 @@ def ajouteImage(entite,nom ,image):
     entite['listeImage'][nom] = image
 
 def dessine(entite, ecran):
+    place(planetes, random.randint(0, FENETRE_LARGEUR), random.randint(0, FENETRE_HAUTEUR))
     ecran.blit(entite['image'], entite['position'])
 
 ##### Fin ENTITE #####
@@ -85,7 +83,6 @@ pygame.display.set_caption('Space Game️')
 
 vaisseau = nouvelleEntite()
 planetes = nouvelleEntite()
-
 
 print("[LOG] CHARGEMENT DES IMAGES")
 #CHARGER TOUTES LES IMAGES :
@@ -108,7 +105,7 @@ for nom_image, nom_fichier in (('Planete1', 'planete1.png'),
 
     chemin = 'Images/' + nom_fichier
     image = pygame.image.load(chemin).convert_alpha(fenetre)
-    image = pygame.transform.scale(image, (PLANETE_LARGEUR, PLANETE_HAUTEUR))
+    image = pygame.transform.scale(image, (VAISSEAU_LARGEUR, VAISSEAU_HAUTEUR))
     ajouteImage(planetes,nom_image,image)
 
     for nom_image, nom_fichier in (('vaisseau_sans_flamme', 'vaisseau_sans_flamme.png'),
@@ -183,17 +180,15 @@ while not fini:
 
     afficher_etoiles(fenetre)
 
+    pose_planete = random.randint(0, len(POSE_PLANETE) - 1)
+    prendsPose(planetes, POSE_PLANETE[pose_planete])
 
     #SAVOIR SI TOUTES LES PLANETES SONT AFFICHées
-
-
     affiche(scene, fenetre)
-
     pygame.display.flip()
 
 
     temps.tick(60)
-
 
 pygame.display.quit()
 pygame.quit()
