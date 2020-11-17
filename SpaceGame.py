@@ -6,14 +6,16 @@ NOMBRE_ETOILES = 500
 FENETRE_LARGEUR = 1080
 FENETRE_HAUTEUR = 720
 
-VAISSEAU_LARGEUR = 60
-VAISSEAU_HAUTEUR = 51
+VAISSEAU_LARGEUR = 10
+VAISSEAU_HAUTEUR = 85
 
 PLANETE_LARGEUR = 180
 PLANETE_HAUTEUR = 180
 
 POSE_PLANETE = ('Planete1', 'Planete2','Planete3', 'Planete4','Planete5', 'Planete6','Planete7', 'Planete8','Planete9', 'Planete10','Planete11', 'Planete12','Planete13', 'Planete14','Planete15', 'Planete16')
 POSE_VAISSEAU = ('vaisseau_sans_flamme', 'vaisseau_avec_flamme')
+
+VITESSE_PLANETE = 5
 
 etoiles = [
         [random.randint(0, FENETRE_LARGEUR), random.randint(0, FENETRE_HAUTEUR)]
@@ -142,7 +144,6 @@ while not fini:
         if evenement.type == pygame.QUIT:
             fini = True
 
-    #Déplacement VAISSEAU ( NE PAS INCLURE DES PRESSAGES DE TOUCHES) :
     keys = pygame.key.get_pressed()
 
     if keys[pygame.K_RIGHT]:
@@ -182,10 +183,6 @@ while not fini:
     fenetre.fill(ESPACE)
 
     afficher_etoiles(fenetre)
-
-
-    #SAVOIR SI TOUTES LES PLANETES SONT AFFICHées
-
 
     affiche(scene, fenetre)
 

@@ -1,10 +1,7 @@
 Menu
-Afficher vaisseau
-Contrôler le vaisseau
-Afficher les planètes en random
-Déplacer les planètes vers la gauche
+#TODO Afficher plusieurs planetes en meme temps et quelle reste affichées
+Déplacer les planètes vers le bas
 Collisions avec les planètes
-Le vaisseau affiche une flamme quand il se déplace
 Afficher les vies
 Perdre une vie dès qu'il y a une collision
 Le jeu s'arrète quand il n'y a plus de vies
@@ -12,6 +9,7 @@ Le score augmente toutes les secondes
 Le jeu accélère de 10% toutes les 10 secondes
 
 
-BONUS:
 Tirer sur des aliens pour gagner des points
+L'alien se déplace
+L'alien tire aussi
 Trou noir qui arrète le jeu instant
