@@ -18,7 +18,7 @@ POSE_VAISSEAU = ('vaisseau_sans_flamme', 'vaisseau_avec_flamme')
 
 VITESSE_PLANETE = 5
 
-score = 0
+SCORE = 0
 
 etoiles = [
         [random.randint(0, FENETRE_LARGEUR), random.randint(0, FENETRE_HAUTEUR)]
@@ -86,12 +86,19 @@ def affiche(entites, ecran):
 
 #Score (Max)
 def score():
-    marquoir = police.render(str(score), True, BLANC)
-    fenetre.blit(marquoir, (5 * FENETRE_LARGEUR // 8, FENETRE_HAUTEUR // 10))
+    marquoir = police.render(str(SCORE), True, BLANC)
+    fenetre.blit(marquoir, (5 * FENETRE_LARGEUR // 6, FENETRE_HAUTEUR // 10))
+
+
+
+
 
 
 
 pygame.init()
+
+
+
 
 fenetre_taille = (FENETRE_LARGEUR, FENETRE_HAUTEUR)
 fenetre = pygame.display.set_mode(fenetre_taille)
@@ -204,8 +211,9 @@ while not fini:
 
     fenetre.fill(ESPACE)
 
-    #score()
 
+    score()
+    SCORE += 1
 
     afficher_etoiles(fenetre)
 
