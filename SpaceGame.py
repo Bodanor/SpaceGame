@@ -3,6 +3,8 @@ import random
 
 ESPACE = (0, 0, 15)
 BLANC = (255,255,255)
+BLEU = (129, 78, 216)
+
 NOMBRE_ETOILES = 500
 FENETRE_LARGEUR = 1080
 FENETRE_HAUTEUR = 720
@@ -21,7 +23,7 @@ POSE_VAISSEAU = ('vaisseau_sans_flamme', 'vaisseau_avec_flamme')
 
 VITESSE_JEU = 3
 
-MUNITIONS = 10
+MUNITIONS = 15
 NOMBRE_VIE = 3
 
 SCORE = 0
@@ -124,7 +126,7 @@ def dessiner_missile(missile, fenetre):
                            missile['temps_depart'],
                            missile['vitesse_verticale'],
                            pygame.time.get_ticks()))
-
+        pygame.draw.circle(fenetre, BLEU, list(map(int, position)), 7)
         pygame.draw.circle(fenetre, BLANC, list(map(int, position)), 5)
     return
 
@@ -140,7 +142,11 @@ game_icon = pygame.image.load("Images/vaisseau_avec_flamme.png")
 pygame.display.set_icon(game_icon)
 
 pygame.init()
+pygame.mixer.init()
 
+piou = pygame.mixer.Sound("Son/piou.wav")
+
+print("[LOG] BRUITAGES CHANGER !")
 missile = []
 
 fenetre_taille = (FENETRE_LARGEUR, FENETRE_HAUTEUR)
@@ -218,6 +224,7 @@ while NOMBRE_VIE>0:
         if event.type == pygame.KEYDOWN:
             if event.key == pygame.K_SPACE:
                 if MUNITIONS > 0:
+                    piou.play()
                     ajouter_missile(missile, (position(vaisseau)[0]+VAISSEAU_LARGEUR/2 , position(vaisseau)[1]), temps_maintenant,
                                     -vitesse_missile)
                     MUNITIONS -=1
@@ -271,13 +278,13 @@ while NOMBRE_VIE>0:
     vie()
     COMPTEUR_BOUCLE +=1
 
-    if COMPTEUR_BOUCLE % 60 == 0 and SCORE <= 1000 :
+    if COMPTEUR_BOUCLE % 60 == 0 and SCORE <= 1000:
         SCORE += 1
         VITESSE_JEU += 0.01
 
-    if COMPTEUR_BOUCLE % 60 == 0 and SCORE > 10 :
+    if COMPTEUR_BOUCLE % 60 == 0 and SCORE > 1000 :
         SCORE += 1
-        NOMBRE_VIE-=1
+
 
     if COMPTEUR_BOUCLE % 6000 == 0:
         MUNITIONS += 10
