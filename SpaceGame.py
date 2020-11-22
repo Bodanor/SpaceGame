@@ -149,6 +149,7 @@ pygame.init()
 pygame.mixer.init()
 
 piou = pygame.mixer.Sound("Son/piou.wav")
+plus_de_balle = pygame.mixer.Sound("Son/plus_de_balle.wav")
 
 print("[LOG] BRUITAGES CHARGE !")
 missile = []
@@ -232,6 +233,8 @@ while NOMBRE_VIE>0:
                     ajouter_missile(missile, (position(vaisseau)[0]+VAISSEAU_LARGEUR/2 , position(vaisseau)[1]), temps_maintenant,
                                     -vitesse_missile)
                     MUNITIONS -=1
+                if MUNITIONS == 0:
+                    plus_de_balle.play()
 
 
 
