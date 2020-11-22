@@ -31,7 +31,7 @@ COMPTEUR_BOUCLE = 0
 
 vitesse_missile = 0.6
 
-
+vie_image = pygame.image.load('Images/vaisseau_jaune_avec_flamme.png')
 
 etoiles = [
         [random.randint(0, FENETRE_LARGEUR), random.randint(0, FENETRE_HAUTEUR)]
@@ -109,7 +109,6 @@ def afficher_munition():
 def vie():
 
     for x in range(0,NOMBRE_VIE+1):
-        vie_image = pygame.image.load('Images/vaisseau_jaune_avec_flamme.png')
         image = pygame.transform.scale(vie_image, (VIE_LARGEUR,VIE_HAUTEUR))
         fenetre.blit(image, (FENETRE_LARGEUR-VIE_LARGEUR*x,FENETRE_HAUTEUR-VIE_HAUTEUR))
 

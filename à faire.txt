@@ -7,7 +7,7 @@ Menu
 5)Tirer sur des aliens pour gagner des points
 6)L'alien se déplace
 7) Décrémenter vie a chaque collision
-
+8) Charger image_vaisseau_jaune dans la fonction qui charge les images et pas comme une variable
 (L'alien tire aussi)
 
 QUESTIONS A POSER :
