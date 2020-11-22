@@ -16,9 +16,12 @@ PLANETE_HAUTEUR = 180
 POSE_PLANETE = ('Planete1', 'Planete2','Planete3', 'Planete4','Planete5', 'Planete6','Planete7', 'Planete8','Planete9', 'Planete10','Planete11', 'Planete12','Planete13', 'Planete14','Planete15', 'Planete16')
 POSE_VAISSEAU = ('vaisseau_sans_flamme', 'vaisseau_avec_flamme')
 
-VITESSE_PLANETE = 5
+VITESSE_JEU = 3
+
+NOMBRE_VIE = 3
 
 SCORE = 0
+COMPTEUR_BOUCLE = 0
 
 etoiles = [
         [random.randint(0, FENETRE_LARGEUR), random.randint(0, FENETRE_HAUTEUR)]
@@ -27,11 +30,11 @@ etoiles = [
 
 
 
-def afficher_etoiles(ecran):
+def afficher_etoiles(ecran, vitesse_etoile):
     for etoile in etoiles:
         pygame.draw.line(ecran, (255,255,255), (etoile[0], etoile[1]), (etoile[0], etoile[1]))
 
-        etoile[1] = etoile[1] + 1
+        etoile[1] = etoile[1] + vitesse_etoile
         if etoile[1] > FENETRE_HAUTEUR:
             etoile[1] = 0
             etoile[0] = random.randint(0, FENETRE_LARGEUR)
@@ -84,13 +87,19 @@ def affiche(entites, ecran):
             dessine(objet, ecran)
 
 
-#Score (Max)
+
 def score():
-    marquoir = police.render(str(SCORE), True, BLANC)
-    fenetre.blit(marquoir, (5 * FENETRE_LARGEUR // 6, FENETRE_HAUTEUR // 10))
+    marquoir = police.render(str(int(round(SCORE, 0))), True, BLANC)
+    fenetre.blit(marquoir, (20, FENETRE_HAUTEUR // 12))
 
 
 
+def vie():
+
+    for x in range(0,NOMBRE_VIE):
+        vie_image = pygame.image.load('Images/vaisseau_avec_flamme.png')
+        image = pygame.transform.scale(vie_image, (30, 25))
+        fenetre.blit(image, (FENETRE_LARGEUR-50,FENETRE_HAUTEUR-50))
 
 
 
@@ -158,22 +167,21 @@ temps = pygame.time.Clock()
 police = pygame.font.SysFont('monospace', FENETRE_HAUTEUR//20, True)
 
 
-while not fini:
-
+while NOMBRE_VIE>0:
 
 
     prendsPose(vaisseau, POSE_VAISSEAU[0])
 
-
-
     for evenement in pygame.event.get():
         if evenement.type == pygame.QUIT:
             fini = True
-
+            NOMBRE_VIE = 0
 
     #Déplacement du vaisseau
 
     keys = pygame.key.get_pressed()
+
+
 
     if keys[pygame.K_RIGHT]:
         if position(vaisseau)[0] + VAISSEAU_LARGEUR >FENETRE_LARGEUR:
@@ -211,11 +219,19 @@ while not fini:
 
     fenetre.fill(ESPACE)
 
-
+#Score et compteur
     score()
-    SCORE += 1
+    vie()
+    COMPTEUR_BOUCLE += 1
+    if COMPTEUR_BOUCLE % 60 == 0 and SCORE <= 1000 :
+        SCORE += 1
+        VITESSE_JEU += 0.01
 
-    afficher_etoiles(fenetre)
+    if COMPTEUR_BOUCLE % 60 == 0 and SCORE > 500 :
+        SCORE += 1
+
+
+    afficher_etoiles(fenetre, VITESSE_JEU)
 
     affiche(scene, fenetre)
 
