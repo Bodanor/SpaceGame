@@ -2,11 +2,12 @@ import pygame
 import random
 
 ESPACE = (0, 0, 15)
+BLANC = (255,255,255)
 NOMBRE_ETOILES = 500
 FENETRE_LARGEUR = 1080
 FENETRE_HAUTEUR = 720
 
-VAISSEAU_LARGEUR = 10
+VAISSEAU_LARGEUR = 100
 VAISSEAU_HAUTEUR = 85
 
 PLANETE_LARGEUR = 180
@@ -17,10 +18,14 @@ POSE_VAISSEAU = ('vaisseau_sans_flamme', 'vaisseau_avec_flamme')
 
 VITESSE_PLANETE = 5
 
+score = 0
+
 etoiles = [
         [random.randint(0, FENETRE_LARGEUR), random.randint(0, FENETRE_HAUTEUR)]
         for x in range(NOMBRE_ETOILES)
     ]
+
+
 
 def afficher_etoiles(ecran):
     for etoile in etoiles:
@@ -79,6 +84,13 @@ def affiche(entites, ecran):
             dessine(objet, ecran)
 
 
+#Score (Max)
+def score():
+    marquoir = police.render(str(score), True, BLANC)
+    fenetre.blit(marquoir, (5 * FENETRE_LARGEUR // 8, FENETRE_HAUTEUR // 10))
+
+
+
 pygame.init()
 
 fenetre_taille = (FENETRE_LARGEUR, FENETRE_HAUTEUR)
@@ -135,14 +147,24 @@ scene = [vaisseau, planetes]
 attente = 0
 fini = False
 temps = pygame.time.Clock()
+
+police = pygame.font.SysFont('monospace', FENETRE_HAUTEUR//20, True)
+
+
 while not fini:
 
+
+
     prendsPose(vaisseau, POSE_VAISSEAU[0])
+
 
 
     for evenement in pygame.event.get():
         if evenement.type == pygame.QUIT:
             fini = True
+
+
+    #Déplacement du vaisseau
 
     keys = pygame.key.get_pressed()
 
@@ -181,6 +203,9 @@ while not fini:
             place(vaisseau, position_vaisseau[0], position_vaisseau[1] - 5)
 
     fenetre.fill(ESPACE)
+
+    #score()
+
 
     afficher_etoiles(fenetre)
 
