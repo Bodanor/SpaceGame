@@ -4,6 +4,7 @@ import random
 ESPACE = (0, 0, 15)
 BLANC = (255,255,255)
 BLEU = (129, 78, 216)
+ROUGE = (255,0,0)
 
 NOMBRE_ETOILES = 500
 FENETRE_LARGEUR = 1080
@@ -102,9 +103,13 @@ def score():
     marquoir = police.render(str(int(round(SCORE, 0))), True, BLANC)
     fenetre.blit(marquoir, (20, FENETRE_HAUTEUR // 12))
 
-def afficher_munition():
-    munition = police.render(str(int(MUNITIONS)), True, BLANC)
-    fenetre.blit(munition, (20, FENETRE_HAUTEUR-35))
+def afficher_munition(nombre_munitions):
+    if nombre_munitions == 0:
+        munition = police.render(str(int(MUNITIONS)), True, ROUGE)
+        fenetre.blit(munition, (20, FENETRE_HAUTEUR - 35))
+    else:
+        munition = police.render(str(int(MUNITIONS)), True, BLANC)
+        fenetre.blit(munition, (20, FENETRE_HAUTEUR-35))
 
 def vie():
 
@@ -150,7 +155,7 @@ missile = []
 
 fenetre_taille = (FENETRE_LARGEUR, FENETRE_HAUTEUR)
 fenetre = pygame.display.set_mode(fenetre_taille)
-pygame.display.set_caption('Space Game️')
+pygame.display.set_caption('Space Game')
 
 vaisseau = nouvelleEntite()
 planetes = nouvelleEntite()
@@ -229,6 +234,7 @@ while NOMBRE_VIE>0:
                     MUNITIONS -=1
 
 
+
     #Déplacement du vaisseau
 
     keys = pygame.key.get_pressed()
@@ -290,7 +296,7 @@ while NOMBRE_VIE>0:
 
     affiche(scene, fenetre)
     score()
-    afficher_munition()
+    afficher_munition(MUNITIONS)
     vie()
     pygame.display.flip()
 
