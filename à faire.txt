@@ -3,10 +3,7 @@ Menu
 Déplacer les planètes vers le bas
 Collisions avec les planètes
 
-Afficher les vies
 Perdre une vie dès qu'il y a une collision
-Le jeu s'arrète quand il n'y a plus de vies
-
 
 
 Trou noir qui arrète le jeu instant

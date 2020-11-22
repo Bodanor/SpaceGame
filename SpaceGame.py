@@ -7,8 +7,11 @@ NOMBRE_ETOILES = 500
 FENETRE_LARGEUR = 1080
 FENETRE_HAUTEUR = 720
 
-VAISSEAU_LARGEUR = 100
-VAISSEAU_HAUTEUR = 85
+VAISSEAU_LARGEUR = 70
+VAISSEAU_HAUTEUR = 60
+
+VIE_LARGEUR = 30
+VIE_HAUTEUR = 25
 
 PLANETE_LARGEUR = 180
 PLANETE_HAUTEUR = 180
@@ -96,13 +99,14 @@ def score():
 
 def vie():
 
-    for x in range(0,NOMBRE_VIE):
+    for x in range(0,NOMBRE_VIE+1):
         vie_image = pygame.image.load('Images/vaisseau_avec_flamme.png')
-        image = pygame.transform.scale(vie_image, (30, 25))
-        fenetre.blit(image, (FENETRE_LARGEUR-50,FENETRE_HAUTEUR-50))
+        image = pygame.transform.scale(vie_image, (VIE_LARGEUR,VIE_HAUTEUR))
+        fenetre.blit(image, (FENETRE_LARGEUR-VIE_LARGEUR*x,FENETRE_HAUTEUR-VIE_HAUTEUR))
 
 
-
+game_icon = pygame.image.load("Images/vaisseau_avec_flamme.png")
+pygame.display.set_icon(game_icon)
 
 pygame.init()
 
@@ -227,8 +231,9 @@ while NOMBRE_VIE>0:
         SCORE += 1
         VITESSE_JEU += 0.01
 
-    if COMPTEUR_BOUCLE % 60 == 0 and SCORE > 500 :
+    if COMPTEUR_BOUCLE % 60 == 0 and SCORE > 10 :
         SCORE += 1
+        NOMBRE_VIE-=1
 
 
     afficher_etoiles(fenetre, VITESSE_JEU)
