@@ -109,7 +109,7 @@ def afficher_munition():
 def vie():
 
     for x in range(0,NOMBRE_VIE+1):
-        vie_image = pygame.image.load('Images/vaisseau_avec_flamme.png')
+        vie_image = pygame.image.load('Images/vaisseau_jaune_avec_flamme.png')
         image = pygame.transform.scale(vie_image, (VIE_LARGEUR,VIE_HAUTEUR))
         fenetre.blit(image, (FENETRE_LARGEUR-VIE_LARGEUR*x,FENETRE_HAUTEUR-VIE_HAUTEUR))
 
@@ -146,7 +146,7 @@ pygame.mixer.init()
 
 piou = pygame.mixer.Sound("Son/piou.wav")
 
-print("[LOG] BRUITAGES CHANGER !")
+print("[LOG] BRUITAGES CHARGE !")
 missile = []
 
 fenetre_taille = (FENETRE_LARGEUR, FENETRE_HAUTEUR)
@@ -273,9 +273,6 @@ while NOMBRE_VIE>0:
     fenetre.fill(ESPACE)
 
 #Score et compteur
-    score()
-    afficher_munition()
-    vie()
     COMPTEUR_BOUCLE +=1
 
     if COMPTEUR_BOUCLE % 60 == 0 and SCORE <= 1000:
@@ -293,7 +290,9 @@ while NOMBRE_VIE>0:
     afficher_etoiles(fenetre, VITESSE_JEU)
 
     affiche(scene, fenetre)
-
+    score()
+    afficher_munition()
+    vie()
     pygame.display.flip()
 
 
