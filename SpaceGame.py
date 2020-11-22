@@ -21,10 +21,15 @@ POSE_VAISSEAU = ('vaisseau_sans_flamme', 'vaisseau_avec_flamme')
 
 VITESSE_JEU = 3
 
+MUNITIONS = 10
 NOMBRE_VIE = 3
 
 SCORE = 0
 COMPTEUR_BOUCLE = 0
+
+vitesse_missile = 0.6
+
+
 
 etoiles = [
         [random.randint(0, FENETRE_LARGEUR), random.randint(0, FENETRE_HAUTEUR)]
@@ -90,12 +95,14 @@ def affiche(entites, ecran):
             dessine(objet, ecran)
 
 
-
+#Score et vie
 def score():
     marquoir = police.render(str(int(round(SCORE, 0))), True, BLANC)
     fenetre.blit(marquoir, (20, FENETRE_HAUTEUR // 12))
 
-
+def afficher_munition():
+    munition = police.render(str(int(MUNITIONS)), True, BLANC)
+    fenetre.blit(munition, (20, FENETRE_HAUTEUR-35))
 
 def vie():
 
@@ -104,14 +111,37 @@ def vie():
         image = pygame.transform.scale(vie_image, (VIE_LARGEUR,VIE_HAUTEUR))
         fenetre.blit(image, (FENETRE_LARGEUR-VIE_LARGEUR*x,FENETRE_HAUTEUR-VIE_HAUTEUR))
 
+#Tir
+def mru_1d(depart, temps_depart, vitesse, temps_maintenant):
+    mru_1d = depart + (vitesse * (temps_maintenant - temps_depart))
+    return (mru_1d)
+
+
+def dessiner_missile(missile, fenetre):
+    for missile in missile:
+        position = (missile['position_depart'][0],
+                    mru_1d(missile['position_depart'][1],
+                           missile['temps_depart'],
+                           missile['vitesse_verticale'],
+                           pygame.time.get_ticks()))
+
+        pygame.draw.circle(fenetre, BLANC, list(map(int, position)), 5)
+    return
+
+def ajouter_missile(missile, position, temps_depart, vitesse):
+    missile.append({'position_depart': position,
+                   'temps_depart': temps_depart,
+                   'vitesse_verticale': vitesse})
+    return
+
+
 
 game_icon = pygame.image.load("Images/vaisseau_avec_flamme.png")
 pygame.display.set_icon(game_icon)
 
 pygame.init()
 
-
-
+missile = []
 
 fenetre_taille = (FENETRE_LARGEUR, FENETRE_HAUTEUR)
 fenetre = pygame.display.set_mode(fenetre_taille)
@@ -138,7 +168,9 @@ for nom_image, nom_fichier in (('Planete1', 'planete1.png'),
                                ('Planete13', 'planete13.png'),
                                ('Planete14', 'planete14.png'),
                                ('Planete15', 'planete15.png'),
-                               ('Planete16', 'planete16.png')):
+                               ('Planete16', 'planete16.png'),
+                               ('trou_noir','trou_noir.png'),
+                               ('ufo','ufo.png')):
 
     chemin = 'Images/' + nom_fichier
     image = pygame.image.load(chemin).convert_alpha(fenetre)
@@ -173,13 +205,23 @@ police = pygame.font.SysFont('monospace', FENETRE_HAUTEUR//20, True)
 
 while NOMBRE_VIE>0:
 
+    temps_maintenant = pygame.time.get_ticks()
 
     prendsPose(vaisseau, POSE_VAISSEAU[0])
 
-    for evenement in pygame.event.get():
-        if evenement.type == pygame.QUIT:
+    evenement = pygame.event.get()
+    for event in evenement:
+        if event.type == pygame.QUIT:
             fini = True
             NOMBRE_VIE = 0
+    #Tir
+        if event.type == pygame.KEYDOWN:
+            if event.key == pygame.K_SPACE:
+                if MUNITIONS > 0:
+                    ajouter_missile(missile, (position(vaisseau)[0]+VAISSEAU_LARGEUR/2 , position(vaisseau)[1]), temps_maintenant,
+                                    -vitesse_missile)
+                    MUNITIONS -=1
+
 
     #Déplacement du vaisseau
 
@@ -225,8 +267,10 @@ while NOMBRE_VIE>0:
 
 #Score et compteur
     score()
+    afficher_munition()
     vie()
-    COMPTEUR_BOUCLE += 1
+    COMPTEUR_BOUCLE +=1
+
     if COMPTEUR_BOUCLE % 60 == 0 and SCORE <= 1000 :
         SCORE += 1
         VITESSE_JEU += 0.01
@@ -235,12 +279,16 @@ while NOMBRE_VIE>0:
         SCORE += 1
         NOMBRE_VIE-=1
 
+    if COMPTEUR_BOUCLE % 6000 == 0:
+        MUNITIONS += 10
 
+    dessiner_missile(missile, fenetre)
     afficher_etoiles(fenetre, VITESSE_JEU)
 
     affiche(scene, fenetre)
 
     pygame.display.flip()
+
 
 
     temps.tick(60)

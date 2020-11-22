@@ -1,20 +1,13 @@
 Menu
-#TODO Afficher plusieurs planetes en meme temps et quelle reste affichées
-Déplacer les planètes vers le bas
-Collisions avec les planètes
+        #TODO Afficher plusieurs planetes en meme temps et quelle reste affichées
+1)Déplacer les planètes vers le bas
+2)Collisions avec les planètes
+3)Perdre une vie dès qu'il y a une collision
+4)Trou noir qui arrète le jeu instant
+5)Tirer sur des aliens pour gagner des points
+6)L'alien se déplace
 
-Perdre une vie dès qu'il y a une collision
-
-
-Trou noir qui arrète le jeu instant
-
-Tirer sur des aliens pour gagner des points
-L'alien se déplace
-ajouter munition tout les X temps
 (L'alien tire aussi)
-
-
-
 
 QUESTIONS A POSER :
 
