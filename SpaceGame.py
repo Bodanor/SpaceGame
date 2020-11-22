@@ -130,7 +130,7 @@ def dessiner_missile(missile, fenetre):
                            missile['temps_depart'],
                            missile['vitesse_verticale'],
                            pygame.time.get_ticks()))
-        pygame.draw.circle(fenetre, BLEU, list(map(int, position)), 7)
+        pygame.draw.circle(fenetre, BLEU, list(map(int, position)), 10, width=1)
         pygame.draw.circle(fenetre, BLANC, list(map(int, position)), 5)
     return
 
