@@ -1,5 +1,9 @@
-Menu
+
 Rajouter difficulté dans le menu
+
+Déplacement commandes dans la boucle principale, tout ce qui est texte_largeur, hauteur doit etre une varibale glabal
+pour y acceder + creer un boucle for pour coordonne juste en focntion des menus.
+
         #TODO Afficher plusieurs planetes en meme temps et quelle reste affichées
 1)Déplacer les planètes vers le bas
 2)Collisions avec les planètes
@@ -9,7 +13,9 @@ Rajouter difficulté dans le menu
 6)L'alien se déplace
 7) Décrémenter vie a chaque collision
 8) Ajouter touche pour naviguer dans le menu (fonction afficher_menu)
-9) ressentrer menu
+
+
+
 
 
 (L'alien tire aussi)
@@ -17,6 +23,6 @@ Rajouter difficulté dans le menu
 QUESTIONS A POSER :
 
 1)Afficher planetes + collisions
-
+2) estce que au final clavier + souris valent les meme points et donc utiliser que les fleches
 
 

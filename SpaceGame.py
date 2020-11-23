@@ -16,7 +16,7 @@ BOUTON_COULEUR_FONCE = (100,100,100)
 NOMBRE_ETOILES = 500
 
 FENETRE_LARGEUR = 1080
-FENETRE_HAUTEUR = 700
+FENETRE_HAUTEUR = 720
 
 VAISSEAU_LARGEUR = 70
 VAISSEAU_HAUTEUR = 60
@@ -173,19 +173,26 @@ def afficherBoutonMenu(Menu):
 
     for index, text in enumerate(Menu):
 
-        if FENETRE_LARGEUR / 2 - 70 <= mouse[0] <= FENETRE_LARGEUR / 2 + 70 and (FENETRE_HAUTEUR / 2 - 20) + (hauteur / 2 * index) <= mouse[1] <= (FENETRE_HAUTEUR / 2 + 20) + (hauteur / 2 * index):
+        text_afficher = POLICE_ECRITURE_BOUTON.render(text, True, BLANC)
+        texte_largeur, texte_hauteur = text_afficher.get_size()
+
+        if FENETRE_LARGEUR / 2 - texte_largeur//2 <= mouse[0] <= FENETRE_LARGEUR / 2 + texte_largeur//2 and FENETRE_HAUTEUR / menu_longueur - texte_hauteur + (hauteur / 2 * index) <= mouse[1] <= (FENETRE_HAUTEUR / menu_longueur) + (hauteur / 2 * index):
             pygame.draw.rect(fenetre, BOUTON_COULEUR_CLAIR,
-                             [(FENETRE_LARGEUR / 2) - 70, ((FENETRE_HAUTEUR / 2) - 20) + (hauteur / 2 * index), 140, 40])
+                             [(FENETRE_LARGEUR / 2) - texte_largeur//2, ((FENETRE_HAUTEUR / menu_longueur) - texte_hauteur) + (hauteur / 2 * index), texte_largeur, 40])
 
         else:
             pygame.draw.rect(fenetre, BOUTON_COULEUR_FONCE,
-                             [(FENETRE_LARGEUR / 2) - 70, ((FENETRE_HAUTEUR / 2) - 20) + (hauteur / 2 * index), 140, 40])
-
-        text_afficher = POLICE_ECRITURE_BOUTON.render(text, True, BLANC)
-
-        fenetre.blit(text_afficher, ((FENETRE_LARGEUR / 2) - text_afficher.get_width() // 2,(FENETRE_HAUTEUR /2) - (text_afficher.get_height() - (hauteur * index)) // 2))
+                             [(FENETRE_LARGEUR / 2) - texte_largeur//2, ((FENETRE_HAUTEUR / menu_longueur) - texte_hauteur)+ (hauteur / 2 * index), texte_largeur, 40])
 
 
+        fenetre.blit(text_afficher, ((FENETRE_LARGEUR / 2) - texte_largeur// 2,(FENETRE_HAUTEUR /menu_longueur) -  texte_hauteur + (hauteur * index) / 2))
+
+
+
+
+
+
+    return (True, False, 0, 60, 15)
 
 #Changement de l'icône de jeu
 game_icon = pygame.image.load("Images/vaisseau_avec_flamme.png")
@@ -197,14 +204,14 @@ pygame.init()
 pygame.mixer.init()
 piou = pygame.mixer.Sound("Son/piou.wav")
 no_bullets = pygame.mixer.Sound("Son/no_bullets.wav")
-kuisine = pygame.mixer.Sound("Son/Kuisine.wav")
+
 
 print("[LOG] BRUITAGES CHARGE !")
 missile = []
 
 #Création de la fenêtre
-fenetre_taille = (FENETRE_LARGEUR, FENETRE_HAUTEUR)
-fenetre = pygame.display.set_mode(fenetre_taille, pygame.RESIZABLE)
+
+fenetre = pygame.display.set_mode((FENETRE_LARGEUR, FENETRE_HAUTEUR), pygame.RESIZABLE)
 pygame.display.set_caption('Space Game')
 
 vaisseau = nouvelleEntite()
@@ -253,12 +260,11 @@ print("[LOG] TOUTES LES IMAGES SONT CHARGéES")
 
 
 
-place(vaisseau, FENETRE_LARGEUR/2, FENETRE_HAUTEUR-VAISSEAU_HAUTEUR)
+place(vaisseau, (FENETRE_LARGEUR/2) -VAISSEAU_LARGEUR/2 , FENETRE_HAUTEUR-VAISSEAU_HAUTEUR)
 
 pose_planete = 0
 
 scene = [vaisseau, planetes]
-attente = 0
 fini = False
 enintro = True
 enjeu = False
@@ -285,35 +291,39 @@ while enintro:
 
     evenement = pygame.event.get()
     for event in evenement:
-        #Changement de taille d'écran
+        # Changement de taille d'écran
         if event.type == pygame.VIDEORESIZE:
             FENETRE_LARGEUR, FENETRE_HAUTEUR = fenetre.get_size()
             etoiles = cree_etoiles()
-            place(vaisseau, FENETRE_LARGEUR / 2, FENETRE_HAUTEUR - VAISSEAU_HAUTEUR)
+            place(vaisseau, (FENETRE_LARGEUR / 2) - VAISSEAU_LARGEUR / 2, FENETRE_HAUTEUR - VAISSEAU_HAUTEUR)
         if event.type == pygame.QUIT:
             enintro = False
             NOMBRE_VIE = 0
 
+            # Lancer le jeu
         if event.type == pygame.MOUSEBUTTONDOWN:
-            if FENETRE_LARGEUR / 2 - 70 <= mouse[0] <= FENETRE_LARGEUR / 2 + 70 and FENETRE_HAUTEUR / 2 - 20 <= mouse[
-                1] <= FENETRE_HAUTEUR / 2 + 20:
+            if FENETRE_LARGEUR / 2 - texte_largeur // 2 <= mouse[
+                0] <= FENETRE_LARGEUR / 2 + texte_largeur // 2 and FENETRE_HAUTEUR / menu_longueur - texte_hauteur + (
+                    hauteur / 2 * index) <= mouse[1] <= (FENETRE_HAUTEUR / menu_longueur) + (hauteur / 2 * index):
                 enintro = False
                 enjeu = True
                 SCORE = 0
                 COMPTEUR_BOUCLE = 0
                 MUNITIONS = 15
+                return (enintro, enjeu, SCORE, COMPTEUR_BOUCLE, MUNITIONS)
 
-            if FENETRE_LARGEUR / 2 - 70 <= mouse[0] <= FENETRE_LARGEUR / 2 + 70 and (FENETRE_HAUTEUR / 2 - 20) + 133 <= \
-                    mouse[
-                        1] <= (FENETRE_HAUTEUR / 2 + 20) + 266:
+            # Quitter le jeu
+            if FENETRE_LARGEUR / 2 - texte_largeur // 2 <= mouse[
+                0] <= FENETRE_LARGEUR / 2 + texte_largeur // 2 and FENETRE_HAUTEUR / menu_longueur - texte_hauteur + (
+                    hauteur / 2 * index) <= mouse[1] <= (FENETRE_HAUTEUR / menu_longueur) + (hauteur / 2 * index):
                 enintro = False
                 enjeu = False
                 NOMBRE_VIE = 0
 
-        #Lancer le jeu
+                return (False, False, 0, 0, 0)
+        # Controle clavier
         if event.type == pygame.KEYDOWN:
             if event.key == pygame.K_DOWN:
-
                 None
             if event.key == pygame.K_UP:
                 None
@@ -326,11 +336,11 @@ while enintro:
     COMPTEUR_BOUCLE += 1
 
 #Mécanique du jeu
-    if COMPTEUR_BOUCLE % 60 == 0 and SCORE <= 1000:
+    if COMPTEUR_BOUCLE % 60 == 0 and SCORE <= 100:
         SCORE += 1
-        VITESSE_JEU += 0.01
+        VITESSE_JEU += 0.10
 
-    if COMPTEUR_BOUCLE % 60 == 0 and SCORE > 1000:
+    if COMPTEUR_BOUCLE % 60 == 0 and SCORE > 100:
         SCORE += 1
 
     if COMPTEUR_BOUCLE % 6000 == 0:
@@ -351,7 +361,7 @@ while enintro:
     score()
     afficher_munition(MUNITIONS)
     vie()
-    afficherBoutonMenu(MENU)
+    enintro, enjeu, SCORE, COMPTEUR_BOUCLE, MUNITIONS = afficherBoutonMenu(MENU)
     pygame.display.flip()
 
     temps.tick(60)
