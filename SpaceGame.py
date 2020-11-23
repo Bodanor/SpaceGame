@@ -33,12 +33,11 @@ COMPTEUR_BOUCLE = 0
 vitesse_missile = 0.6
 
 vie_image = pygame.image.load('Images/vaisseau_jaune_avec_flamme.png')
-
+ 
 etoiles = [
         [random.randint(0, FENETRE_LARGEUR), random.randint(0, FENETRE_HAUTEUR)]
         for x in range(NOMBRE_ETOILES)
     ]
-
 
 
 def afficher_etoiles(ecran, vitesse_etoile):
@@ -100,16 +99,25 @@ def affiche(entites, ecran):
 
 #Score et vie
 def score():
-    marquoir = police.render(str(int(round(SCORE, 0))), True, BLANC)
+    marquoir = police.render(str("Score: {}".format(int(round(SCORE, 0)))), True, BLANC)
     fenetre.blit(marquoir, (20, FENETRE_HAUTEUR // 12))
 
 def afficher_munition(nombre_munitions):
     if nombre_munitions == 0:
-        munition = police.render(str(int(MUNITIONS)), True, ROUGE)
-        fenetre.blit(munition, (20, FENETRE_HAUTEUR - 35))
+
+        munition = police.render(str(": {}".format(int(MUNITIONS))), True, ROUGE)
+        fenetre.blit(munition, (35, FENETRE_HAUTEUR - 35))
+
+        pygame.draw.rect(fenetre, BLANC, pygame.Rect(5, FENETRE_HAUTEUR - 40, munition.get_size()[0]+40, 30), width=1)
+        pygame.draw.circle(fenetre, BLEU,(17, FENETRE_HAUTEUR - 25), 10, width=1)
+        pygame.draw.circle(fenetre, BLANC, (17, FENETRE_HAUTEUR - 25), 5)
     else:
-        munition = police.render(str(int(MUNITIONS)), True, BLANC)
-        fenetre.blit(munition, (20, FENETRE_HAUTEUR-35))
+        munition = police.render(str(": {}".format(int(MUNITIONS))), True, BLANC)
+        fenetre.blit(munition, (35, FENETRE_HAUTEUR-35))
+
+        pygame.draw.rect(fenetre, BLANC, pygame.Rect(5, FENETRE_HAUTEUR - 40, munition.get_size()[0]+40, 30), width=1)
+        pygame.draw.circle(fenetre, BLEU, (17, FENETRE_HAUTEUR - 25), 10, width=1)
+        pygame.draw.circle(fenetre, BLANC, (17, FENETRE_HAUTEUR - 25), 5)
 
 def vie():
 
@@ -149,13 +157,13 @@ pygame.init()
 pygame.mixer.init()
 
 piou = pygame.mixer.Sound("Son/piou.wav")
-plus_de_balle = pygame.mixer.Sound("Son/plus_de_balle.wav")
+no_bullets = pygame.mixer.Sound("Son/no_bullets.wav")
 
 print("[LOG] BRUITAGES CHARGE !")
 missile = []
 
 fenetre_taille = (FENETRE_LARGEUR, FENETRE_HAUTEUR)
-fenetre = pygame.display.set_mode(fenetre_taille)
+fenetre = pygame.display.set_mode(fenetre_taille, pygame.RESIZABLE)
 pygame.display.set_caption('Space Game')
 
 vaisseau = nouvelleEntite()
@@ -211,7 +219,7 @@ attente = 0
 fini = False
 temps = pygame.time.Clock()
 
-police = pygame.font.SysFont('monospace', FENETRE_HAUTEUR//20, True)
+police = pygame.font.SysFont('monospace', FENETRE_HAUTEUR//40, True)
 
 
 while NOMBRE_VIE>0:
@@ -222,19 +230,26 @@ while NOMBRE_VIE>0:
 
     evenement = pygame.event.get()
     for event in evenement:
+        if event.type == pygame.VIDEORESIZE:
+            FENETRE_LARGEUR, FENETRE_HAUTEUR = fenetre.get_size()
+            etoiles = [
+                [random.randint(0, FENETRE_LARGEUR), random.randint(0, FENETRE_HAUTEUR)]
+                for x in range(NOMBRE_ETOILES)
+            ]
         if event.type == pygame.QUIT:
             fini = True
             NOMBRE_VIE = 0
     #Tir
         if event.type == pygame.KEYDOWN:
             if event.key == pygame.K_SPACE:
-                if MUNITIONS > 0:
+                if MUNITIONS == 0:
+                    no_bullets.play()
+                else:
+
                     piou.play()
                     ajouter_missile(missile, (position(vaisseau)[0]+VAISSEAU_LARGEUR/2 , position(vaisseau)[1]), temps_maintenant,
                                     -vitesse_missile)
                     MUNITIONS -=1
-                if MUNITIONS == 0:
-                    plus_de_balle.play()
 
 
 
