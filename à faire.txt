@@ -23,6 +23,6 @@ pour y acceder + creer un boucle for pour coordonne juste en focntion des menus.
 QUESTIONS A POSER :
 
 1)Afficher planetes + collisions
-2) estce que au final clavier + souris valent les meme points et donc utiliser que les fleches
+2)Est ce que au final clavier + souris valent les meme points et donc utiliser que les fleches
 
 
