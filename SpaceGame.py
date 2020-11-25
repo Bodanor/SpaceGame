@@ -60,8 +60,11 @@ HAUTEUR_PAUSE =FENETRE_HAUTEUR/MENU_PAUSE_LONGUEUR
 BOUTON_LARGEUR = 220
 BOUTON_HAUTEUR = 41
 
-ENJEU = 0
-ENINTRO = 1
+
+
+#DEFINITION PLANETE
+
+LISTE_PLANETE = []
 
 ########FIN CONSTANTE#######
 
@@ -207,10 +210,9 @@ def afficherBoutonMenu(Menu):
         fenetre.blit(text_afficher, ((FENETRE_LARGEUR / 2) - texte_largeur // 2,
                                      (FENETRE_HAUTEUR / MENU_LONGUEUR) - texte_hauteur + (HAUTEUR * index) / 2))
 
-    return (True, False)
+#Pause
 
-def pause ():
-
+def pause():
     afficherBoutonMenu(MENU_PAUSE)
     pygame.display.flip()
     temps.tick(60)
@@ -247,9 +249,10 @@ pygame.display.set_caption('Space Game')
 
 #Création des entités
 vaisseau = nouvelleEntite()
-planetes = nouvelleEntite()
 
+#CREATION PLANETE
 
+#def spawn_planete()
 
 
 #CHARGER TOUTES LES IMAGES #
@@ -296,7 +299,7 @@ place(vaisseau, (FENETRE_LARGEUR/2) -VAISSEAU_LARGEUR/2 , FENETRE_HAUTEUR-VAISSE
 
 #Scene et planete
 pose_planete = 0
-scene = [vaisseau, planetes]
+scene = [vaisseau]
 
 #Variable de jeu et Temps
 fini = False
@@ -314,9 +317,9 @@ etoiles = cree_etoiles()
 
 
 
-######CREATION DU MENU######
-while ENINTRO == 1:
 
+######CREATION DU MENU######
+while enintro:
     temps_maintenant = pygame.time.get_ticks()
     prendsPose(vaisseau, POSE_VAISSEAU[0])
     evenement = pygame.event.get()
@@ -330,17 +333,16 @@ while ENINTRO == 1:
 
         #Quitter avec la croix
         if event.type == pygame.QUIT:
-            ENINTRO=0
-            ENJEU=0
-            NOMBRE_VIE = 0
+            pygame.quit()
+            quit()
 
          #Lancer le jeu
         if event.type == pygame.MOUSEBUTTONDOWN:
             if FENETRE_LARGEUR / 2 - BOUTON_LARGEUR // 2 <= mouse[
                 0] <= FENETRE_LARGEUR / 2 + BOUTON_LARGEUR // 2 and FENETRE_HAUTEUR / MENU_LONGUEUR - BOUTON_HAUTEUR + (
                     HAUTEUR / 2 * 0) <= mouse[1] <= (FENETRE_HAUTEUR / MENU_LONGUEUR) + (HAUTEUR / 2 * 0):
-                ENINTRO = 0
-                ENJEU = 1
+                enintro = False
+                enjeu = True
                 SCORE = 0
                 NOMBRE_VIE = 3
                 COMPTEUR_BOUCLE = 1
@@ -353,8 +355,8 @@ while ENINTRO == 1:
             if FENETRE_LARGEUR / 2 - BOUTON_LARGEUR // 2 <= mouse[
                 0] <= FENETRE_LARGEUR / 2 + BOUTON_LARGEUR // 2 and FENETRE_HAUTEUR / MENU_LONGUEUR - BOUTON_HAUTEUR + (
                     HAUTEUR / 2 * 2) <= mouse[1] <= (FENETRE_HAUTEUR / MENU_LONGUEUR) + (HAUTEUR / 2 * 2):
-                ENJEU = 0
-                ENINTRO = 0
+                enjeu = False
+                enintro = False
                 NOMBRE_VIE = 0
 
 
@@ -403,10 +405,8 @@ while ENINTRO == 1:
     score()
     vie()
     afficher_munition(MUNITIONS)
-
-    enintro, enjeu = afficherBoutonMenu(MENU)
+    afficherBoutonMenu(MENU)
     pygame.display.flip()
-
 
     #Temps
     temps_maintenant = pygame.time.get_ticks()
@@ -420,8 +420,7 @@ while ENINTRO == 1:
 
 #####BOUCLE DU JEU#####
 
-    while NOMBRE_VIE > 0 and ENJEU == 1 :
-
+    while NOMBRE_VIE > 0 and enjeu:
 
         temps_maintenant = pygame.time.get_ticks()
         prendsPose(vaisseau, POSE_VAISSEAU[0])
@@ -436,16 +435,11 @@ while ENINTRO == 1:
 
             #Quitter avec la croix
             if event.type == pygame.QUIT:
-                ENJEU = 0
-                ENINTRO = 0
-                NOMBRE_VIE = 0
                 pygame.quit()
                 quit()
-
+            #Touche pause
             if event.type== pygame.K_ESCAPE:
-
                 COMPTEUR_PAUSE +=1
-                afficherBoutonMenu(MENU_PAUSE)
 
             #Tir
             if event.type == pygame.KEYDOWN:
@@ -521,8 +515,8 @@ while ENINTRO == 1:
                 MUNITIONS += 10
 
             if NOMBRE_VIE == 0:
-                ENJEU = 0
-                ENINTRO = 1
+                enjeu = False
+                enintro = True
             #Affichage
             dessiner_missile(missile, fenetre)
             afficher_etoiles(fenetre, VITESSE_JEU, etoiles)

@@ -379,7 +379,7 @@ while ENINTRO==1:
     score()
     afficher_munition(MUNITIONS)
     vie()
-    enintro, enjeu= afficherBoutonMenu(MENU)
+    enintro, enjeu = afficherBoutonMenu(MENU)
     pygame.display.flip()
 
     temps.tick(60)
