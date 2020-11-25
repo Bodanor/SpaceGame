@@ -47,6 +47,7 @@ vitesse_missile = 0.6
 #Score et compteur
 SCORE = 0
 COMPTEUR_BOUCLE = 0
+COMPTEUR_PAUSE = 0
 
 #CONSTANTE POUR LE MENU
 MENU = ['Jouer','Difficulté','Quitter']
@@ -61,6 +62,7 @@ BOUTON_HAUTEUR = 41
 
 ENJEU = 0
 ENINTRO = 1
+
 ########FIN CONSTANTE#######
 
 
@@ -206,6 +208,14 @@ def afficherBoutonMenu(Menu):
                                      (FENETRE_HAUTEUR / MENU_LONGUEUR) - texte_hauteur + (HAUTEUR * index) / 2))
 
     return (True, False)
+
+def pause ():
+
+    afficherBoutonMenu(MENU_PAUSE)
+    pygame.display.flip()
+    temps.tick(60)
+
+
 #####FIN FONCTIONS######
 
 
@@ -305,7 +315,7 @@ etoiles = cree_etoiles()
 
 
 ######CREATION DU MENU######
-while ENINTRO==1:
+while ENINTRO == 1:
 
     temps_maintenant = pygame.time.get_ticks()
     prendsPose(vaisseau, POSE_VAISSEAU[0])
@@ -407,108 +417,124 @@ while ENINTRO==1:
 #####FIN DU MENU#####
 
 
-#Réinitialisation du nombre de munitions avant d'entrer en jeu
-#MUNITIONS = 15
 
 #####BOUCLE DU JEU#####
 
-while NOMBRE_VIE > 0 and ENJEU == 1 :
+    while NOMBRE_VIE > 0 and ENJEU == 1 :
 
-    temps_maintenant = pygame.time.get_ticks()
-    prendsPose(vaisseau, POSE_VAISSEAU[0])
-    evenement = pygame.event.get()
 
-    for event in evenement:
-        #Changement de l'écran
-        if event.type == pygame.VIDEORESIZE:
-            FENETRE_LARGEUR, FENETRE_HAUTEUR = fenetre.get_size()
-            etoiles = cree_etoiles()
-            place(vaisseau, FENETRE_LARGEUR / 2, FENETRE_HAUTEUR - VAISSEAU_HAUTEUR)
+        temps_maintenant = pygame.time.get_ticks()
+        prendsPose(vaisseau, POSE_VAISSEAU[0])
 
-        #Quitter avec la croix
-        if event.type == pygame.QUIT:
-            ENJEU = 0
-            NOMBRE_VIE = 0
+        evenement = pygame.event.get()
+        for event in evenement:
+            #Changement de l'écran
+            if event.type == pygame.VIDEORESIZE:
+                FENETRE_LARGEUR, FENETRE_HAUTEUR = fenetre.get_size()
+                etoiles = cree_etoiles()
+                place(vaisseau, FENETRE_LARGEUR / 2, FENETRE_HAUTEUR - VAISSEAU_HAUTEUR)
 
-        #Tir
-        if event.type == pygame.KEYDOWN:
-            if event.key == pygame.K_SPACE:
-                #Pas de munition
-                if MUNITIONS == 0:
-                    no_bullets.play()
-                else:
-                    #Tir de munitions
-                    piou.play()
-                    ajouter_missile(missile, (position(vaisseau)[0]+VAISSEAU_LARGEUR/2 , position(vaisseau)[1]), temps_maintenant,
-                                    -vitesse_missile)
-                    MUNITIONS -=1
+            #Quitter avec la croix
+            if event.type == pygame.QUIT:
+                ENJEU = 0
+                ENINTRO = 0
+                NOMBRE_VIE = 0
+                pygame.quit()
+                quit()
 
-            #if event.key == pygame.K_e
+            if event.type== pygame.K_ESCAPE:
 
-    #Déplacement du vaisseau
-    keys = pygame.key.get_pressed()
+                COMPTEUR_PAUSE +=1
+                afficherBoutonMenu(MENU_PAUSE)
 
-    #DROITE
-    if keys[pygame.K_RIGHT]:
-        if position(vaisseau)[0] + VAISSEAU_LARGEUR >FENETRE_LARGEUR:
-            None
+            #Tir
+            if event.type == pygame.KEYDOWN:
+                if event.key == pygame.K_SPACE:
+                    #Pas de munition
+                    if MUNITIONS == 0:
+                        no_bullets.play()
+                    else:
+                        #Tir de munitions
+                        piou.play()
+                        ajouter_missile(missile, (position(vaisseau)[0]+VAISSEAU_LARGEUR/2 , position(vaisseau)[1]), temps_maintenant,
+                                        -vitesse_missile)
+                        MUNITIONS -=1
+
+                if event.key == pygame.K_ESCAPE:
+                    COMPTEUR_PAUSE+=1
+
+        #Déplacement du vaisseau
+        keys = pygame.key.get_pressed()
+
+        #DROITE
+        if keys[pygame.K_RIGHT]:
+            if position(vaisseau)[0] + VAISSEAU_LARGEUR >FENETRE_LARGEUR:
+                None
+            else:
+                prendsPose(vaisseau, POSE_VAISSEAU[1])
+                position_vaisseau = position(vaisseau)
+                place(vaisseau, position_vaisseau[0] + 5, position_vaisseau[1])
+
+        #GAUCHE
+        if keys[pygame.K_LEFT]:
+            if position(vaisseau)[0] == 0:
+                None
+            else:
+                prendsPose(vaisseau, POSE_VAISSEAU[1])
+                position_vaisseau = position(vaisseau)
+                place(vaisseau, position_vaisseau[0] - 5, position_vaisseau[1])
+
+        #BAS
+        if keys[pygame.K_DOWN]:
+            if position(vaisseau)[1] > FENETRE_HAUTEUR - VAISSEAU_HAUTEUR :
+                None
+            else:
+                prendsPose(vaisseau, POSE_VAISSEAU[0])
+                position_vaisseau = position(vaisseau)
+                place(vaisseau, position_vaisseau[0], position_vaisseau[1] + 5)
+
+        #HAUT
+        if keys[pygame.K_UP]:
+            if position(vaisseau)[1] < 0:
+                None
+            else:
+                prendsPose(vaisseau, POSE_VAISSEAU[1])
+                position_vaisseau = position(vaisseau)
+                place(vaisseau, position_vaisseau[0], position_vaisseau[1] - 5)
+
+        fenetre.fill(ESPACE)
+
+        if COMPTEUR_PAUSE%2 != 0:
+            pause()
+
+
         else:
-            prendsPose(vaisseau, POSE_VAISSEAU[1])
-            position_vaisseau = position(vaisseau)
-            place(vaisseau, position_vaisseau[0] + 5, position_vaisseau[1])
+            #Score, compteur, et missiles
+            if COMPTEUR_BOUCLE % 60 == 0 and SCORE <= 1000:
+                SCORE += 1
+                VITESSE_JEU += 0.01
 
-    #GAUCHE
-    if keys[pygame.K_LEFT]:
-        if position(vaisseau)[0] == 0:
-            None
-        else:
-            prendsPose(vaisseau, POSE_VAISSEAU[1])
-            position_vaisseau = position(vaisseau)
-            place(vaisseau, position_vaisseau[0] - 5, position_vaisseau[1])
+            if COMPTEUR_BOUCLE % 60 == 0 and SCORE > 1000 :
+                SCORE += 1
 
-    #BAS
-    if keys[pygame.K_DOWN]:
-        if position(vaisseau)[1] > FENETRE_HAUTEUR - VAISSEAU_HAUTEUR :
-            None
-        else:
-            prendsPose(vaisseau, POSE_VAISSEAU[0])
-            position_vaisseau = position(vaisseau)
-            place(vaisseau, position_vaisseau[0], position_vaisseau[1] + 5)
+            if COMPTEUR_BOUCLE % 6000 == 0:
+                MUNITIONS += 10
 
-    #HAUT
-    if keys[pygame.K_UP]:
-        if position(vaisseau)[1] < 0:
-            None
-        else:
-            prendsPose(vaisseau, POSE_VAISSEAU[1])
-            position_vaisseau = position(vaisseau)
-            place(vaisseau, position_vaisseau[0], position_vaisseau[1] - 5)
+            if NOMBRE_VIE == 0:
+                ENJEU = 0
+                ENINTRO = 1
+            #Affichage
+            dessiner_missile(missile, fenetre)
+            afficher_etoiles(fenetre, VITESSE_JEU, etoiles)
+            affiche(scene, fenetre)
+            score()
+            afficher_munition(MUNITIONS)
+            vie()
+            pygame.display.flip()
 
-    fenetre.fill(ESPACE)
-
-    #Score, compteur, et missiles
-    if COMPTEUR_BOUCLE % 60 == 0 and SCORE <= 1000:
-        SCORE += 1
-        VITESSE_JEU += 0.01
-
-    if COMPTEUR_BOUCLE % 60 == 0 and SCORE > 1000 :
-        SCORE += 1
-
-    if COMPTEUR_BOUCLE % 6000 == 0:
-        MUNITIONS += 10
-
-    #Affichage
-    dessiner_missile(missile, fenetre)
-    afficher_etoiles(fenetre, VITESSE_JEU, etoiles)
-    affiche(scene, fenetre)
-    score()
-    afficher_munition(MUNITIONS)
-    vie()
-    pygame.display.flip()
-
-    #Temps
-    temps.tick(60)
-    COMPTEUR_BOUCLE += 1
+            #Temps
+            temps.tick(60)
+            COMPTEUR_BOUCLE += 1
 
 pygame.display.quit()
 pygame.quit()
