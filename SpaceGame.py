@@ -306,6 +306,7 @@ etoiles = cree_etoiles()
 
 ######CREATION DU MENU######
 while ENINTRO==1:
+
     temps_maintenant = pygame.time.get_ticks()
     prendsPose(vaisseau, POSE_VAISSEAU[0])
     evenement = pygame.event.get()
@@ -332,8 +333,10 @@ while ENINTRO==1:
                 ENJEU = 1
                 SCORE = 0
                 NOMBRE_VIE = 3
-                COMPTEUR_BOUCLE = 0
+                COMPTEUR_BOUCLE = 1
                 MUNITIONS = 15
+                VITESSE_JEU = 3
+
 
 
             # Quitter le jeu avec le bouton quitter
@@ -357,23 +360,23 @@ while ENINTRO==1:
  #Mécanique du jeu
     #Incrémentation du score et de la vitesse dans le menu
     if COMPTEUR_BOUCLE % 60 == 0 and SCORE <= 100:
-        SCORE += 1
         VITESSE_JEU += 0.10
 
     if COMPTEUR_BOUCLE % 60 == 0 and SCORE > 100:
-        SCORE += 1
+        None
 
     #Ajout de munition
-    if COMPTEUR_BOUCLE % 6000 == 0:
+    if COMPTEUR_BOUCLE % 6000 == 0 and COMPTEUR_BOUCLE>0:
         MUNITIONS += 10
 
     #Tir auto
-    if COMPTEUR_BOUCLE % 120 == 0:
+    if COMPTEUR_BOUCLE % 150 == 0:
         if MUNITIONS > 0:
             ajouter_missile(missile, (position(vaisseau)[0] + VAISSEAU_LARGEUR / 2, position(vaisseau)[1]),
                             temps_maintenant,
                             -vitesse_missile)
             MUNITIONS -= 1
+
 
     #Contrôle souris
     mouse = pygame.mouse.get_pos()
@@ -400,9 +403,12 @@ while ENINTRO==1:
     temps.tick(60)
     COMPTEUR_BOUCLE += 1
 
+
 #####FIN DU MENU#####
 
 
+#Réinitialisation du nombre de munitions avant d'entrer en jeu
+#MUNITIONS = 15
 
 #####BOUCLE DU JEU#####
 
@@ -437,7 +443,7 @@ while NOMBRE_VIE > 0 and ENJEU == 1 :
                                     -vitesse_missile)
                     MUNITIONS -=1
 
-
+            #if event.key == pygame.K_e
 
     #Déplacement du vaisseau
     keys = pygame.key.get_pressed()
