@@ -410,8 +410,8 @@ while enintro:
         None
 
     # Ajout de munition
-    if COMPTEUR_BOUCLE % 6000 == 0 and COMPTEUR_BOUCLE > 0:
-        MUNITIONS += 10
+    if MUNITIONS == 1 and COMPTEUR_BOUCLE > 0:
+        MUNITIONS += 15
 
     # Tir auto
     if COMPTEUR_BOUCLE % 150 == 0:
@@ -458,6 +458,7 @@ while enintro:
             # Changement de l'écran
             if event.type == pygame.VIDEORESIZE:
                 FENETRE_LARGEUR, FENETRE_HAUTEUR = fenetre.get_size()
+                print(FENETRE_LARGEUR, FENETRE_HAUTEUR)
                 etoiles = cree_etoiles()
                 place(vaisseau, FENETRE_LARGEUR / 2, FENETRE_HAUTEUR - VAISSEAU_HAUTEUR)
 
@@ -526,8 +527,9 @@ while enintro:
 
             # GAUCHE
             if keys[pygame.K_LEFT]:
-                if position(vaisseau)[0] == 0:
-                    None
+                if position(vaisseau)[0] <= 0:
+                    prendsPose(vaisseau, POSE_VAISSEAU[1])
+                    position_vaisseau = position(vaisseau)
                 else:
                     prendsPose(vaisseau, POSE_VAISSEAU[1])
                     position_vaisseau = position(vaisseau)
