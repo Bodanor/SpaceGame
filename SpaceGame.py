@@ -1,92 +1,90 @@
 import pygame
 import random
 
-
 ######CONSTANTES#######
-#Couleur
+# Couleur
 ESPACE = (0, 0, 15)
-BLANC = (255,255,255)
+BLANC = (255, 255, 255)
 BLEU = (129, 78, 216)
-ROUGE = (255,0,0)
+ROUGE = (255, 0, 0)
 
-BOUTON_COULEUR_CLAIR = (170,170,170)
-BOUTON_COULEUR_FONCE = (100,100,100)
+BOUTON_COULEUR_CLAIR = (170, 170, 170)
+BOUTON_COULEUR_FONCE = (100, 100, 100)
 
-#Etoile
+# Etoile
 NOMBRE_ETOILES = 500
 
-#Dimension Fenetre
+# Dimension Fenetre
 FENETRE_LARGEUR = 1080
 FENETRE_HAUTEUR = 720
 
-#Dimension Vaisseau
+# Dimension Vaisseau
 VAISSEAU_LARGEUR = 70
 VAISSEAU_HAUTEUR = 60
 
-#Vie
+# Vie
 VIE_LARGEUR = 30
 VIE_HAUTEUR = 25
 NOMBRE_VIE = 3
 
-#dimension planete
+# dimension planete
 PLANETE_LARGEUR = 180
 PLANETE_HAUTEUR = 180
 
-#Pose Planete
-POSE_PLANETE = ('Planete1', 'Planete2','Planete3', 'Planete4','Planete5', 'Planete6','Planete7', 'Planete8','Planete9', 'Planete10','Planete11', 'Planete12','Planete13', 'Planete14','Planete15', 'Planete16')
+# Pose Planete
+POSE_PLANETE = (
+'Planete1', 'Planete2', 'Planete3', 'Planete4', 'Planete5', 'Planete6', 'Planete7', 'Planete8', 'Planete9', 'Planete10',
+'Planete11', 'Planete12', 'Planete13', 'Planete14', 'Planete15', 'Planete16')
 POSE_VAISSEAU = ('vaisseau_sans_flamme', 'vaisseau_avec_flamme')
 
-
-#Vitesse du Jeu
+# Vitesse du Jeu
 VITESSE_JEU = 3
 
-#Info tir
+# Info tir
 MUNITIONS = 15
 vitesse_missile = 0.6
 
-#Score et compteur
+# Score et compteur
 SCORE = 0
 COMPTEUR_BOUCLE = 0
 COMPTEUR_PAUSE = 0
 
-
 TEMPS_AVANT_PAUSE = 0
 
-#CONSTANTE POUR LE MENU
-MENU = ['Jouer','Difficulté','Quitter']
+# CONSTANTE POUR LE MENU
+MENU = ['Jouer', 'Difficulté', 'Quitter']
 MENU_PAUSE = ['REPRENDRE', 'QUITTER']
 CHOIX_MENU = 1
 MENU_LONGUEUR = len(MENU)
 MENU_PAUSE_LONGUEUR = len(MENU_PAUSE)
-HAUTEUR = FENETRE_HAUTEUR/MENU_LONGUEUR
-HAUTEUR_PAUSE =FENETRE_HAUTEUR/MENU_PAUSE_LONGUEUR
+HAUTEUR = FENETRE_HAUTEUR / MENU_LONGUEUR
+HAUTEUR_PAUSE = FENETRE_HAUTEUR / MENU_PAUSE_LONGUEUR
 BOUTON_LARGEUR = 220
 BOUTON_HAUTEUR = 41
-BOUTON=0
+BOUTON = 0
 
-
-#DEFINITION PLANETE
+# DEFINITION PLANETE
 
 LISTE_PLANETE = []
+
 
 ########FIN CONSTANTE#######
 
 
-
 #######FONCTIONS########
 
-#Etoile
+# Etoile
 def cree_etoiles():
     etoile = []
     for x in range(NOMBRE_ETOILES):
-        etoile.append([random.randint(0,FENETRE_LARGEUR), random.randint(0, FENETRE_HAUTEUR)])
+        etoile.append([random.randint(0, FENETRE_LARGEUR), random.randint(0, FENETRE_HAUTEUR)])
 
     return etoile
 
 
 def afficher_etoiles(ecran, vitesse_etoile, etoiles):
     for etoile in etoiles:
-        pygame.draw.line(ecran, (255,255,255), (etoile[0], etoile[1]), (etoile[0], etoile[1]))
+        pygame.draw.line(ecran, (255, 255, 255), (etoile[0], etoile[1]), (etoile[0], etoile[1]))
 
         etoile[1] = etoile[1] + vitesse_etoile
         if etoile[1] > FENETRE_HAUTEUR:
@@ -98,11 +96,12 @@ def afficher_etoiles(ecran, vitesse_etoile, etoiles):
 
 def nouvelleEntite():
     return {
-        'visible':False,
+        'visible': False,
         'position': [0, 0],
-        'image' : None,
-        'listeImage' : {}
+        'image': None,
+        'listeImage': {}
     }
+
 
 def visible(entite):
     entite['visible'] = True
@@ -124,47 +123,54 @@ def place(entite, x, y):
 def position(entite):
     return entite['position']
 
+
 def prendsPose(entite, nom):
     entite['image'] = entite['listeImage'][nom]
     visible(entite)
-def ajouteImage(entite,nom ,image):
+
+
+def ajouteImage(entite, nom, image):
     entite['listeImage'][nom] = image
+
 
 def dessine(entite, ecran):
     ecran.blit(entite['image'], entite['position'])
 
+
 # Fin ENTITE #
 
-#AFFICHAGE
+# AFFICHAGE
 def affiche(entites, ecran):
     for objet in entites:
         if estVisible(objet):
             dessine(objet, ecran)
 
 
-#Score et vie
+# Score et vie
 def score():
     marquoir = police.render(str("Score: {}".format(int(round(SCORE, 0)))), True, BLANC)
     fenetre.blit(marquoir, (20, FENETRE_HAUTEUR // 12))
 
-def vie():
-    for x in range(0,NOMBRE_VIE+1):
-        image = pygame.transform.scale(vie_image, (VIE_LARGEUR,VIE_HAUTEUR))
-        fenetre.blit(image, (FENETRE_LARGEUR-VIE_LARGEUR*x,FENETRE_HAUTEUR-VIE_HAUTEUR))
 
-#Tir et Munition
+def vie():
+    for x in range(0, NOMBRE_VIE + 1):
+        image = pygame.transform.scale(vie_image, (VIE_LARGEUR, VIE_HAUTEUR))
+        fenetre.blit(image, (FENETRE_LARGEUR - VIE_LARGEUR * x, FENETRE_HAUTEUR - VIE_HAUTEUR))
+
+
+# Tir et Munition
 def afficher_munition(nombre_munitions):
     if nombre_munitions == 0:
 
         munition = police.render(str(": {}".format(int(MUNITIONS))), True, ROUGE)
         fenetre.blit(munition, (35, FENETRE_HAUTEUR - 35))
-        pygame.draw.rect(fenetre, BLANC, pygame.Rect(5, FENETRE_HAUTEUR - 40, munition.get_size()[0]+40, 30), width=1)
-        pygame.draw.circle(fenetre, BLEU,(17, FENETRE_HAUTEUR - 25), 10, width=1)
+        pygame.draw.rect(fenetre, BLANC, pygame.Rect(5, FENETRE_HAUTEUR - 40, munition.get_size()[0] + 40, 30), width=1)
+        pygame.draw.circle(fenetre, BLEU, (17, FENETRE_HAUTEUR - 25), 10, width=1)
         pygame.draw.circle(fenetre, BLANC, (17, FENETRE_HAUTEUR - 25), 5)
     else:
         munition = police.render(str(": {}".format(int(MUNITIONS))), True, BLANC)
-        fenetre.blit(munition, (35, FENETRE_HAUTEUR-35))
-        pygame.draw.rect(fenetre, BLANC, pygame.Rect(5, FENETRE_HAUTEUR - 40, munition.get_size()[0]+40, 30), width=1)
+        fenetre.blit(munition, (35, FENETRE_HAUTEUR - 35))
+        pygame.draw.rect(fenetre, BLANC, pygame.Rect(5, FENETRE_HAUTEUR - 40, munition.get_size()[0] + 40, 30), width=1)
         pygame.draw.circle(fenetre, BLEU, (17, FENETRE_HAUTEUR - 25), 10, width=1)
         pygame.draw.circle(fenetre, BLANC, (17, FENETRE_HAUTEUR - 25), 5)
 
@@ -173,13 +179,14 @@ def mru_1d(depart, temps_depart, vitesse, temps_maintenant):
     mru_1d = depart + (vitesse * (temps_maintenant - temps_depart))
     return (mru_1d)
 
-#TODO A MODIFIER LES BALLES QUI DISPARESSENT
+
+# TODO A MODIFIER LES BALLES QUI DISPARESSENT
 
 def dessiner_missile(missile, fenetre):
     temps_maintenant = pygame.time.get_ticks()
     for missile in missile:
         missile_vitesse = missile['vitesse_verticale']
-        if COMPTEUR_PAUSE%2 !=0:
+        if COMPTEUR_PAUSE % 2 != 0:
             temps_maintenant = TEMPS_AVANT_PAUSE
             missile_vitesse = 0
 
@@ -193,33 +200,41 @@ def dessiner_missile(missile, fenetre):
         pygame.draw.circle(fenetre, BLANC, list(map(int, position)), 5)
     return
 
+
 def ajouter_missile(missile, position, temps_depart, vitesse):
     missile.append({'position_depart': position,
-                   'temps_depart': temps_depart,
-                   'vitesse_verticale': vitesse})
+                    'temps_depart': temps_depart,
+                    'vitesse_verticale': vitesse})
     return
 
 
-#MENU#
+# MENU#
 def afficherBoutonMenu(Menu):
-
     for index, text in enumerate(Menu):
 
         text_afficher = POLICE_ECRITURE_BOUTON.render(text, True, BLANC)
         texte_largeur, texte_hauteur = text_afficher.get_size()
 
-        if FENETRE_LARGEUR / 2 - BOUTON_LARGEUR//2 <= mouse[0] <= FENETRE_LARGEUR / 2 + BOUTON_LARGEUR//2 and FENETRE_HAUTEUR / MENU_LONGUEUR - BOUTON_HAUTEUR + (HAUTEUR / 2 * index) <= mouse[1] <= (FENETRE_HAUTEUR / MENU_LONGUEUR) + (HAUTEUR / 2 * index) or index == BOUTON:
+        if FENETRE_LARGEUR / 2 - BOUTON_LARGEUR // 2 <= mouse[
+            0] <= FENETRE_LARGEUR / 2 + BOUTON_LARGEUR // 2 and FENETRE_HAUTEUR / MENU_LONGUEUR - BOUTON_HAUTEUR + (
+                HAUTEUR / 2 * index) <= mouse[1] <= (FENETRE_HAUTEUR / MENU_LONGUEUR) + (
+                HAUTEUR / 2 * index) or index == BOUTON:
             pygame.draw.rect(fenetre, BOUTON_COULEUR_CLAIR,
-                             [(FENETRE_LARGEUR / 2) - BOUTON_LARGEUR//2, ((FENETRE_HAUTEUR / MENU_LONGUEUR) - BOUTON_HAUTEUR) + (HAUTEUR / 2 * index), BOUTON_LARGEUR, 40])
+                             [(FENETRE_LARGEUR / 2) - BOUTON_LARGEUR // 2,
+                              ((FENETRE_HAUTEUR / MENU_LONGUEUR) - BOUTON_HAUTEUR) + (HAUTEUR / 2 * index),
+                              BOUTON_LARGEUR, 40])
 
         else:
             pygame.draw.rect(fenetre, BOUTON_COULEUR_FONCE,
-                             [(FENETRE_LARGEUR / 2) - BOUTON_LARGEUR//2, ((FENETRE_HAUTEUR / MENU_LONGUEUR) - BOUTON_HAUTEUR)+ (HAUTEUR / 2 * index), BOUTON_LARGEUR, 40])
+                             [(FENETRE_LARGEUR / 2) - BOUTON_LARGEUR // 2,
+                              ((FENETRE_HAUTEUR / MENU_LONGUEUR) - BOUTON_HAUTEUR) + (HAUTEUR / 2 * index),
+                              BOUTON_LARGEUR, 40])
 
         fenetre.blit(text_afficher, ((FENETRE_LARGEUR / 2) - texte_largeur // 2,
                                      (FENETRE_HAUTEUR / MENU_LONGUEUR) - texte_hauteur + (HAUTEUR * index) / 2))
 
-#Pause
+
+# Pause
 
 def pause():
     afficherBoutonMenu(MENU_PAUSE)
@@ -230,41 +245,38 @@ def pause():
 #####FIN FONCTIONS######
 
 
-
-
-
-#Changement de l'icône de jeu
+# Changement de l'icône de jeu
 game_icon = pygame.image.load("Images/vaisseau_avec_flamme.png")
 pygame.display.set_icon(game_icon)
 
-#Icone vie
+# Icone vie
 vie_image = pygame.image.load('Images/vaisseau_jaune_avec_flamme.png')
 
-#Initiamisation de pygame
+# Initiamisation de pygame
 pygame.init()
 
-#Son
+# Son
 pygame.mixer.init()
 piou = pygame.mixer.Sound("Son/piou.wav")
 no_bullets = pygame.mixer.Sound("Son/no_bullets.wav")
 print("[LOG] BRUITAGES CHARGE !")
 
-#Missile
+# Missile
 missile = []
 
-#Création de la fenêtre
+# Création de la fenêtre
 fenetre = pygame.display.set_mode((FENETRE_LARGEUR, FENETRE_HAUTEUR), pygame.RESIZABLE)
 pygame.display.set_caption('Space Game')
 
-#Création des entités
+# Création des entités
 vaisseau = nouvelleEntite()
 
-#CREATION PLANETE
+# CREATION PLANETE
 
-#def spawn_planete()
+# def spawn_planete()
 
 
-#CHARGER TOUTES LES IMAGES #
+# CHARGER TOUTES LES IMAGES #
 print("[LOG] CHARGEMENT DES IMAGES")
 
 for nom_image, nom_fichier in (('Planete1', 'planete1.png'),
@@ -283,49 +295,43 @@ for nom_image, nom_fichier in (('Planete1', 'planete1.png'),
                                ('Planete14', 'planete14.png'),
                                ('Planete15', 'planete15.png'),
                                ('Planete16', 'planete16.png'),
-                               ('trou_noir','trou_noir.png'),
-                               ('ufo','ufo.png')):
+                               ('trou_noir', 'trou_noir.png'),
+                               ('ufo', 'ufo.png')):
 
     chemin = 'Images/' + nom_fichier
     image = pygame.image.load(chemin).convert_alpha(fenetre)
     image = pygame.transform.scale(image, (PLANETE_LARGEUR, PLANETE_HAUTEUR))
 
     for nom_image, nom_fichier in (('vaisseau_sans_flamme', 'vaisseau_sans_flamme.png'),
-                               ('vaisseau_avec_flamme', 'vaisseau_avec_flamme.png')):
-
+                                   ('vaisseau_avec_flamme', 'vaisseau_avec_flamme.png')):
         chemin = 'Images/' + nom_fichier
         image = pygame.image.load(chemin).convert_alpha(fenetre)
         image = pygame.transform.scale(image, (VAISSEAU_LARGEUR, VAISSEAU_HAUTEUR))
-        ajouteImage(vaisseau,nom_image,image)
+        ajouteImage(vaisseau, nom_image, image)
 
 print("[LOG] TOUTES LES IMAGES SONT CHARGéES")
 # FIN CHARGEMENT IMAGES #
 
 
+# Postionement du vaisseau
+place(vaisseau, (FENETRE_LARGEUR / 2) - VAISSEAU_LARGEUR / 2, FENETRE_HAUTEUR - VAISSEAU_HAUTEUR)
 
-#Postionement du vaisseau
-place(vaisseau, (FENETRE_LARGEUR/2) -VAISSEAU_LARGEUR/2 , FENETRE_HAUTEUR-VAISSEAU_HAUTEUR)
-
-#Scene et planete
+# Scene et planete
 pose_planete = 0
 scene = [vaisseau]
 
-#Variable de jeu et Temps
+# Variable de jeu et Temps
 fini = False
 enintro = True
 enjeu = False
 temps = pygame.time.Clock()
 
-#Police d'écriture#
-police = pygame.font.SysFont('monospace', FENETRE_HAUTEUR//40, True)
-POLICE_ECRITURE_BOUTON = pygame.font.SysFont('monospace',36)
+# Police d'écriture#
+police = pygame.font.SysFont('monospace', FENETRE_HAUTEUR // 40, True)
+POLICE_ECRITURE_BOUTON = pygame.font.SysFont('monospace', 36)
 
-#Création des étoiles
+# Création des étoiles
 etoiles = cree_etoiles()
-
-
-
-
 
 ######CREATION DU MENU######
 while enintro:
@@ -340,12 +346,12 @@ while enintro:
             etoiles = cree_etoiles()
             place(vaisseau, (FENETRE_LARGEUR / 2) - VAISSEAU_LARGEUR / 2, FENETRE_HAUTEUR - VAISSEAU_HAUTEUR)
 
-        #Quitter avec la croix
+        # Quitter avec la croix
         if event.type == pygame.QUIT:
             pygame.quit()
             quit()
 
-         #Lancer le jeu
+        # Lancer le jeu
         if event.type == pygame.MOUSEBUTTONDOWN:
             if FENETRE_LARGEUR / 2 - BOUTON_LARGEUR // 2 <= mouse[
                 0] <= FENETRE_LARGEUR / 2 + BOUTON_LARGEUR // 2 and FENETRE_HAUTEUR / MENU_LONGUEUR - BOUTON_HAUTEUR + (
@@ -357,8 +363,6 @@ while enintro:
                 COMPTEUR_BOUCLE = 1
                 MUNITIONS = 15
                 VITESSE_JEU = 3
-
-
 
             # Quitter le jeu avec le bouton quitter
             if FENETRE_LARGEUR / 2 - BOUTON_LARGEUR // 2 <= mouse[
@@ -397,20 +401,19 @@ while enintro:
                     enintro = False
                     NOMBRE_VIE = 0
 
- #Mécanique du jeu
-    #Incrémentation du score et de la vitesse dans le menu
+    # Mécanique du jeu
+    # Incrémentation du score et de la vitesse dans le menu
     if COMPTEUR_BOUCLE % 60 == 0 and COMPTEUR_BOUCLE < 3600:
         VITESSE_JEU += 0.10
 
     if COMPTEUR_BOUCLE % 60 == 0 and COMPTEUR_BOUCLE > 3600:
         None
 
-    #Ajout de munition
-    if COMPTEUR_BOUCLE % 6000 == 0 and COMPTEUR_BOUCLE>0:
-
+    # Ajout de munition
+    if COMPTEUR_BOUCLE % 6000 == 0 and COMPTEUR_BOUCLE > 0:
         MUNITIONS += 10
 
-    #Tir auto
+    # Tir auto
     if COMPTEUR_BOUCLE % 150 == 0:
         if MUNITIONS > 0:
             ajouter_missile(missile, (position(vaisseau)[0] + VAISSEAU_LARGEUR / 2, position(vaisseau)[1]),
@@ -418,11 +421,10 @@ while enintro:
                             -vitesse_missile)
             MUNITIONS -= 1
 
-
-    #Contrôle souris
+    # Contrôle souris
     mouse = pygame.mouse.get_pos()
 
-    #Affichage Vaisseau, etoile, vie, score
+    # Affichage Vaisseau, etoile, vie, score
     prendsPose(vaisseau, POSE_VAISSEAU[0])
     fenetre.fill(ESPACE)
     afficher_etoiles(fenetre, VITESSE_JEU, etoiles)
@@ -437,17 +439,14 @@ while enintro:
     afficherBoutonMenu(MENU)
     pygame.display.flip()
 
-    #Temps
+    # Temps
     temps_maintenant = pygame.time.get_ticks()
     temps.tick(60)
     COMPTEUR_BOUCLE += 1
 
+    #####FIN DU MENU#####
 
-#####FIN DU MENU#####
-
-
-
-#####BOUCLE DU JEU#####
+    #####BOUCLE DU JEU#####
 
     while NOMBRE_VIE > 0 and enjeu:
 
@@ -456,53 +455,76 @@ while enintro:
 
         evenement = pygame.event.get()
         for event in evenement:
-            #Changement de l'écran
+            # Changement de l'écran
             if event.type == pygame.VIDEORESIZE:
                 FENETRE_LARGEUR, FENETRE_HAUTEUR = fenetre.get_size()
                 etoiles = cree_etoiles()
                 place(vaisseau, FENETRE_LARGEUR / 2, FENETRE_HAUTEUR - VAISSEAU_HAUTEUR)
 
-            #Quitter avec la croix
+            # Quitter avec la croix
             if event.type == pygame.QUIT:
                 pygame.quit()
                 quit()
-            #Tir
+            # Tir
             if event.type == pygame.KEYDOWN:
                 if event.key == pygame.K_SPACE:
-                    if COMPTEUR_PAUSE %2 !=0:
+                    if COMPTEUR_PAUSE % 2 != 0:
                         None
                     else:
-                        #Pas de munition
+                        # Pas de munition
                         if MUNITIONS == 0:
                             no_bullets.play()
                         else:
-                            #Tir de munitions
+                            # Tir de munitions
                             piou.play()
-                            ajouter_missile(missile, (position(vaisseau)[0]+VAISSEAU_LARGEUR/2 , position(vaisseau)[1]), temps_maintenant,
+                            ajouter_missile(missile,
+                                            (position(vaisseau)[0] + VAISSEAU_LARGEUR / 2, position(vaisseau)[1]),
+                                            temps_maintenant,
                                             -vitesse_missile)
-                            MUNITIONS -=1
+                            MUNITIONS -= 1
 
-                #Touche Pause
+                # Touche Pause
                 if event.key == pygame.K_ESCAPE:
                     TEMPS_AVANT_PAUSE = pygame.time.get_ticks()
                     COMPTEUR_PAUSE += 1
+                if event.key == pygame.K_DOWN:
+                    if BOUTON < 1:
+                        BOUTON += 1
+                    else:
+                        BOUTON = 0
+                if event.key == pygame.K_UP:
+                    if BOUTON > 1:
+                        BOUTON -= 1
+                    else:
+                        BOUTON = 1
+                if event.key == pygame.K_RETURN:
+                    if BOUTON == 0:
+                        COMPTEUR_PAUSE += 1
+                    if BOUTON == 1:
+                        enintro = True
+                        enjeu = False
+                        SCORE = 0
+                        NOMBRE_VIE = 3
+                        COMPTEUR_BOUCLE = 1
+                        MUNITIONS = 15
+                        VITESSE_JEU = 3
 
         if COMPTEUR_PAUSE % 2 != 0:
             pause()
         else:
-            #Déplacement du vaisseau
+            # Déplacement du vaisseau
             keys = pygame.key.get_pressed()
 
-            #DROITE
+            # DROITE
             if keys[pygame.K_RIGHT]:
-                if position(vaisseau)[0] + VAISSEAU_LARGEUR >FENETRE_LARGEUR:
+                if position(vaisseau)[0] + VAISSEAU_LARGEUR > FENETRE_LARGEUR:
                     None
                 else:
                     prendsPose(vaisseau, POSE_VAISSEAU[1])
                     position_vaisseau = position(vaisseau)
                     place(vaisseau, position_vaisseau[0] + 5, position_vaisseau[1])
 
-            #GAUCHE
+            # GAUCHE
             if keys[pygame.K_LEFT]:
                 if position(vaisseau)[0] == 0:
                     None
@@ -511,16 +533,16 @@ while enintro:
                     position_vaisseau = position(vaisseau)
                     place(vaisseau, position_vaisseau[0] - 5, position_vaisseau[1])
 
-            #BAS
+            # BAS
             if keys[pygame.K_DOWN]:
-                if position(vaisseau)[1] > FENETRE_HAUTEUR - VAISSEAU_HAUTEUR :
+                if position(vaisseau)[1] > FENETRE_HAUTEUR - VAISSEAU_HAUTEUR:
                     None
                 else:
                     prendsPose(vaisseau, POSE_VAISSEAU[0])
                     position_vaisseau = position(vaisseau)
                     place(vaisseau, position_vaisseau[0], position_vaisseau[1] + 5)
 
-            #HAUT
+            # HAUT
             if keys[pygame.K_UP]:
                 if position(vaisseau)[1] < 0:
                     None
@@ -531,13 +553,12 @@ while enintro:
 
             fenetre.fill(ESPACE)
 
-
-            #Score, compteur, et missiles
+            # Score, compteur, et missiles
             if COMPTEUR_BOUCLE % 60 == 0 and SCORE <= 1000:
                 SCORE += 1
                 VITESSE_JEU += 0.01
 
-            if COMPTEUR_BOUCLE % 60 == 0 and SCORE > 1000 :
+            if COMPTEUR_BOUCLE % 60 == 0 and SCORE > 1000:
                 SCORE += 1
 
             if COMPTEUR_BOUCLE % 6000 == 0:
@@ -547,7 +568,7 @@ while enintro:
                 enjeu = False
                 enintro = True
 
-            #Affichage
+            # Affichage
             dessiner_missile(missile, fenetre)
             afficher_etoiles(fenetre, VITESSE_JEU, etoiles)
             affiche(scene, fenetre)
@@ -556,7 +577,7 @@ while enintro:
             vie()
             pygame.display.flip()
 
-            #Temps
+            # Temps
             temps.tick(60)
             COMPTEUR_BOUCLE += 1
 
