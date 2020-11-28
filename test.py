@@ -488,7 +488,6 @@ while NOMBRE_VIE > 0 and ENJEU == 1 :
         pygame.display.flip()
 
 
-
         temps.tick(60)
 
 pygame.display.quit()
