@@ -1,10 +1,7 @@
-
-Rajouter difficulté dans le menu
-
-Déplacement commandes dans la boucle principale, tout ce qui est texte_largeur, hauteur doit etre une varibale glabal
-pour y acceder + creer un boucle for pour coordonne juste en focntion des menus.
+[EN DEVELOPPEMENT] :
 
         #TODO Afficher plusieurs planetes en meme temps et quelle reste affichées
+
 1)Déplacer les planètes vers le bas
 2)Collisions avec les planètes
 3)Perdre une vie dès qu'il y a une collision
@@ -23,6 +20,8 @@ pour y acceder + creer un boucle for pour coordonne juste en focntion des menus.
 QUESTIONS A POSER :
 
 1)Afficher planetes + collisions
-2)Est ce que au final clavier + souris valent les meme points et donc utiliser que les fleches
 
 
+[Bug à fixer]:
+
+Dans le menu pause, si on laisse la souris sur le bouton, les deux s'éclairent

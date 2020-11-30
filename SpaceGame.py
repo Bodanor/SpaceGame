@@ -139,13 +139,13 @@ def ajouteImage(entite, nom, image):
 def dessine(entite, ecran):
     ecran.blit(entite['image'], entite['position'])
 
-
 # Fin ENTITE #
 
 # AFFICHAGE
 def affiche(entites, ecran):
     for objet in entites:
         if estVisible(objet):
+
             dessine(objet, ecran)
 
 
@@ -240,12 +240,12 @@ def afficherBoutonMenu(Menu):
 
 
 # Pause
-
 def pause():
     afficherBoutonMenu(MENU_PAUSE)
     pygame.display.flip()
     temps.tick(60)
 
+#Difficulté
 def difficulte (niveau_difficulte):
     if niveau_difficulte == 0:
         MENU = ['Jouer', 'Facile>', 'Quitter']
@@ -305,14 +305,10 @@ pygame.display.set_caption('Space Game')
 # Création des entités
 vaisseau = nouvelleEntite()
 
-# CREATION PLANETE
-
-# def spawn_planete()
-
-
 # CHARGER TOUTES LES IMAGES #
 print("[LOG] CHARGEMENT DES IMAGES")
 
+compteur_chargement_image = 0
 for nom_image, nom_fichier in (('Planete1', 'planete1.png'),
                                ('Planete2', 'planete2.png'),
                                ('Planete3', 'planete3.png'),
@@ -335,6 +331,9 @@ for nom_image, nom_fichier in (('Planete1', 'planete1.png'),
     chemin = 'Images/' + nom_fichier
     image = pygame.image.load(chemin).convert_alpha(fenetre)
     image = pygame.transform.scale(image, (PLANETE_LARGEUR, PLANETE_HAUTEUR))
+    LISTE_PLANETE.append(nouvelleEntite())
+    ajouteImage(LISTE_PLANETE[compteur_chargement_image], nom_image, nom_fichier)
+    compteur_chargement_image +=1
 
     for nom_image, nom_fichier in (('vaisseau_jaune_sans_flamme', 'vaisseau_jaune_sans_flamme.png'),
                                    ('vaisseau_jaune_avec_flamme', 'vaisseau_jaune_avec_flamme.png')):
@@ -361,16 +360,16 @@ enjeu = False
 temps = pygame.time.Clock()
 
 
-
 # Police d'écriture#
 police = pygame.font.SysFont('monospace', FENETRE_HAUTEUR // 40, True)
 POLICE_ECRITURE_BOUTON = pygame.font.SysFont('monospace', 36)
 
 # Création des étoiles
 etoiles = cree_etoiles()
-
+print(vaisseau)
 ######CREATION DU MENU######
 while enintro:
+
     temps_maintenant = pygame.time.get_ticks()
     prendsPose(vaisseau, POSE_VAISSEAU[0])
     place(vaisseau, (FENETRE_LARGEUR / 2) - VAISSEAU_LARGEUR / 2,
@@ -427,38 +426,40 @@ while enintro:
                         MENU, AJOUT_MUNITION, MUNITIONS, VITESSE_JEU, VITESSE_MISSILE,NOMBRE_VIE,DEPLACEMENT_VAISSEAU = difficulte(niveau_difficulte)
                     else:
                         None
-            if event.key == pygame.K_DOWN: #déplacement dans le menu
+            # déplacement dans le menu
+            if event.key == pygame.K_DOWN:
                 if BOUTON < 2:
                     BOUTON += 1
                 else:
                     BOUTON = 0
 
-            if event.key == pygame.K_UP:#déplacement dans le menu
+            # déplacement dans le menu
+            if event.key == pygame.K_UP:
                 if BOUTON < 1:
                     BOUTON = 2
                 else:
                     BOUTON -= 1
 
-            if event.key == pygame.K_RETURN: #lancer/quitter le jeu
+            # lancer/quitter le jeu
+            if event.key == pygame.K_RETURN:
 
+                #Jouer
                 if BOUTON == 0 or BOUTON == 1:
                     enintro = False
                     enjeu = True
                     SCORE = 0
                     COMPTEUR_BOUCLE = 1
 
+                #Quitter le programme
                 if BOUTON == 2:
                     enjeu = False
                     enintro = False
                     NOMBRE_VIE = 0
 
     # Mécanique du jeu
-    # Incrémentation du score et de la vitesse dans le menu
+    # Incrémentation de la vitesse du jeu dans le menu
     if COMPTEUR_BOUCLE % 60 == 0 and COMPTEUR_BOUCLE < 3600:
         VITESSE_JEU += 0.10
-
-    if COMPTEUR_BOUCLE % 60 == 0 and COMPTEUR_BOUCLE > 3600:
-        None
 
 
     # Tir auto
@@ -507,7 +508,7 @@ while enintro:
             # Changement de l'écran
             if event.type == pygame.VIDEORESIZE:
                 FENETRE_LARGEUR, FENETRE_HAUTEUR = fenetre.get_size()
-                print(FENETRE_LARGEUR, FENETRE_HAUTEUR)
+
                 etoiles = cree_etoiles()
                 place(vaisseau, FENETRE_LARGEUR / 2, FENETRE_HAUTEUR - VAISSEAU_HAUTEUR)
 
@@ -534,28 +535,34 @@ while enintro:
                                             -VITESSE_MISSILE)
                             MUNITIONS -= 1
 
-                # Touche dans le menu Pause
-                if event.key == pygame.K_ESCAPE: #Quitter le menu
+            # Touche dans le menu Pause
+                # Quitter le menu pause avec echap
+                if event.key == pygame.K_ESCAPE:
                     TEMPS_AVANT_PAUSE = pygame.time.get_ticks()
                     COMPTEUR_PAUSE += 1
-                if event.key == pygame.K_DOWN: #Bas
+                # Bas
+                if event.key == pygame.K_DOWN:
                     if BOUTON < 1:
                         BOUTON += 1
                     else:
                         BOUTON = 0
-                if event.key == pygame.K_UP:#Haut
+                # Haut
+                if event.key == pygame.K_UP:
                     if BOUTON > 1:
                         BOUTON -= 1
                     else:
                         BOUTON = 1
-                if event.key == pygame.K_RETURN:#Enter
+                # Enter
+                if event.key == pygame.K_RETURN:
                     if BOUTON == 0:
                         COMPTEUR_PAUSE += 1
-                    if BOUTON == 1: #Revenir au menu principal
+
+                    # Revenir au menu principal
+                    if BOUTON == 1:
                         COMPTEUR_PAUSE+=1
                         enintro = True
                         enjeu = False
-                        #Reprise des paramètres de la difficulté choisie
+                        #Reprise des paramètres de la difficulté choisie dans le menu
                         MENU, AJOUT_MUNITION, MUNITIONS, VITESSE_JEU, VITESSE_MISSILE,NOMBRE_VIE,DEPLACEMENT_VAISSEAU = difficulte(niveau_difficulte)
 
         #Pause
@@ -563,7 +570,7 @@ while enintro:
             pause()
             pygame.display.flip()
         else:
-            # Déplacement du vaisseau
+            #Déplacement du vaisseau
             keys = pygame.key.get_pressed()
 
             # DROITE
@@ -604,9 +611,10 @@ while enintro:
                     position_vaisseau = position(vaisseau)
                     place(vaisseau, position_vaisseau[0], position_vaisseau[1] - DEPLACEMENT_VAISSEAU)
 
+            #remplissage de l'écran en NOIR
             fenetre.fill(ESPACE)
 
-            # Score, compteur, et missiles
+            # incrémentation du Score, compteur, et missiles
             if COMPTEUR_BOUCLE % 60 == 0 and SCORE <= 1000:
                 SCORE += 1
                 VITESSE_JEU += 0.01
@@ -617,6 +625,7 @@ while enintro:
             if COMPTEUR_BOUCLE % 6000 == 0:
                 MUNITIONS += AJOUT_MUNITION
 
+            #Arrêter le jeu si plus de vie
             if NOMBRE_VIE == 0:
                 enjeu = False
                 enintro = True
