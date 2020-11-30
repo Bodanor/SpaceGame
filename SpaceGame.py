@@ -21,6 +21,7 @@ FENETRE_HAUTEUR = 720
 # Dimension Vaisseau
 VAISSEAU_LARGEUR = 70
 VAISSEAU_HAUTEUR = 60
+DEPLACEMENT_VAISSEAU = 7
 
 # Vie
 VIE_LARGEUR = 30
@@ -41,8 +42,9 @@ POSE_VAISSEAU = ('vaisseau_jaune_sans_flamme', 'vaisseau_jaune_avec_flamme')
 VITESSE_JEU = 3
 
 # Info tir
-MUNITIONS = 15
-vitesse_missile = 0.6
+MUNITIONS = 20
+VITESSE_MISSILE = 1
+AJOUT_MUNITION = 20
 
 # Score et compteur
 SCORE = 0
@@ -52,7 +54,7 @@ COMPTEUR_PAUSE = 0
 TEMPS_AVANT_PAUSE = 0
 
 # CONSTANTE POUR LE MENU
-MENU = ['Jouer', 'Difficulté', 'Quitter']
+MENU = ['Jouer', 'Facile>', 'Quitter']
 MENU_PAUSE = ['REPRENDRE', 'QUITTER']
 CHOIX_MENU = 1
 MENU_LONGUEUR = len(MENU)
@@ -64,12 +66,13 @@ BOUTON_HAUTEUR = 41
 BOUTON = 0
 
 # DEFINITION PLANETE
-
 LISTE_PLANETE = []
 
 
 ########FIN CONSTANTE#######
 
+#Difficulté
+niveau_difficulté = 0
 
 #######FONCTIONS########
 
@@ -183,11 +186,16 @@ def mru_1d(depart, temps_depart, vitesse, temps_maintenant):
 # TODO A MODIFIER LES BALLES QUI DISPARESSENT
 
 def dessiner_missile(missile, fenetre):
+
+    #TODO Pour freeze le temps, il faut utiliser la variable temps_maintenant qui sera freeze et quand on rappuie sur echap
+    # on fait le vrai temps actuel (-) le temps passer dans le menu echap et normalement ca devrait fonctionner
+
     temps_maintenant = pygame.time.get_ticks()
+
     for missile in missile:
         missile_vitesse = missile['vitesse_verticale']
         if COMPTEUR_PAUSE % 2 != 0:
-            temps_maintenant = TEMPS_AVANT_PAUSE
+            temps_maintenant = temps_maintenant - TEMPS_AVANT_PAUSE
             missile_vitesse = 0
 
         position = (missile['position_depart'][0],
@@ -240,6 +248,35 @@ def pause():
     afficherBoutonMenu(MENU_PAUSE)
     pygame.display.flip()
     temps.tick(60)
+
+def difficulté (niveau_difficulté):
+    if niveau_difficulté == 0:
+        MENU = ['Jouer', 'Facile>', 'Quitter']
+        AJOUT_MUNITION = 20
+        MUNITIONS = 20
+        VITESSE_JEU = 3
+        VITESSE_MISSILE = 1
+        NOMBRE_VIE = 3
+        DEPLACEMENT_VAISSEAU = 7
+
+    elif niveau_difficulté == 1:
+        MENU = ['Jouer', '<Moyen>', 'Quitter']
+        AJOUT_MUNITION = 15
+        MUNITIONS = 15
+        VITESSE_JEU = 3.5
+        VITESSE_MISSILE = 0.8
+        NOMBRE_VIE = 2
+        DEPLACEMENT_VAISSEAU = 6
+    elif niveau_difficulté == 2:
+        MENU = ['Jouer', '<Difficile', 'Quitter']
+        AJOUT_MUNITION = 10
+        MUNITIONS = 10
+        VITESSE_JEU = 4
+        VITESSE_MISSILE = 0.6
+        NOMBRE_VIE = 1
+        DEPLACEMENT_VAISSEAU = 5
+
+    return MENU,AJOUT_MUNITION, MUNITIONS,VITESSE_JEU,VITESSE_MISSILE,NOMBRE_VIE,DEPLACEMENT_VAISSEAU
 
 
 #####FIN FONCTIONS######
@@ -326,6 +363,8 @@ enintro = True
 enjeu = False
 temps = pygame.time.Clock()
 
+
+
 # Police d'écriture#
 police = pygame.font.SysFont('monospace', FENETRE_HAUTEUR // 40, True)
 POLICE_ECRITURE_BOUTON = pygame.font.SysFont('monospace', 36)
@@ -359,10 +398,9 @@ while enintro:
                 enintro = False
                 enjeu = True
                 SCORE = 0
-                NOMBRE_VIE = 3
                 COMPTEUR_BOUCLE = 1
-                MUNITIONS = 15
-                VITESSE_JEU = 3
+
+
 
             # Quitter le jeu avec le bouton quitter
             if FENETRE_LARGEUR / 2 - BOUTON_LARGEUR // 2 <= mouse[
@@ -374,28 +412,42 @@ while enintro:
 
         # Controle clavier
         if event.type == pygame.KEYDOWN:
-            if event.key == pygame.K_DOWN:
+            # incrémentation de la difficulté
+            if event.key == pygame.K_RIGHT:
+                if BOUTON == 1:
+                    if niveau_difficulté < 2:
+                        niveau_difficulté += 1
+                        MENU, AJOUT_MUNITION, MUNITIONS, VITESSE_JEU, VITESSE_MISSILE,NOMBRE_VIE,DEPLACEMENT_VAISSEAU = difficulté(niveau_difficulté)
+                    else:
+                        None
+            # Décrémentation de la difficulté
+            if event.key == pygame.K_LEFT:
+                if BOUTON == 1:
+                    if niveau_difficulté > 0:
+                        niveau_difficulté -= 1
+                        MENU, AJOUT_MUNITION, MUNITIONS, VITESSE_JEU, VITESSE_MISSILE,NOMBRE_VIE,DEPLACEMENT_VAISSEAU = difficulté(niveau_difficulté)
+                    else:
+                        None
+            if event.key == pygame.K_DOWN: #déplacement dans le menu
                 if BOUTON < 2:
                     BOUTON += 1
                 else:
                     BOUTON = 0
 
-            if event.key == pygame.K_UP:
+            if event.key == pygame.K_UP:#déplacement dans le menu
                 if BOUTON < 1:
                     BOUTON = 2
                 else:
                     BOUTON -= 1
-            if event.key == pygame.K_RETURN:
-                if BOUTON == 0:
+
+            if event.key == pygame.K_RETURN: #lancer/quitter le jeu
+
+                if BOUTON == 0 or BOUTON == 1:
                     enintro = False
                     enjeu = True
                     SCORE = 0
-                    NOMBRE_VIE = 3
                     COMPTEUR_BOUCLE = 1
-                    MUNITIONS = 15
-                    VITESSE_JEU = 3
-                if BOUTON == 1:
-                    None
+
                 if BOUTON == 2:
                     enjeu = False
                     enintro = False
@@ -409,17 +461,14 @@ while enintro:
     if COMPTEUR_BOUCLE % 60 == 0 and COMPTEUR_BOUCLE > 3600:
         None
 
-    # Ajout de munition
-    if MUNITIONS == 1 and COMPTEUR_BOUCLE > 0:
-        MUNITIONS += 15
 
     # Tir auto
     if COMPTEUR_BOUCLE % 150 == 0:
         if MUNITIONS > 0:
             ajouter_missile(missile, (position(vaisseau)[0] + VAISSEAU_LARGEUR / 2, position(vaisseau)[1]),
                             temps_maintenant,
-                            -vitesse_missile)
-            MUNITIONS -= 1
+                            -VITESSE_MISSILE)
+
 
     # Contrôle souris
     mouse = pygame.mouse.get_pos()
@@ -469,6 +518,7 @@ while enintro:
                 quit()
             # Tir
             if event.type == pygame.KEYDOWN:
+                #Vérification qu'on est pas en pause
                 if event.key == pygame.K_SPACE:
                     if COMPTEUR_PAUSE % 2 != 0:
                         None
@@ -482,35 +532,33 @@ while enintro:
                             ajouter_missile(missile,
                                             (position(vaisseau)[0] + VAISSEAU_LARGEUR / 2, position(vaisseau)[1]),
                                             temps_maintenant,
-                                            -vitesse_missile)
+                                            -VITESSE_MISSILE)
                             MUNITIONS -= 1
 
-                # Touche Pause
-                if event.key == pygame.K_ESCAPE:
+                # Touche dans le menu Pause
+                if event.key == pygame.K_ESCAPE: #Quitter le menu
                     TEMPS_AVANT_PAUSE = pygame.time.get_ticks()
                     COMPTEUR_PAUSE += 1
-                if event.key == pygame.K_DOWN:
+                if event.key == pygame.K_DOWN: #Bas
                     if BOUTON < 1:
                         BOUTON += 1
                     else:
                         BOUTON = 0
-                if event.key == pygame.K_UP:
+                if event.key == pygame.K_UP:#Haut
                     if BOUTON > 1:
                         BOUTON -= 1
                     else:
                         BOUTON = 1
-                if event.key == pygame.K_RETURN:
+                if event.key == pygame.K_RETURN:#Enter
                     if BOUTON == 0:
                         COMPTEUR_PAUSE += 1
-                    if BOUTON == 1:
+                    if BOUTON == 1: #Revenir au menu principal
                         enintro = True
                         enjeu = False
-                        SCORE = 0
-                        NOMBRE_VIE = 3
-                        COMPTEUR_BOUCLE = 1
-                        MUNITIONS = 15
-                        VITESSE_JEU = 3
+                        #Reprise des paramètres de la difficulté choisie
+                        MENU, AJOUT_MUNITION, MUNITIONS, VITESSE_JEU, VITESSE_MISSILE,NOMBRE_VIE,DEPLACEMENT_VAISSEAU = difficulté(niveau_difficulté)
 
+        #Pause
         if COMPTEUR_PAUSE % 2 != 0:
             pause()
             pygame.display.flip()
@@ -525,7 +573,8 @@ while enintro:
                 else:
                     prendsPose(vaisseau, POSE_VAISSEAU[1])
                     position_vaisseau = position(vaisseau)
-                    place(vaisseau, position_vaisseau[0] + 5, position_vaisseau[1])
+                    place(vaisseau, position_vaisseau[0] + DEPLACEMENT_VAISSEAU, position_vaisseau[1])
+
 
             # GAUCHE
             if keys[pygame.K_LEFT]:
@@ -535,7 +584,7 @@ while enintro:
                 else:
                     prendsPose(vaisseau, POSE_VAISSEAU[1])
                     position_vaisseau = position(vaisseau)
-                    place(vaisseau, position_vaisseau[0] - 5, position_vaisseau[1])
+                    place(vaisseau, position_vaisseau[0] - DEPLACEMENT_VAISSEAU, position_vaisseau[1])
 
             # BAS
             if keys[pygame.K_DOWN]:
@@ -544,7 +593,7 @@ while enintro:
                 else:
                     prendsPose(vaisseau, POSE_VAISSEAU[0])
                     position_vaisseau = position(vaisseau)
-                    place(vaisseau, position_vaisseau[0], position_vaisseau[1] + 5)
+                    place(vaisseau, position_vaisseau[0], position_vaisseau[1] + DEPLACEMENT_VAISSEAU)
 
             # HAUT
             if keys[pygame.K_UP]:
@@ -553,7 +602,7 @@ while enintro:
                 else:
                     prendsPose(vaisseau, POSE_VAISSEAU[1])
                     position_vaisseau = position(vaisseau)
-                    place(vaisseau, position_vaisseau[0], position_vaisseau[1] - 5)
+                    place(vaisseau, position_vaisseau[0], position_vaisseau[1] - DEPLACEMENT_VAISSEAU)
 
             fenetre.fill(ESPACE)
 
@@ -566,7 +615,7 @@ while enintro:
                 SCORE += 1
 
             if COMPTEUR_BOUCLE % 6000 == 0:
-                MUNITIONS += 10
+                MUNITIONS += AJOUT_MUNITION
 
             if NOMBRE_VIE == 0:
                 enjeu = False
