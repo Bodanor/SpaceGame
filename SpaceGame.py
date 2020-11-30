@@ -72,7 +72,7 @@ LISTE_PLANETE = []
 ########FIN CONSTANTE#######
 
 #Difficulté
-niveau_difficulté = 0
+niveau_difficulte = 0
 
 #######FONCTIONS########
 
@@ -187,9 +187,6 @@ def mru_1d(depart, temps_depart, vitesse, temps_maintenant):
 
 def dessiner_missile(missile, fenetre):
 
-    #TODO Pour freeze le temps, il faut utiliser la variable temps_maintenant qui sera freeze et quand on rappuie sur echap
-    # on fait le vrai temps actuel (-) le temps passer dans le menu echap et normalement ca devrait fonctionner
-
     temps_maintenant = pygame.time.get_ticks()
 
     for missile in missile:
@@ -249,8 +246,8 @@ def pause():
     pygame.display.flip()
     temps.tick(60)
 
-def difficulté (niveau_difficulté):
-    if niveau_difficulté == 0:
+def difficulte (niveau_difficulte):
+    if niveau_difficulte == 0:
         MENU = ['Jouer', 'Facile>', 'Quitter']
         AJOUT_MUNITION = 20
         MUNITIONS = 20
@@ -259,7 +256,7 @@ def difficulté (niveau_difficulté):
         NOMBRE_VIE = 3
         DEPLACEMENT_VAISSEAU = 7
 
-    elif niveau_difficulté == 1:
+    elif niveau_difficulte == 1:
         MENU = ['Jouer', '<Moyen>', 'Quitter']
         AJOUT_MUNITION = 15
         MUNITIONS = 15
@@ -267,7 +264,7 @@ def difficulté (niveau_difficulté):
         VITESSE_MISSILE = 0.8
         NOMBRE_VIE = 2
         DEPLACEMENT_VAISSEAU = 6
-    elif niveau_difficulté == 2:
+    elif niveau_difficulte == 2:
         MENU = ['Jouer', '<Difficile', 'Quitter']
         AJOUT_MUNITION = 10
         MUNITIONS = 10
@@ -415,17 +412,17 @@ while enintro:
             # incrémentation de la difficulté
             if event.key == pygame.K_RIGHT:
                 if BOUTON == 1:
-                    if niveau_difficulté < 2:
-                        niveau_difficulté += 1
-                        MENU, AJOUT_MUNITION, MUNITIONS, VITESSE_JEU, VITESSE_MISSILE,NOMBRE_VIE,DEPLACEMENT_VAISSEAU = difficulté(niveau_difficulté)
+                    if niveau_difficulte < 2:
+                        niveau_difficulte += 1
+                        MENU, AJOUT_MUNITION, MUNITIONS, VITESSE_JEU, VITESSE_MISSILE,NOMBRE_VIE,DEPLACEMENT_VAISSEAU = difficulte(niveau_difficulte)
                     else:
                         None
             # Décrémentation de la difficulté
             if event.key == pygame.K_LEFT:
                 if BOUTON == 1:
-                    if niveau_difficulté > 0:
-                        niveau_difficulté -= 1
-                        MENU, AJOUT_MUNITION, MUNITIONS, VITESSE_JEU, VITESSE_MISSILE,NOMBRE_VIE,DEPLACEMENT_VAISSEAU = difficulté(niveau_difficulté)
+                    if niveau_difficulte > 0:
+                        niveau_difficulte -= 1
+                        MENU, AJOUT_MUNITION, MUNITIONS, VITESSE_JEU, VITESSE_MISSILE,NOMBRE_VIE,DEPLACEMENT_VAISSEAU = difficulte(niveau_difficulte)
                     else:
                         None
             if event.key == pygame.K_DOWN: #déplacement dans le menu
@@ -556,7 +553,7 @@ while enintro:
                         enintro = True
                         enjeu = False
                         #Reprise des paramètres de la difficulté choisie
-                        MENU, AJOUT_MUNITION, MUNITIONS, VITESSE_JEU, VITESSE_MISSILE,NOMBRE_VIE,DEPLACEMENT_VAISSEAU = difficulté(niveau_difficulté)
+                        MENU, AJOUT_MUNITION, MUNITIONS, VITESSE_JEU, VITESSE_MISSILE,NOMBRE_VIE,DEPLACEMENT_VAISSEAU = difficulte(niveau_difficulte)
 
         #Pause
         if COMPTEUR_PAUSE % 2 != 0:
