@@ -35,7 +35,7 @@ PLANETE_HAUTEUR = 180
 POSE_PLANETE = (
 'Planete1', 'Planete2', 'Planete3', 'Planete4', 'Planete5', 'Planete6', 'Planete7', 'Planete8', 'Planete9', 'Planete10',
 'Planete11', 'Planete12', 'Planete13', 'Planete14', 'Planete15', 'Planete16')
-POSE_VAISSEAU = ('vaisseau_sans_flamme', 'vaisseau_avec_flamme')
+POSE_VAISSEAU = ('vaisseau_jaune_sans_flamme', 'vaisseau_jaune_avec_flamme')
 
 # Vitesse du Jeu
 VITESSE_JEU = 3
@@ -246,11 +246,11 @@ def pause():
 
 
 # Changement de l'icône de jeu
-game_icon = pygame.image.load("Images/vaisseau_avec_flamme.png")
+game_icon = pygame.image.load("Images/vaisseau_jaune_avec_flamme.png")
 pygame.display.set_icon(game_icon)
 
 # Icone vie
-vie_image = pygame.image.load('Images/vaisseau_jaune_avec_flamme.png')
+vie_image = pygame.image.load('Images/vaisseau_rouge_avec_flamme.png')
 
 # Initiamisation de pygame
 pygame.init()
@@ -302,8 +302,8 @@ for nom_image, nom_fichier in (('Planete1', 'planete1.png'),
     image = pygame.image.load(chemin).convert_alpha(fenetre)
     image = pygame.transform.scale(image, (PLANETE_LARGEUR, PLANETE_HAUTEUR))
 
-    for nom_image, nom_fichier in (('vaisseau_sans_flamme', 'vaisseau_sans_flamme.png'),
-                                   ('vaisseau_avec_flamme', 'vaisseau_avec_flamme.png')):
+    for nom_image, nom_fichier in (('vaisseau_jaune_sans_flamme', 'vaisseau_jaune_sans_flamme.png'),
+                                   ('vaisseau_jaune_avec_flamme', 'vaisseau_jaune_avec_flamme.png')):
         chemin = 'Images/' + nom_fichier
         image = pygame.image.load(chemin).convert_alpha(fenetre)
         image = pygame.transform.scale(image, (VAISSEAU_LARGEUR, VAISSEAU_HAUTEUR))
@@ -446,6 +446,7 @@ while enintro:
 
     #####FIN DU MENU#####
 
+
     #####BOUCLE DU JEU#####
 
     while NOMBRE_VIE > 0 and enjeu:
@@ -512,6 +513,7 @@ while enintro:
 
         if COMPTEUR_PAUSE % 2 != 0:
             pause()
+            pygame.display.flip()
         else:
             # Déplacement du vaisseau
             keys = pygame.key.get_pressed()
