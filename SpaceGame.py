@@ -373,6 +373,8 @@ etoiles = cree_etoiles()
 while enintro:
     temps_maintenant = pygame.time.get_ticks()
     prendsPose(vaisseau, POSE_VAISSEAU[0])
+    place(vaisseau, (FENETRE_LARGEUR / 2) - VAISSEAU_LARGEUR / 2,
+          FENETRE_HAUTEUR - VAISSEAU_HAUTEUR)
     evenement = pygame.event.get()
     for event in evenement:
 
@@ -550,6 +552,7 @@ while enintro:
                     if BOUTON == 0:
                         COMPTEUR_PAUSE += 1
                     if BOUTON == 1: #Revenir au menu principal
+                        COMPTEUR_PAUSE+=1
                         enintro = True
                         enjeu = False
                         #Reprise des paramètres de la difficulté choisie
