@@ -10,7 +10,7 @@
 6)L'alien se déplace
 7) Décrémenter vie a chaque collision
 8) Ajouter touche pour naviguer dans le menu (fonction afficher_menu)
-
+9) diviser l'ecran en 4 parties avec une boucle for et ajouter des valeurs randoms en fonction des parties divisées
 
 
 

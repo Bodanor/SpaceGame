@@ -294,6 +294,24 @@ def difficulte (niveau_difficulte):
 
     return MENU,AJOUT_MUNITION, MUNITIONS,VITESSE_JEU,VITESSE_MISSILE,NOMBRE_VIE,DEPLACEMENT_VAISSEAU
 
+def spawn_planete():
+    for planete in LISTE_PLANETE:
+        scene.append(planete)
+
+def deplacement_planete():
+
+    couloirs = []
+
+    for x in range(0,5):
+        couloirs.append(((FENETRE_LARGEUR/5) * x, (FENETRE_LARGEUR/5)*(x+1)))
+
+    for index,planete in enumerate(LISTE_PLANETE):
+        for couloir in couloirs:
+            place(LISTE_PLANETE[index], couloir[0], couloir[1])
+
+
+
+
 
 #####FIN FONCTIONS######
 
@@ -327,7 +345,6 @@ vaisseau = nouvelleEntite()
 # CHARGER TOUTES LES IMAGES #
 print("[LOG] CHARGEMENT DES IMAGES")
 
-compteur_chargement_image = 0
 for nom_image, nom_fichier in (('Planete1', 'planete1.png'),
                                ('Planete2', 'planete2.png'),
                                ('Planete3', 'planete3.png'),
@@ -350,9 +367,11 @@ for nom_image, nom_fichier in (('Planete1', 'planete1.png'),
     chemin = 'Images/' + nom_fichier
     image = pygame.image.load(chemin).convert_alpha(fenetre)
     image = pygame.transform.scale(image, (PLANETE_LARGEUR, PLANETE_HAUTEUR))
-    LISTE_PLANETE.append(nouvelleEntite())
-    ajouteImage(LISTE_PLANETE[compteur_chargement_image], nom_image, nom_fichier)
-    compteur_chargement_image +=1
+    planete = nouvelleEntite()
+
+    ajouteImage(planete, nom_image, image)
+    prendsPose(planete, nom_image)
+    LISTE_PLANETE.append(planete)
 
     for nom_image, nom_fichier in (('vaisseau_jaune_sans_flamme', 'vaisseau_jaune_sans_flamme.png'),
                                    ('vaisseau_jaune_avec_flamme', 'vaisseau_jaune_avec_flamme.png')):
@@ -367,10 +386,11 @@ print("[LOG] TOUTES LES IMAGES SONT CHARGéES")
 
 # Postionement du vaisseau
 place(vaisseau, (FENETRE_LARGEUR / 2) - VAISSEAU_LARGEUR / 2, FENETRE_HAUTEUR - VAISSEAU_HAUTEUR)
-
 # Scene et planete
-pose_planete = 0
-scene = [vaisseau]
+
+scene = []
+scene.append(vaisseau)
+spawn_planete()
 
 # Variable de jeu et Temps
 fini = False
@@ -386,7 +406,7 @@ POLICE_ECRITURE_BOUTON = pygame.font.SysFont('monospace', 36)
 # Création des étoiles
 etoiles = cree_etoiles()
 
-
+position_planete = [0,0]
 
 ######CREATION DU MENU######
 while enintro:
@@ -501,26 +521,27 @@ while enintro:
 
     dessiner_missile(missile, fenetre)
 
+    deplacement_planete()
+    spawn_planete()
     affiche(scene, fenetre)
 
     score()
     vie()
     afficher_munition(MUNITIONS)
     afficherBoutonMenu(MENU)
+
     pygame.display.flip()
 
     # Temps
     temps_maintenant = pygame.time.get_ticks()
     temps.tick(60)
-    COMPTEUR_BOUCLE += 1
+    COMPTEUR_BOUCLE +=1
 
     #####FIN DU MENU#####
 
 
     #####BOUCLE DU JEU#####
-
     while NOMBRE_VIE > 0 and enjeu:
-
         temps_maintenant = pygame.time.get_ticks()
         prendsPose(vaisseau, POSE_VAISSEAU[0])
 
