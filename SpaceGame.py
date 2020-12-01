@@ -548,12 +548,13 @@ while enintro:
                         BOUTON = 0
                 # Haut
                 if event.key == pygame.K_UP:
-                    if BOUTON > 1:
-                        BOUTON -= 1
-                    else:
+                    if BOUTON == 1:
+                        BOUTON = 0
+                    elif BOUTON == 0:
                         BOUTON = 1
                 # Enter
-                if event.key == pygame.K_RETURN:
+
+                if event.key == pygame.K_RETURN: #continuer le jeu
                     if BOUTON == 0:
                         COMPTEUR_PAUSE += 1
 
