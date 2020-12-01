@@ -241,7 +241,26 @@ def afficherBoutonMenu(Menu):
 
 # Pause
 def pause():
-    afficherBoutonMenu(MENU_PAUSE)
+    for index, text in enumerate(MENU_PAUSE):
+
+        text_afficher = POLICE_ECRITURE_BOUTON.render(text, True, BLANC)
+        texte_largeur, texte_hauteur = text_afficher.get_size()
+
+        if BOUTON == index:
+            pygame.draw.rect(fenetre, BOUTON_COULEUR_CLAIR,
+                             [(FENETRE_LARGEUR / 2) - BOUTON_LARGEUR // 2,
+                              ((FENETRE_HAUTEUR / MENU_LONGUEUR) - BOUTON_HAUTEUR) + (HAUTEUR / 2 * index),
+                              BOUTON_LARGEUR, 40])
+
+        else:
+            pygame.draw.rect(fenetre, BOUTON_COULEUR_FONCE,
+                             [(FENETRE_LARGEUR / 2) - BOUTON_LARGEUR // 2,
+                              ((FENETRE_HAUTEUR / MENU_LONGUEUR) - BOUTON_HAUTEUR) + (HAUTEUR / 2 * index),
+                              BOUTON_LARGEUR, 40])
+
+        fenetre.blit(text_afficher, ((FENETRE_LARGEUR / 2) - texte_largeur // 2,
+                                     (FENETRE_HAUTEUR / MENU_LONGUEUR) - texte_hauteur + (HAUTEUR * index) / 2))
+
     pygame.display.flip()
     temps.tick(60)
 
@@ -366,7 +385,9 @@ POLICE_ECRITURE_BOUTON = pygame.font.SysFont('monospace', 36)
 
 # Création des étoiles
 etoiles = cree_etoiles()
-print(vaisseau)
+
+
+
 ######CREATION DU MENU######
 while enintro:
 

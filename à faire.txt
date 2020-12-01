@@ -22,6 +22,4 @@ QUESTIONS A POSER :
 1)Afficher planetes + collisions
 
 
-[Bug à fixer]:
 
-Dans le menu pause, si on laisse la souris sur le bouton, les deux s'éclairent
