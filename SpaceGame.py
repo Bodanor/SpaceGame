@@ -411,6 +411,8 @@ position_planete = [0,0]
 ######CREATION DU MENU######
 while enintro:
 
+    fenetre.fill(ESPACE)
+
     temps_maintenant = pygame.time.get_ticks()
     prendsPose(vaisseau, POSE_VAISSEAU[0])
     place(vaisseau, (FENETRE_LARGEUR / 2) - VAISSEAU_LARGEUR / 2,
@@ -521,10 +523,9 @@ while enintro:
 
     dessiner_missile(missile, fenetre)
 
-    deplacement_planete()
-    spawn_planete()
-    affiche(scene, fenetre)
 
+    affiche(scene, fenetre)
+    fenetre.fill(ESPACE)
     score()
     vie()
     afficher_munition(MUNITIONS)
@@ -536,6 +537,7 @@ while enintro:
     temps_maintenant = pygame.time.get_ticks()
     temps.tick(60)
     COMPTEUR_BOUCLE +=1
+    fenetre.fill(ESPACE)
 
     #####FIN DU MENU#####
 
@@ -603,6 +605,7 @@ while enintro:
                     # Revenir au menu principal
                     if BOUTON == 1:
                         COMPTEUR_PAUSE+=1
+                        SCORE = 0
                         enintro = True
                         enjeu = False
                         #Reprise des paramètres de la difficulté choisie dans le menu
@@ -679,6 +682,8 @@ while enintro:
             affiche(scene, fenetre)
             score()
             afficher_munition(MUNITIONS)
+            spawn_planete()
+            fenetre.fill(ESPACE)
             vie()
             pygame.display.flip()
 
