@@ -64,6 +64,7 @@ HAUTEUR_PAUSE = FENETRE_HAUTEUR / MENU_PAUSE_LONGUEUR
 BOUTON_LARGEUR = 220
 BOUTON_HAUTEUR = 41
 BOUTON = 0
+COULOIRS = []
 
 # DEFINITION PLANETE
 LISTE_PLANETE = []
@@ -264,6 +265,13 @@ def pause():
     pygame.display.flip()
     temps.tick(60)
 
+def creation_couloirs_planete():
+
+    for x in range(0,5):
+        COULOIRS.append(((FENETRE_LARGEUR/5) * x, (FENETRE_LARGEUR/5)*(x+1)))
+
+
+
 #Difficulté
 def difficulte (niveau_difficulte):
     if niveau_difficulte == 0:
@@ -293,21 +301,6 @@ def difficulte (niveau_difficulte):
         DEPLACEMENT_VAISSEAU = 5
 
     return MENU,AJOUT_MUNITION, MUNITIONS,VITESSE_JEU,VITESSE_MISSILE,NOMBRE_VIE,DEPLACEMENT_VAISSEAU
-
-def spawn_planete():
-    for planete in LISTE_PLANETE:
-        scene.append(planete)
-
-def deplacement_planete():
-
-    couloirs = []
-
-    for x in range(0,5):
-        couloirs.append(((FENETRE_LARGEUR/5) * x, (FENETRE_LARGEUR/5)*(x+1)))
-
-    for index,planete in enumerate(LISTE_PLANETE):
-        for couloir in couloirs:
-            place(LISTE_PLANETE[index], couloir[0], couloir[1])
 
 
 
@@ -373,6 +366,7 @@ for nom_image, nom_fichier in (('Planete1', 'planete1.png'),
     prendsPose(planete, nom_image)
     LISTE_PLANETE.append(planete)
 
+
     for nom_image, nom_fichier in (('vaisseau_jaune_sans_flamme', 'vaisseau_jaune_sans_flamme.png'),
                                    ('vaisseau_jaune_avec_flamme', 'vaisseau_jaune_avec_flamme.png')):
         chemin = 'Images/' + nom_fichier
@@ -390,7 +384,6 @@ place(vaisseau, (FENETRE_LARGEUR / 2) - VAISSEAU_LARGEUR / 2, FENETRE_HAUTEUR - 
 
 scene = []
 scene.append(vaisseau)
-spawn_planete()
 
 # Variable de jeu et Temps
 fini = False
@@ -408,10 +401,9 @@ etoiles = cree_etoiles()
 
 position_planete = [0,0]
 
+creation_couloirs_planete()
 ######CREATION DU MENU######
 while enintro:
-
-    fenetre.fill(ESPACE)
 
     temps_maintenant = pygame.time.get_ticks()
     prendsPose(vaisseau, POSE_VAISSEAU[0])
@@ -503,6 +495,13 @@ while enintro:
     # Incrémentation de la vitesse du jeu dans le menu
     if COMPTEUR_BOUCLE % 60 == 0 and COMPTEUR_BOUCLE < 3600:
         VITESSE_JEU += 0.10
+        planete_random = random.randint(0,15)
+        couloir_random = random.randint(0,4)
+
+        place(LISTE_PLANETE[planete_random], COULOIRS[couloir_random][0],0)
+        scene.append(LISTE_PLANETE[planete_random])
+        print(scene)
+
 
 
     # Tir auto
@@ -525,7 +524,7 @@ while enintro:
 
 
     affiche(scene, fenetre)
-    fenetre.fill(ESPACE)
+
     score()
     vie()
     afficher_munition(MUNITIONS)
@@ -537,7 +536,7 @@ while enintro:
     temps_maintenant = pygame.time.get_ticks()
     temps.tick(60)
     COMPTEUR_BOUCLE +=1
-    fenetre.fill(ESPACE)
+
 
     #####FIN DU MENU#####
 
@@ -682,8 +681,8 @@ while enintro:
             affiche(scene, fenetre)
             score()
             afficher_munition(MUNITIONS)
-            spawn_planete()
-            fenetre.fill(ESPACE)
+
+
             vie()
             pygame.display.flip()
 
