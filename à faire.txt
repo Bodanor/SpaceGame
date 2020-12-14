@@ -1,25 +1,15 @@
 [EN DEVELOPPEMENT] :
 
-        #TODO Afficher plusieurs planetes en meme temps et quelle reste affichées
 
-1)Déplacer les planètes vers le bas
-2)Collisions avec les planètes
+
+
+2)Collisions avec les planètes à affiner
 3)Perdre une vie dès qu'il y a une collision
 4)Trou noir qui arrète le jeu instant
 5)Tirer sur des aliens pour gagner des points
 6)L'alien se déplace
 7) Décrémenter vie a chaque collision
 8) Ajouter touche pour naviguer dans le menu (fonction afficher_menu)
-9) diviser l'ecran en 4 parties avec une boucle for et ajouter des valeurs randoms en fonction des parties divisées
-
-
 
 
 (L'alien tire aussi)
-
-QUESTIONS A POSER :
-
-1)Afficher planetes + collisions
-
-
-

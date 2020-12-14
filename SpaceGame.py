@@ -29,8 +29,8 @@ VIE_HAUTEUR = 25
 
 
 # dimension planete
-PLANETE_LARGEUR = 180
-PLANETE_HAUTEUR = 180
+
+TAILLE_PLANETE = 180
 
 # Pose Planete
 POSE_PLANETE = (
@@ -64,7 +64,9 @@ HAUTEUR_PAUSE = FENETRE_HAUTEUR / MENU_PAUSE_LONGUEUR
 BOUTON_LARGEUR = 220
 BOUTON_HAUTEUR = 41
 BOUTON = 0
-COULOIRS = []
+
+
+
 
 # DEFINITION PLANETE
 LISTE_PLANETE = []
@@ -195,7 +197,7 @@ def mru_1d(depart, temps_depart, vitesse, temps_maintenant):
     return (mru_1d)
 
 
-# TODO A MODIFIER LES BALLES QUI DISPARESSENT
+
 
 def dessiner_missile(missile, fenetre):
 
@@ -203,6 +205,8 @@ def dessiner_missile(missile, fenetre):
 
     for missile in missile:
         missile_vitesse = missile['vitesse_verticale']
+
+        # stopper missiles pendant menu pause
         if COMPTEUR_PAUSE % 2 != 0:
             temps_maintenant = temps_maintenant - TEMPS_AVANT_PAUSE
             missile_vitesse = 0
@@ -232,6 +236,7 @@ def afficherBoutonMenu(Menu):
         text_afficher = POLICE_ECRITURE_BOUTON.render(text, True, BLANC)
         texte_largeur, texte_hauteur = text_afficher.get_size()
 
+        #détection de la souris qui passe au dessus des boutons
         if FENETRE_LARGEUR / 2 - BOUTON_LARGEUR // 2 <= mouse[
             0] <= FENETRE_LARGEUR / 2 + BOUTON_LARGEUR // 2 and FENETRE_HAUTEUR / MENU_LONGUEUR - BOUTON_HAUTEUR + (
                 HAUTEUR / 2 * index) <= mouse[1] <= (FENETRE_HAUTEUR / MENU_LONGUEUR) + (
@@ -258,6 +263,7 @@ def pause():
         text_afficher = POLICE_ECRITURE_BOUTON.render(text, True, BLANC)
         texte_largeur, texte_hauteur = text_afficher.get_size()
 
+        #affichage des boutons de couleurs différentes selon celui qui est sélectionné
         if BOUTON == index:
             pygame.draw.rect(fenetre, BOUTON_COULEUR_CLAIR,
                              [(FENETRE_LARGEUR / 2) - BOUTON_LARGEUR // 2,
@@ -330,6 +336,8 @@ def collision_planete(PLANETE_EN_LISTE, position_vaisseau):
 
 #Difficulté
 def difficulte (niveau_difficulte):
+
+    #Les valeures du jeu changent en fonction de la difficulté choisie
     if niveau_difficulte == 0:
         MENU = ['Jouer', 'Facile>', 'Quitter']
         AJOUT_MUNITION = 20
@@ -456,7 +464,8 @@ etoiles = cree_etoiles()
 
 creation_couloirs_planete()
 couloir_utilise = []
-creation_couloirs_planete()
+
+
 ######CREATION DU MENU######
 while enintro:
 
