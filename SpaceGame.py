@@ -309,15 +309,18 @@ def spawn_planete():
 
 
 def deplace_planete():
-
-    for planete in PLANETE_EN_LISTE:
-        x, y = position(planete)
-        couloir_planete = afficherCouloir(planete)
-        place(planete, x, y+VITESSE_JEU, couloir_planete)
-        if position(planete)[1] > FENETRE_HAUTEUR:
-            PLANETE_EN_LISTE.remove(planete)
+    if COMPTEUR_PAUSE %2 != 0:
+       VITESSE_JEU = 0
+    else:
+        VITESSE_JEU = 3
+        for planete in PLANETE_EN_LISTE:
+            x, y = position(planete)
             couloir_planete = afficherCouloir(planete)
-            couloir_utilise.remove(couloir_planete)
+            place(planete, x, y+VITESSE_JEU, couloir_planete)
+            if position(planete)[1] > FENETRE_HAUTEUR:
+                PLANETE_EN_LISTE.remove(planete)
+                couloir_planete = afficherCouloir(planete)
+                couloir_utilise.remove(couloir_planete)
 
 
 def collision_planete(PLANETE_EN_LISTE, position_vaisseau):
@@ -351,14 +354,18 @@ def spawn_ufo():
 
 def deplace_ufo():
 
-    for ufo in UFO_EN_LISTE:
-        x, y = position(ufo)
-        couloir_ufo = afficherCouloir(ufo)
-        place(ufo, x, y+VITESSE_JEU, couloir_ufo)
-        if position(ufo)[1] > FENETRE_HAUTEUR + random.randint(100,9000):
-            UFO_EN_LISTE.remove(ufo)
+    if COMPTEUR_PAUSE %2 != 0:
+       VITESSE_JEU = 0
+    else:
+        VITESSE_JEU = 3
+        for ufo in UFO_EN_LISTE:
+            x, y = position(ufo)
             couloir_ufo = afficherCouloir(ufo)
-            couloir_utilise_ufo.remove(couloir_ufo)
+            place(ufo, x, y+VITESSE_JEU, couloir_ufo)
+            if position(ufo)[1] > FENETRE_HAUTEUR + random.randint(100,9000):
+                UFO_EN_LISTE.remove(ufo)
+                couloir_ufo = afficherCouloir(ufo)
+                couloir_utilise_ufo.remove(couloir_ufo)
 
 
 #Difficulté
@@ -543,6 +550,15 @@ while enintro:
             if FENETRE_LARGEUR / 2 - BOUTON_LARGEUR // 2 <= mouse[
                 0] <= FENETRE_LARGEUR / 2 + BOUTON_LARGEUR // 2 and FENETRE_HAUTEUR / MENU_LONGUEUR - BOUTON_HAUTEUR + (
                     HAUTEUR / 2 * 0) <= mouse[1] <= (FENETRE_HAUTEUR / MENU_LONGUEUR) + (HAUTEUR / 2 * 0):
+
+                if niveau_difficulte == 0:
+                    VITESSE_JEU = 3
+                elif niveau_difficulte == 1:
+                    VITESSE_JEU = 3.5
+
+                elif niveau_difficulte == 2:
+                    VITESSE_JEU = 4
+
                 enintro = False
                 enjeu = True
                 SCORE = 0
@@ -595,6 +611,14 @@ while enintro:
 
                 #Jouer
                 if BOUTON == 0 or BOUTON == 1:
+                    if niveau_difficulte == 0:
+                        VITESSE_JEU = 3
+                    elif niveau_difficulte == 1:
+                        VITESSE_JEU = 3.5
+
+                    elif niveau_difficulte == 2:
+                        VITESSE_JEU = 4
+
                     enintro = False
                     enjeu = True
                     SCORE = 0
@@ -606,10 +630,11 @@ while enintro:
                     enintro = False
                     NOMBRE_VIE = 0
 
+    print(VITESSE_JEU)
     # Mécanique du jeu
     # Incrémentation de la vitesse du jeu dans le menu
     if COMPTEUR_BOUCLE % 60 == 0 and COMPTEUR_BOUCLE < 3600:
-        VITESSE_JEU += 0.10
+        VITESSE_JEU += 1
 
 
 
@@ -678,6 +703,12 @@ while enintro:
 
                     place(planete,COULOIRS[couloir][0] ,position_y,couloir)
 
+
+                for ufo in UFO_EN_LISTE:
+                    couloir = afficherCouloir(ufo)
+                    position_x, position_y = position(ufo)
+
+                    place(ufo, COULOIRS[couloir][0], position_y, couloir)
 
                 etoiles = cree_etoiles()
 
