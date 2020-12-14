@@ -275,22 +275,21 @@ def creation_couloirs_planete():
 
 def spawn_planete():
 
-    random_timer = random.randint(0, 5)
+    random_timer = random.randint(0, 14)
     if random_timer == 3:
-        if len(PLANETE_EN_LISTE) < 5:
+        if len(PLANETE_EN_LISTE) < 4:
             couloir_random = random.randint(0, 4)
             planete_random = random.randint(0, 15)
+            if couloir_random in couloir_utilise:
+                print("couloir deja utilise")
 
-            for i in range(5):
-                couloir_random = random.randint(0,4)
-                if couloir_random not in couloir_utilise:
+            else:
+                if LISTE_PLANETE[planete_random] in PLANETE_EN_LISTE:
+                    print("Planete deja en liste ")
+                else:
+                    place(LISTE_PLANETE[planete_random], COULOIRS[couloir_random][0], 0)
+                    PLANETE_EN_LISTE.append(LISTE_PLANETE[planete_random])
                     couloir_utilise.append(couloir_random)
-
-
-            place(LISTE_PLANETE[planete_random], COULOIRS[couloir_random][0], 0)
-            PLANETE_EN_LISTE.append(LISTE_PLANETE[planete_random])
-
-            print(couloir_utilise)
 
 
 def deplace_planete():
@@ -300,6 +299,7 @@ def deplace_planete():
         place(planete, x, y+1.5)
         if position(planete)[1] > FENETRE_HAUTEUR:
             PLANETE_EN_LISTE.remove(planete)
+
 
 #Difficulté
 def difficulte (niveau_difficulte):
@@ -428,14 +428,12 @@ POLICE_ECRITURE_BOUTON = pygame.font.SysFont('monospace', 36)
 # Création des étoiles
 etoiles = cree_etoiles()
 
-position_planete = [0,0]
-
+creation_couloirs_planete()
 couloir_utilise = []
 creation_couloirs_planete()
 ######CREATION DU MENU######
 while enintro:
-    spawn_planete()
-    deplace_planete()
+
     temps_maintenant = pygame.time.get_ticks()
     prendsPose(vaisseau, POSE_VAISSEAU[0])
     place(vaisseau, (FENETRE_LARGEUR / 2) - VAISSEAU_LARGEUR / 2,
@@ -549,7 +547,6 @@ while enintro:
 
 
     affiche(scene, fenetre)
-    affiche(PLANETE_EN_LISTE, fenetre)
 
     score()
     vie()
@@ -569,6 +566,8 @@ while enintro:
 
     #####BOUCLE DU JEU#####
     while NOMBRE_VIE > 0 and enjeu:
+        spawn_planete()
+        deplace_planete()
         temps_maintenant = pygame.time.get_ticks()
         prendsPose(vaisseau, POSE_VAISSEAU[0])
 
@@ -633,6 +632,11 @@ while enintro:
                         SCORE = 0
                         enintro = True
                         enjeu = False
+                        couloir_utilise = []
+                        PLANETE_EN_LISTE = []
+                        spawn_planete()
+                        deplace_planete()
+
                         #Reprise des paramètres de la difficulté choisie dans le menu
                         MENU, AJOUT_MUNITION, MUNITIONS, VITESSE_JEU, VITESSE_MISSILE,NOMBRE_VIE,DEPLACEMENT_VAISSEAU = difficulte(niveau_difficulte)
 
@@ -702,9 +706,11 @@ while enintro:
                 enintro = True
 
             # Affichage
+
             dessiner_missile(missile, fenetre)
             afficher_etoiles(fenetre, VITESSE_JEU, etoiles)
             affiche(scene, fenetre)
+            affiche(PLANETE_EN_LISTE, fenetre)
             score()
             afficher_munition(MUNITIONS)
 
