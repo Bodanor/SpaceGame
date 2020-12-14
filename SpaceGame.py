@@ -13,7 +13,7 @@ BOUTON_COULEUR_FONCE = (100, 100, 100)
 
 # Etoile
 NOMBRE_ETOILES = 500
-
+NOMBRE_UFO = 5
 # Dimension Fenetre
 FENETRE_LARGEUR = 1080
 FENETRE_HAUTEUR = 720
@@ -71,7 +71,8 @@ BOUTON = 0
 # DEFINITION PLANETE
 LISTE_PLANETE = []
 PLANETE_EN_LISTE = []
-
+LISTE_UFO = []
+UFO_EN_LISTE = []
 COULOIRS = []
 
 ########FIN CONSTANTE#######
@@ -330,8 +331,34 @@ def collision_planete(PLANETE_EN_LISTE, position_vaisseau):
             None
 
 
+def spawn_ufo():
+    random_timer = random.randint(0, 14)
+    if random_timer == 2:
+        if len(UFO_EN_LISTE) < 1:
+            couloir_random = random.randint(0, 4)
+            ufo_random = random.randint(0, 4)
+            if couloir_random in couloir_utilise_ufo:
+                pass
+
+            else:
+                if LISTE_UFO[ufo_random] in UFO_EN_LISTE:
+                    pass
+                else:
+                    place(LISTE_UFO[ufo_random], COULOIRS[couloir_random][0], VAISSEAU_HAUTEUR, couloir_random)
+                    UFO_EN_LISTE.append(LISTE_UFO[ufo_random])
+                    couloir_utilise_ufo.append(couloir_random)
 
 
+def deplace_ufo():
+
+    for ufo in UFO_EN_LISTE:
+        x, y = position(ufo)
+        couloir_ufo = afficherCouloir(ufo)
+        place(ufo, x, y+VITESSE_JEU, couloir_ufo)
+        if position(ufo)[1] > FENETRE_HAUTEUR + random.randint(100,9000):
+            UFO_EN_LISTE.remove(ufo)
+            couloir_ufo = afficherCouloir(ufo)
+            couloir_utilise_ufo.remove(couloir_ufo)
 
 
 #Difficulté
@@ -401,7 +428,7 @@ vaisseau = nouvelleEntite()
 
 # CHARGER TOUTES LES IMAGES #
 print("[LOG] CHARGEMENT DES IMAGES")
-
+print("[LOG] CHARGEMENT DES PLANETES")
 for nom_image, nom_fichier in (('Planete1', 'planete1.png'),
                                ('Planete2', 'planete2.png'),
                                ('Planete3', 'planete3.png'),
@@ -418,8 +445,7 @@ for nom_image, nom_fichier in (('Planete1', 'planete1.png'),
                                ('Planete14', 'planete14.png'),
                                ('Planete15', 'planete15.png'),
                                ('Planete16', 'planete16.png'),
-                               ('trou_noir', 'trou_noir.png'),
-                               ('ufo', 'ufo.png')):
+                               ('trou_noir', 'trou_noir.png')):
 
     chemin = 'Images/' + nom_fichier
     image = pygame.image.load(chemin).convert_alpha(fenetre)
@@ -430,13 +456,29 @@ for nom_image, nom_fichier in (('Planete1', 'planete1.png'),
     prendsPose(planete, nom_image)
     LISTE_PLANETE.append(planete)
 
+print("[LOG] TOUTES LES PLANETES SONT CHARGéES")
+print("[LOG] CHARGEMENT DES VAISSEAUX")
+for nom_image, nom_fichier in (('vaisseau_jaune_sans_flamme', 'vaisseau_jaune_sans_flamme.png'),
+                               ('vaisseau_jaune_avec_flamme', 'vaisseau_jaune_avec_flamme.png')):
+    chemin = 'Images/' + nom_fichier
+    image = pygame.image.load(chemin).convert_alpha(fenetre)
+    image = pygame.transform.scale(image, (VAISSEAU_LARGEUR, VAISSEAU_HAUTEUR))
+    ajouteImage(vaisseau, nom_image, image)
 
-    for nom_image, nom_fichier in (('vaisseau_jaune_sans_flamme', 'vaisseau_jaune_sans_flamme.png'),
-                                   ('vaisseau_jaune_avec_flamme', 'vaisseau_jaune_avec_flamme.png')):
-        chemin = 'Images/' + nom_fichier
-        image = pygame.image.load(chemin).convert_alpha(fenetre)
-        image = pygame.transform.scale(image, (VAISSEAU_LARGEUR, VAISSEAU_HAUTEUR))
-        ajouteImage(vaisseau, nom_image, image)
+print("[LOG] TOUT LES VAISSEAUX SONT CHARGéES")
+print("[LOG] CHARGEMENT DE L'UFO")
+
+for i in range(NOMBRE_UFO):
+    chemin = 'Images/ufo.png'
+    image = pygame.image.load(chemin).convert_alpha(fenetre)
+    image = pygame.transform.scale(image, (VAISSEAU_LARGEUR, VAISSEAU_HAUTEUR))
+    ufo = nouvelleEntite()
+    ajouteImage(ufo, 'ufo{}'.format(i), image)
+    prendsPose(ufo, 'ufo{}'.format(i))
+    LISTE_UFO.append(ufo)
+print("[LOG] TOUT LES UFO SONT CHARGéES")
+
+
 
 print("[LOG] TOUTES LES IMAGES SONT CHARGéES")
 # FIN CHARGEMENT IMAGES #
@@ -464,6 +506,7 @@ etoiles = cree_etoiles()
 
 creation_couloirs_planete()
 couloir_utilise = []
+couloir_utilise_ufo = []
 
 
 ######CREATION DU MENU######
@@ -585,7 +628,6 @@ while enintro:
     prendsPose(vaisseau, POSE_VAISSEAU[0])
     fenetre.fill(ESPACE)
     afficher_etoiles(fenetre, VITESSE_JEU, etoiles)
-
     dessiner_missile(missile, fenetre)
 
 
@@ -610,7 +652,8 @@ while enintro:
     while NOMBRE_VIE > 0 and enjeu:
         spawn_planete()
         deplace_planete()
-
+        spawn_ufo()
+        deplace_ufo()
 
         temps_maintenant = pygame.time.get_ticks()
         prendsPose(vaisseau, POSE_VAISSEAU[0])
@@ -624,7 +667,6 @@ while enintro:
 
                 position_x, position_y = position(vaisseau)
                 place(vaisseau, (position_x/FENETRE_LARGEUR)*fenetre.get_size()[0], (position_y/FENETRE_HAUTEUR)*fenetre.get_size()[1], 0)
-                # place(vaisseau, FENETRE_LARGEUR / 2, FENETRE_HAUTEUR - VAISSEAU_HAUTEUR, 0)
 
                 FENETRE_LARGEUR, FENETRE_HAUTEUR = fenetre.get_size()
                 COULOIRS = []
@@ -771,6 +813,7 @@ while enintro:
             afficher_etoiles(fenetre, VITESSE_JEU, etoiles)
             affiche(scene, fenetre)
             affiche(PLANETE_EN_LISTE, fenetre)
+            affiche(UFO_EN_LISTE, fenetre)
             score()
             afficher_munition(MUNITIONS)
             collision_planete(PLANETE_EN_LISTE, position(vaisseau))
