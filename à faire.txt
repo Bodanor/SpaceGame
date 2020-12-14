@@ -10,6 +10,9 @@
 6)L'alien se déplace
 7) Décrémenter vie a chaque collision
 8) Ajouter touche pour naviguer dans le menu (fonction afficher_menu)
-
+9) Quand on resize il faut que les planetes changent de tailles (Recharegr les images pour que ca fonctionne sinon perte de qualité)
 
 (L'alien tire aussi)
+
+1) Collisions avec le cercle
+2) Est ce que les collisions doivent etres precise

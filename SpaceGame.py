@@ -22,7 +22,9 @@ FENETRE_HAUTEUR = 720
 VAISSEAU_LARGEUR = 70
 VAISSEAU_HAUTEUR = 60
 DEPLACEMENT_VAISSEAU = 7
+# Dimension UFO
 
+UFO_TAILLE = 80
 # Vie
 VIE_LARGEUR = 30
 VIE_HAUTEUR = 25
@@ -50,6 +52,7 @@ AJOUT_MUNITION = 20
 SCORE = 0
 COMPTEUR_BOUCLE = 0
 COMPTEUR_PAUSE = 0
+COMPTEUR_COLLISION = 0
 NOMBRE_VIE = 3
 TEMPS_AVANT_PAUSE = 0
 
@@ -113,9 +116,7 @@ def nouvelleEntite():
     }
 
 
-def changer_taille_planete(entite, taille_planete):
 
-    entite['image'] = pygame.transform.smoothscale(entite['image'], (taille_planete[0], taille_planete[1]))
 
 def visible(entite):
     entite['visible'] = True
@@ -288,14 +289,18 @@ def creation_couloirs_planete():
     for x in range(0,5):
         COULOIRS.append(((FENETRE_LARGEUR/5) * x, (FENETRE_LARGEUR/5)*(x+1)))
 
-
+#GERER PLANETES
 def spawn_planete():
 
+    #Nombre de chances de spawn une planete
     random_timer = random.randint(0, 14)
     if random_timer == 3:
+        #Pas plus de 4 planetes a l'ecran
         if len(PLANETE_EN_LISTE) < 4:
             couloir_random = random.randint(0, 4)
             planete_random = random.randint(0, 15)
+
+            #Une seule planete par couloir
             if couloir_random in couloir_utilise:
                 pass
 
@@ -309,6 +314,7 @@ def spawn_planete():
 
 
 def deplace_planete():
+    #Freeze des planete si en pause
     if COMPTEUR_PAUSE %2 != 0:
        VITESSE_JEU = 0
     else:
@@ -317,29 +323,63 @@ def deplace_planete():
             x, y = position(planete)
             couloir_planete = afficherCouloir(planete)
             place(planete, x, y+VITESSE_JEU, couloir_planete)
+            #Respawn la planete si elle est en dessous de l'ecran (donc plus affichée)
             if position(planete)[1] > FENETRE_HAUTEUR:
                 PLANETE_EN_LISTE.remove(planete)
                 couloir_planete = afficherCouloir(planete)
                 couloir_utilise.remove(couloir_planete)
 
+#Gérer les collisions
+def collision_planete(PLANETE_EN_LISTE, position_vaisseau, nombre_vie):
 
-def collision_planete(PLANETE_EN_LISTE, position_vaisseau):
+    if collision_active:
+        vies = nombre_vie
+        for planete in PLANETE_EN_LISTE:
+            # Test si vaisseau rentre dans un grand carré autour des planetes
+            if position_vaisseau[1] <= position(planete)[1] + TAILLE_PLANETE and position_vaisseau[
+                1] + VAISSEAU_HAUTEUR >= position(planete)[1] and position(planete)[0] <= position_vaisseau[
+                0] + VAISSEAU_LARGEUR and position_vaisseau[0] <= position(planete)[0] + TAILLE_PLANETE:
 
-    for planete in PLANETE_EN_LISTE:
-        #Test collision dans l'ordre BAS,HAUT,DROITE,GAUCHE
+                # Affinage des collisions au dessus à gauche du grand carré
+                if position_vaisseau[1] + VAISSEAU_HAUTEUR <= position(planete)[1] + TAILLE_PLANETE / 8 and \
+                        position_vaisseau[0] + VAISSEAU_LARGEUR >= position(planete)[0] and position_vaisseau[
+                    0] + VAISSEAU_LARGEUR <= position(planete)[0] + TAILLE_PLANETE / 8:
+                    print("Haut gauche")
+
+                # Affinage des collisions au dessus à droite du grand carré
+                elif position_vaisseau[1] + VAISSEAU_HAUTEUR < position(planete)[1] + TAILLE_PLANETE / 8 and \
+                        position_vaisseau[0] > position(planete)[0] + (TAILLE_PLANETE * (7 / 8)):
+                    print("Haut droite")
+
+                # Affinage des collisions en bas à droite du grand carré
+                elif position_vaisseau[1] > position(planete)[1] + (TAILLE_PLANETE * (7 / 8)) and position_vaisseau[0] > \
+                        position(planete)[0] + TAILLE_PLANETE * (7 / 8):
+                    print("Bas droite")
+
+                # Affinage des collisions en bas à gauche du grand carré
+                elif position_vaisseau[1] > position(planete)[1] + (TAILLE_PLANETE * (7 / 8)) and position_vaisseau[
+                    0] + VAISSEAU_LARGEUR < position(planete)[0] + TAILLE_PLANETE / 8:
+                    print("Bas GAuche")
+
+                else:
+                    print("collision")
 
 
-        if position_vaisseau[1] <= position(planete)[1] + TAILLE_PLANETE and position_vaisseau[1]+VAISSEAU_HAUTEUR >= position(planete)[1] and position(planete)[0] <= position_vaisseau[0]+VAISSEAU_LARGEUR and position_vaisseau[0] <= position(planete)[0]+TAILLE_PLANETE:
+        for ufo in UFO_EN_LISTE:
 
-            None
+            if position_vaisseau[1] <= position(ufo)[1] + UFO_TAILLE and position_vaisseau[1]+VAISSEAU_HAUTEUR >= position(ufo)[1] and position(ufo)[0] <= position_vaisseau[0]+VAISSEAU_LARGEUR and position_vaisseau[0] <= position(ufo)[0]+UFO_TAILLE:
+                vies = vies -1
 
-
+        return vies
+#GERER UFO
 def spawn_ufo():
+
     random_timer = random.randint(0, 14)
     if random_timer == 2:
         if len(UFO_EN_LISTE) < 1:
             couloir_random = random.randint(0, 4)
             ufo_random = random.randint(0, 4)
+            hauteur_random = random.randint(-200,200)
             if couloir_random in couloir_utilise_ufo:
                 pass
 
@@ -347,13 +387,19 @@ def spawn_ufo():
                 if LISTE_UFO[ufo_random] in UFO_EN_LISTE:
                     pass
                 else:
-                    place(LISTE_UFO[ufo_random], COULOIRS[couloir_random][0], VAISSEAU_HAUTEUR, couloir_random)
-                    UFO_EN_LISTE.append(LISTE_UFO[ufo_random])
-                    couloir_utilise_ufo.append(couloir_random)
+                    #On verifie qu'il n'existe pas deja une planete a l'emplacement de l'UFO
+                    for planete in PLANETE_EN_LISTE:
+
+                        couloir_planete = afficherCouloir(planete)
+                        if couloir_planete == couloir_random:
+                            if hauteur_random > position(planete)[1] + TAILLE_PLANETE or hauteur_random + UFO_TAILLE< position(planete)[1]:
+                                place(LISTE_UFO[ufo_random], COULOIRS[couloir_random][0], hauteur_random, couloir_random)
+                                UFO_EN_LISTE.append(LISTE_UFO[ufo_random])
+                                couloir_utilise_ufo.append(couloir_random)
 
 
 def deplace_ufo():
-
+    #Si en pause alors on freeze l'UFO
     if COMPTEUR_PAUSE %2 != 0:
        VITESSE_JEU = 0
     else:
@@ -362,6 +408,7 @@ def deplace_ufo():
             x, y = position(ufo)
             couloir_ufo = afficherCouloir(ufo)
             place(ufo, x, y+VITESSE_JEU, couloir_ufo)
+            #Si l'UFO sort de la fenetre alors on met un nombre random de pixel avant une nouvelle apparition
             if position(ufo)[1] > FENETRE_HAUTEUR + random.randint(100,9000):
                 UFO_EN_LISTE.remove(ufo)
                 couloir_ufo = afficherCouloir(ufo)
@@ -478,7 +525,7 @@ print("[LOG] CHARGEMENT DE L'UFO")
 for i in range(NOMBRE_UFO):
     chemin = 'Images/ufo.png'
     image = pygame.image.load(chemin).convert_alpha(fenetre)
-    image = pygame.transform.scale(image, (VAISSEAU_LARGEUR, VAISSEAU_HAUTEUR))
+    image = pygame.transform.scale(image, (UFO_TAILLE, UFO_TAILLE))
     ufo = nouvelleEntite()
     ajouteImage(ufo, 'ufo{}'.format(i), image)
     prendsPose(ufo, 'ufo{}'.format(i))
@@ -514,7 +561,7 @@ etoiles = cree_etoiles()
 creation_couloirs_planete()
 couloir_utilise = []
 couloir_utilise_ufo = []
-
+collision_active = True
 
 ######CREATION DU MENU######
 while enintro:
@@ -534,9 +581,6 @@ while enintro:
                 VAISSEAU_LARGEUR = int(FENETRE_LARGEUR / 15)
                 VAISSEAU_HAUTEUR = int(FENETRE_HAUTEUR/12)
 
-
-                for planete in LISTE_PLANETE:
-                    changer_taille_planete(planete, (TAILLE_PLANETE, TAILLE_PLANETE))
             etoiles = cree_etoiles()
             place(vaisseau, (FENETRE_LARGEUR / 2) - VAISSEAU_LARGEUR / 2, FENETRE_HAUTEUR - VAISSEAU_HAUTEUR,0)
 
@@ -630,11 +674,10 @@ while enintro:
                     enintro = False
                     NOMBRE_VIE = 0
 
-    print(VITESSE_JEU)
     # Mécanique du jeu
     # Incrémentation de la vitesse du jeu dans le menu
     if COMPTEUR_BOUCLE % 60 == 0 and COMPTEUR_BOUCLE < 3600:
-        VITESSE_JEU += 1
+        VITESSE_JEU += 0.10
 
 
 
@@ -655,7 +698,7 @@ while enintro:
     afficher_etoiles(fenetre, VITESSE_JEU, etoiles)
     dessiner_missile(missile, fenetre)
 
-
+    #Affichage général
     affiche(scene, fenetre)
 
     score()
@@ -675,6 +718,7 @@ while enintro:
 
     #####BOUCLE DU JEU#####
     while NOMBRE_VIE > 0 and enjeu:
+        #Spawn des entités ennemies
         spawn_planete()
         deplace_planete()
         spawn_ufo()
@@ -847,7 +891,7 @@ while enintro:
             affiche(UFO_EN_LISTE, fenetre)
             score()
             afficher_munition(MUNITIONS)
-            collision_planete(PLANETE_EN_LISTE, position(vaisseau))
+            NOMBRE_VIE = collision_planete(PLANETE_EN_LISTE, position(vaisseau), NOMBRE_VIE)
 
             vie()
             pygame.display.flip()
