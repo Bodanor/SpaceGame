@@ -68,7 +68,9 @@ COULOIRS = []
 
 # DEFINITION PLANETE
 LISTE_PLANETE = []
+PLANETE_EN_LISTE = []
 
+COULOIRS = []
 
 ########FIN CONSTANTE#######
 
@@ -271,6 +273,33 @@ def creation_couloirs_planete():
         COULOIRS.append(((FENETRE_LARGEUR/5) * x, (FENETRE_LARGEUR/5)*(x+1)))
 
 
+def spawn_planete():
+
+    random_timer = random.randint(0, 5)
+    if random_timer == 3:
+        if len(PLANETE_EN_LISTE) < 5:
+            couloir_random = random.randint(0, 4)
+            planete_random = random.randint(0, 15)
+
+            for i in range(5):
+                couloir_random = random.randint(0,4)
+                if couloir_random not in couloir_utilise:
+                    couloir_utilise.append(couloir_random)
+
+
+            place(LISTE_PLANETE[planete_random], COULOIRS[couloir_random][0], 0)
+            PLANETE_EN_LISTE.append(LISTE_PLANETE[planete_random])
+
+            print(couloir_utilise)
+
+
+def deplace_planete():
+
+    for planete in PLANETE_EN_LISTE:
+        x, y = position(planete)
+        place(planete, x, y+1.5)
+        if position(planete)[1] > FENETRE_HAUTEUR:
+            PLANETE_EN_LISTE.remove(planete)
 
 #Difficulté
 def difficulte (niveau_difficulte):
@@ -401,10 +430,12 @@ etoiles = cree_etoiles()
 
 position_planete = [0,0]
 
+couloir_utilise = []
 creation_couloirs_planete()
 ######CREATION DU MENU######
 while enintro:
-
+    spawn_planete()
+    deplace_planete()
     temps_maintenant = pygame.time.get_ticks()
     prendsPose(vaisseau, POSE_VAISSEAU[0])
     place(vaisseau, (FENETRE_LARGEUR / 2) - VAISSEAU_LARGEUR / 2,
@@ -495,12 +526,6 @@ while enintro:
     # Incrémentation de la vitesse du jeu dans le menu
     if COMPTEUR_BOUCLE % 60 == 0 and COMPTEUR_BOUCLE < 3600:
         VITESSE_JEU += 0.10
-        planete_random = random.randint(0,15)
-        couloir_random = random.randint(0,4)
-
-        place(LISTE_PLANETE[planete_random], COULOIRS[couloir_random][0],0)
-        scene.append(LISTE_PLANETE[planete_random])
-        print(scene)
 
 
 
@@ -524,6 +549,7 @@ while enintro:
 
 
     affiche(scene, fenetre)
+    affiche(PLANETE_EN_LISTE, fenetre)
 
     score()
     vie()
