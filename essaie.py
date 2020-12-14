@@ -26,7 +26,7 @@ DEPLACEMENT_VAISSEAU = 7
 # Vie
 VIE_LARGEUR = 30
 VIE_HAUTEUR = 25
-
+NOMBRE_VIE = 3
 
 # dimension planete
 PLANETE_LARGEUR = 180
@@ -50,7 +50,7 @@ AJOUT_MUNITION = 20
 SCORE = 0
 COMPTEUR_BOUCLE = 0
 COMPTEUR_PAUSE = 0
-NOMBRE_VIE = 3
+
 TEMPS_AVANT_PAUSE = 0
 
 # CONSTANTE POUR LE MENU
@@ -110,10 +110,6 @@ def nouvelleEntite():
     }
 
 
-def changer_taille_planete(entite, taille_planete):
-
-    entite['image'] = pygame.transform.smoothscale(entite['image'], (taille_planete[0], taille_planete[1]))
-
 def visible(entite):
     entite['visible'] = True
 
@@ -131,13 +127,12 @@ def place(entite, x, y, couloir):
     entite['position'][1] = y
     entite['couloir'] = couloir
 
+def afficherCouloir(entite):
+    return entite['couloir']
 
 def position(entite):
     return entite['position']
 
-
-def afficherCouloir(entite):
-    return entite['couloir']
 
 def prendsPose(entite, nom):
     entite['image'] = entite['listeImage'][nom]
@@ -290,42 +285,26 @@ def spawn_planete():
             couloir_random = random.randint(0, 4)
             planete_random = random.randint(0, 15)
             if couloir_random in couloir_utilise:
-                pass
+                print("couloir deja utilise")
 
             else:
                 if LISTE_PLANETE[planete_random] in PLANETE_EN_LISTE:
-                    pass
+                    print("Planete deja en liste ")
                 else:
-                    place(LISTE_PLANETE[planete_random], COULOIRS[couloir_random][0], -TAILLE_PLANETE, couloir_random)
+                    place(LISTE_PLANETE[planete_random], COULOIRS[couloir_random][0], 0, couloir_random)
                     PLANETE_EN_LISTE.append(LISTE_PLANETE[planete_random])
                     couloir_utilise.append(couloir_random)
 
 
 def deplace_planete():
-
     for planete in PLANETE_EN_LISTE:
         x, y = position(planete)
         couloir_planete = afficherCouloir(planete)
-        place(planete, x, y+VITESSE_JEU, couloir_planete)
+        place(planete, x, y + VITESSE_JEU, couloir_planete)
         if position(planete)[1] > FENETRE_HAUTEUR:
             PLANETE_EN_LISTE.remove(planete)
             couloir_planete = afficherCouloir(planete)
             couloir_utilise.remove(couloir_planete)
-
-
-def collision_planete(PLANETE_EN_LISTE, position_vaisseau):
-
-    for planete in PLANETE_EN_LISTE:
-        #Test collision dans l'ordre BAS,HAUT,DROITE,GAUCHE
-
-
-        if position_vaisseau[1] <= position(planete)[1] + TAILLE_PLANETE*(7/8) and position_vaisseau[1]+VAISSEAU_HAUTEUR >= position(planete)[1]+ TAILLE_PLANETE*(1/8) and position(planete)[0] + TAILLE_PLANETE*(1/8) <= position_vaisseau[0]+VAISSEAU_LARGEUR and position_vaisseau[0] <= position(planete)[0]+TAILLE_PLANETE*(7/8):
-
-            None
-
-
-
-
 
 
 #Difficulté
@@ -415,7 +394,7 @@ for nom_image, nom_fichier in (('Planete1', 'planete1.png'),
 
     chemin = 'Images/' + nom_fichier
     image = pygame.image.load(chemin).convert_alpha(fenetre)
-    image = pygame.transform.scale(image, (TAILLE_PLANETE, TAILLE_PLANETE))
+    image = pygame.transform.scale(image, (PLANETE_LARGEUR, PLANETE_HAUTEUR))
     planete = nouvelleEntite()
 
     ajouteImage(planete, nom_image, image)
@@ -435,7 +414,7 @@ print("[LOG] TOUTES LES IMAGES SONT CHARGéES")
 
 
 # Postionement du vaisseau
-place(vaisseau, (FENETRE_LARGEUR / 2) - VAISSEAU_LARGEUR / 2, FENETRE_HAUTEUR - VAISSEAU_HAUTEUR, 0)
+place(vaisseau, (FENETRE_LARGEUR / 2) - VAISSEAU_LARGEUR / 2, FENETRE_HAUTEUR - VAISSEAU_HAUTEUR, None)
 # Scene et planete
 
 scene = []
@@ -446,6 +425,7 @@ fini = False
 enintro = True
 enjeu = False
 temps = pygame.time.Clock()
+
 
 # Police d'écriture#
 police = pygame.font.SysFont('monospace', FENETRE_HAUTEUR // 40, True)
@@ -463,23 +443,15 @@ while enintro:
     temps_maintenant = pygame.time.get_ticks()
     prendsPose(vaisseau, POSE_VAISSEAU[0])
     place(vaisseau, (FENETRE_LARGEUR / 2) - VAISSEAU_LARGEUR / 2,
-          FENETRE_HAUTEUR - VAISSEAU_HAUTEUR, 0)
+          FENETRE_HAUTEUR - VAISSEAU_HAUTEUR, None)
     evenement = pygame.event.get()
     for event in evenement:
 
         # Changement de taille d'écran
         if event.type == pygame.VIDEORESIZE:
             FENETRE_LARGEUR, FENETRE_HAUTEUR = fenetre.get_size()
-            if event.type == pygame.VIDEORESIZE:
-                TAILLE_PLANETE = int(FENETRE_LARGEUR / 6)
-                VAISSEAU_LARGEUR = int(FENETRE_LARGEUR / 15)
-                VAISSEAU_HAUTEUR = int(FENETRE_HAUTEUR/12)
-
-
-                for planete in LISTE_PLANETE:
-                    changer_taille_planete(planete, (TAILLE_PLANETE, TAILLE_PLANETE))
             etoiles = cree_etoiles()
-            place(vaisseau, (FENETRE_LARGEUR / 2) - VAISSEAU_LARGEUR / 2, FENETRE_HAUTEUR - VAISSEAU_HAUTEUR,0)
+            place(vaisseau, (FENETRE_LARGEUR / 2) - VAISSEAU_LARGEUR / 2, FENETRE_HAUTEUR - VAISSEAU_HAUTEUR)
 
         # Quitter avec la croix
         if event.type == pygame.QUIT:
@@ -586,6 +558,7 @@ while enintro:
     vie()
     afficher_munition(MUNITIONS)
     afficherBoutonMenu(MENU)
+
     pygame.display.flip()
 
     # Temps
@@ -601,35 +574,19 @@ while enintro:
     while NOMBRE_VIE > 0 and enjeu:
         spawn_planete()
         deplace_planete()
-
-
         temps_maintenant = pygame.time.get_ticks()
         prendsPose(vaisseau, POSE_VAISSEAU[0])
 
         evenement = pygame.event.get()
         for event in evenement:
             # Changement de l'écran
-
-
             if event.type == pygame.VIDEORESIZE:
-
-                position_x, position_y = position(vaisseau)
-                place(vaisseau, (position_x/FENETRE_LARGEUR)*fenetre.get_size()[0], (position_y/FENETRE_HAUTEUR)*fenetre.get_size()[1], 0)
-                # place(vaisseau, FENETRE_LARGEUR / 2, FENETRE_HAUTEUR - VAISSEAU_HAUTEUR, 0)
-
                 FENETRE_LARGEUR, FENETRE_HAUTEUR = fenetre.get_size()
                 COULOIRS = []
                 creation_couloirs_planete()
-                for planete in PLANETE_EN_LISTE:
-
-                    couloir = afficherCouloir(planete)
-                    position_x, position_y = position(planete)
-
-                    place(planete,COULOIRS[couloir][0] ,position_y,couloir)
-
-
+                spawn_planete()
                 etoiles = cree_etoiles()
-
+                place(vaisseau, FENETRE_LARGEUR / 2, FENETRE_HAUTEUR - VAISSEAU_HAUTEUR, None)
 
             # Quitter avec la croix
             if event.type == pygame.QUIT:
@@ -706,7 +663,7 @@ while enintro:
                 else:
                     prendsPose(vaisseau, POSE_VAISSEAU[1])
                     position_vaisseau = position(vaisseau)
-                    place(vaisseau, position_vaisseau[0] + DEPLACEMENT_VAISSEAU, position_vaisseau[1], 0)
+                    place(vaisseau, position_vaisseau[0] + DEPLACEMENT_VAISSEAU, position_vaisseau[1], None)
 
 
             # GAUCHE
@@ -717,7 +674,7 @@ while enintro:
                 else:
                     prendsPose(vaisseau, POSE_VAISSEAU[1])
                     position_vaisseau = position(vaisseau)
-                    place(vaisseau, position_vaisseau[0] - DEPLACEMENT_VAISSEAU, position_vaisseau[1],0)
+                    place(vaisseau, position_vaisseau[0] - DEPLACEMENT_VAISSEAU, position_vaisseau[1], None)
 
             # BAS
             if keys[pygame.K_DOWN]:
@@ -726,7 +683,7 @@ while enintro:
                 else:
                     prendsPose(vaisseau, POSE_VAISSEAU[0])
                     position_vaisseau = position(vaisseau)
-                    place(vaisseau, position_vaisseau[0], position_vaisseau[1] + DEPLACEMENT_VAISSEAU,0)
+                    place(vaisseau, position_vaisseau[0], position_vaisseau[1] + DEPLACEMENT_VAISSEAU, None)
 
             # HAUT
             if keys[pygame.K_UP]:
@@ -735,7 +692,7 @@ while enintro:
                 else:
                     prendsPose(vaisseau, POSE_VAISSEAU[1])
                     position_vaisseau = position(vaisseau)
-                    place(vaisseau, position_vaisseau[0], position_vaisseau[1] - DEPLACEMENT_VAISSEAU, 0)
+                    place(vaisseau, position_vaisseau[0], position_vaisseau[1] - DEPLACEMENT_VAISSEAU, None)
 
             #remplissage de l'écran en NOIR
             fenetre.fill(ESPACE)
@@ -764,7 +721,7 @@ while enintro:
             affiche(PLANETE_EN_LISTE, fenetre)
             score()
             afficher_munition(MUNITIONS)
-            collision_planete(PLANETE_EN_LISTE, position(vaisseau))
+
 
             vie()
             pygame.display.flip()
