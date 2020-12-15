@@ -342,8 +342,8 @@ def collision_planete(PLANETE_EN_LISTE,  nombre_vie, COMPTEUR_COLLISION, collisi
         vies = nombre_vie
         for planete in PLANETE_EN_LISTE:
             # Test si vaisseau rentre dans un grand carré qui représente les planetes
-            #On fait -5 à la taille des planetes pour que les collisions soient moins "brutale"
-            if position(vaisseau)[1] <= position(planete)[1] + (TAILLE_PLANETE-10) and position_vaisseau[1] + VAISSEAU_HAUTEUR >= position(planete)[1] and position(planete)[0] <= position(vaisseau)[0] + VAISSEAU_LARGEUR and position(vaisseau)[0] <= position(planete)[0] + (TAILLE_PLANETE-10):
+            #On diminue un peu la taille des planetes pour que les collisions soient moins "brutale"
+            if position(vaisseau)[1] <= position(planete)[1] + (TAILLE_PLANETE-5) and position_vaisseau[1] + VAISSEAU_HAUTEUR >= position(planete)[1] and position(planete)[0] <= position(vaisseau)[0] + VAISSEAU_LARGEUR and position(vaisseau)[0] <= position(planete)[0] + (TAILLE_PLANETE-10):
 
                 # Affinage des collisions au dessus à gauche du grand carré
                 if position(vaisseau)[1] + VAISSEAU_HAUTEUR <= position(planete)[1] + (TAILLE_PLANETE-10) / 8 and position_vaisseau[0] + VAISSEAU_LARGEUR >= position(planete)[0] and position(vaisseau)[0] + VAISSEAU_LARGEUR <= position(planete)[0] + (TAILLE_PLANETE-10) / 8:
@@ -589,10 +589,6 @@ while enintro:
         # Changement de taille d'écran
         if event.type == pygame.VIDEORESIZE:
             FENETRE_LARGEUR, FENETRE_HAUTEUR = fenetre.get_size()
-            if event.type == pygame.VIDEORESIZE:
-                TAILLE_PLANETE = int(FENETRE_LARGEUR / 6)
-                VAISSEAU_LARGEUR = int(FENETRE_LARGEUR / 15)
-                VAISSEAU_HAUTEUR = int(FENETRE_HAUTEUR/12)
 
             etoiles = cree_etoiles()
             place(vaisseau, (FENETRE_LARGEUR / 2) - VAISSEAU_LARGEUR / 2, FENETRE_HAUTEUR - VAISSEAU_HAUTEUR,0)
