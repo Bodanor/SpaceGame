@@ -14,6 +14,7 @@ BOUTON_COULEUR_FONCE = (100, 100, 100)
 # Etoile
 NOMBRE_ETOILES = 500
 NOMBRE_UFO = 5
+
 # Dimension Fenetre
 FENETRE_LARGEUR = 1080
 FENETRE_HAUTEUR = 720
@@ -22,10 +23,11 @@ FENETRE_HAUTEUR = 720
 VAISSEAU_LARGEUR = 70
 VAISSEAU_HAUTEUR = 60
 DEPLACEMENT_VAISSEAU = 7
-# Dimension UFO
 
+# Dimension UFO
 UFO_TAILLE = 80
-# Vie
+
+# Apparence vie
 VIE_LARGEUR = 30
 VIE_HAUTEUR = 25
 
@@ -165,7 +167,7 @@ def affiche(entites, ecran):
             dessine(objet, ecran)
 
 
-# Score et vie
+# Affichage du score et vies
 def score():
     marquoir = police.render(str("Score: {}".format(int(round(SCORE, 0)))), True, BLANC)
     fenetre.blit(marquoir, (20, FENETRE_HAUTEUR // 12))
@@ -179,28 +181,29 @@ def vie():
 
 # Tir et Munition
 def afficher_munition(nombre_munitions):
-    if nombre_munitions == 0:
+    if nombre_munitions == 0: #Afficher les munitions en rouges quand il n'y en a plus
 
         munition = police.render(str(": {}".format(int(MUNITIONS))), True, ROUGE)
         fenetre.blit(munition, (35, FENETRE_HAUTEUR - 35))
         pygame.draw.rect(fenetre, BLANC, pygame.Rect(5, FENETRE_HAUTEUR - 40, munition.get_size()[0] + 40, 30), width=1)
         pygame.draw.circle(fenetre, BLEU, (17, FENETRE_HAUTEUR - 25), 10, width=1)
         pygame.draw.circle(fenetre, BLANC, (17, FENETRE_HAUTEUR - 25), 5)
-    else:
+
+    else: #Afficher les munitions normalement
         munition = police.render(str(": {}".format(int(MUNITIONS))), True, BLANC)
         fenetre.blit(munition, (35, FENETRE_HAUTEUR - 35))
         pygame.draw.rect(fenetre, BLANC, pygame.Rect(5, FENETRE_HAUTEUR - 40, munition.get_size()[0] + 40, 30), width=1)
         pygame.draw.circle(fenetre, BLEU, (17, FENETRE_HAUTEUR - 25), 10, width=1)
         pygame.draw.circle(fenetre, BLANC, (17, FENETRE_HAUTEUR - 25), 5)
 
-
+#MRU pour les missiles
 def mru_1d(depart, temps_depart, vitesse, temps_maintenant):
     mru_1d = depart + (vitesse * (temps_maintenant - temps_depart))
     return (mru_1d)
 
 
 
-
+#Affichage des missiles
 def dessiner_missile(missile, fenetre):
 
     temps_maintenant = pygame.time.get_ticks()
@@ -208,8 +211,8 @@ def dessiner_missile(missile, fenetre):
     for missile in missile:
         missile_vitesse = missile['vitesse_verticale']
 
-        # stopper missiles pendant menu pause
-        if COMPTEUR_PAUSE % 2 != 0:
+
+        if COMPTEUR_PAUSE % 2 != 0:  # stopper missiles pendant menu pause
             temps_maintenant = temps_maintenant - TEMPS_AVANT_PAUSE
             missile_vitesse = 0
 
@@ -238,7 +241,7 @@ def afficherBoutonMenu(Menu):
         text_afficher = POLICE_ECRITURE_BOUTON.render(text, True, BLANC)
         texte_largeur, texte_hauteur = text_afficher.get_size()
 
-        #détection de la souris qui passe au dessus des boutons
+        #détection de la souris qui passe au dessus des boutons et les afficher en couleur clair si elle est au dessus
         if FENETRE_LARGEUR / 2 - BOUTON_LARGEUR // 2 <= mouse[
             0] <= FENETRE_LARGEUR / 2 + BOUTON_LARGEUR // 2 and FENETRE_HAUTEUR / MENU_LONGUEUR - BOUTON_HAUTEUR + (
                 HAUTEUR / 2 * index) <= mouse[1] <= (FENETRE_HAUTEUR / MENU_LONGUEUR) + (
@@ -248,7 +251,7 @@ def afficherBoutonMenu(Menu):
                               ((FENETRE_HAUTEUR / MENU_LONGUEUR) - BOUTON_HAUTEUR) + (HAUTEUR / 2 * index),
                               BOUTON_LARGEUR, 40])
 
-        else:
+        else: #Afficher les boutons d'une couleur normale
             pygame.draw.rect(fenetre, BOUTON_COULEUR_FONCE,
                              [(FENETRE_LARGEUR / 2) - BOUTON_LARGEUR // 2,
                               ((FENETRE_HAUTEUR / MENU_LONGUEUR) - BOUTON_HAUTEUR) + (HAUTEUR / 2 * index),
@@ -330,7 +333,7 @@ def deplace_planete():
                 couloir_utilise.remove(couloir_planete)
 
 #Gérer les collisions
-def collision_planete(PLANETE_EN_LISTE, position_vaisseau, nombre_vie, COMPTEUR_COLLISION, collision_active):
+def collision_planete(PLANETE_EN_LISTE,  nombre_vie, COMPTEUR_COLLISION, collision_active):
     compteur = COMPTEUR_COLLISION
     vies = nombre_vie
     collision = collision_active
@@ -360,8 +363,7 @@ def collision_planete(PLANETE_EN_LISTE, position_vaisseau, nombre_vie, COMPTEUR_
                     None
 
                 # Affinage des collisions en bas à gauche du grand carré
-                elif position_vaisseau[1] > position(planete)[1] + (TAILLE_PLANETE * (7 / 8)) and position_vaisseau[
-                    0] + VAISSEAU_LARGEUR < position(planete)[0] + TAILLE_PLANETE / 8:
+                elif position(vaisseau)[1] > position(planete)[1] + (TAILLE_PLANETE * (7 / 8)) and position(vaisseau)[0] + VAISSEAU_LARGEUR < position(planete)[0] + TAILLE_PLANETE / 8:
                     None
 
                 else:
@@ -581,7 +583,7 @@ couloir_utilise_ufo = []
 collision_active = True
 ######CREATION DU MENU######
 while enintro:
-
+    visible(vaisseau)
     temps_maintenant = pygame.time.get_ticks()
     prendsPose(vaisseau, POSE_VAISSEAU[0])
     place(vaisseau, (FENETRE_LARGEUR / 2) - VAISSEAU_LARGEUR / 2,
@@ -623,6 +625,7 @@ while enintro:
                 enjeu = True
                 SCORE = 0
                 COMPTEUR_BOUCLE = 1
+                BOUTON = 0
 
 
 
@@ -683,12 +686,14 @@ while enintro:
                     enjeu = True
                     SCORE = 0
                     COMPTEUR_BOUCLE = 1
+                    BOUTON = 0
 
                 #Quitter le programme
                 if BOUTON == 2:
                     enjeu = False
                     enintro = False
                     NOMBRE_VIE = 0
+
 
     # Mécanique du jeu
     # Incrémentation de la vitesse du jeu dans le menu
@@ -765,9 +770,9 @@ while enintro:
 
         evenement = pygame.event.get()
         for event in evenement:
+
+
             # Changement de l'écran
-
-
             if event.type == pygame.VIDEORESIZE:
 
                 position_x, position_y = position(vaisseau)
@@ -797,6 +802,7 @@ while enintro:
             if event.type == pygame.QUIT:
                 pygame.quit()
                 quit()
+
             # Tir
             if event.type == pygame.KEYDOWN:
                 #Vérification qu'on est pas en pause
@@ -816,25 +822,27 @@ while enintro:
                                             -VITESSE_MISSILE)
                             MUNITIONS -= 1
 
-            # Touche dans le menu Pause
+            ######## Touche dans le menu Pause########
                 # Quitter le menu pause avec echap
                 if event.key == pygame.K_ESCAPE:
                     TEMPS_AVANT_PAUSE = pygame.time.get_ticks()
                     COMPTEUR_PAUSE += 1
                 # Bas
-                if event.key == pygame.K_DOWN:
-                    if BOUTON < 1:
-                        BOUTON += 1
-                    else:
-                        BOUTON = 0
-                # Haut
-                if event.key == pygame.K_UP:
-                    if BOUTON == 1:
-                        BOUTON = 0
-                    elif BOUTON == 0:
-                        BOUTON = 1
-                # Enter
+                if COMPTEUR_PAUSE%2 != 0:
+                    if event.key == pygame.K_DOWN:
+                        if BOUTON < 1:
+                            BOUTON += 1
+                        else:
+                            BOUTON = 0
+                    # Haut
+                    if event.key == pygame.K_UP:
+                        if BOUTON == 1:
+                            BOUTON = 0
+                        elif BOUTON == 0:
+                            BOUTON = 1
 
+
+                ####Enter#####
                 if event.key == pygame.K_RETURN: #continuer le jeu
                     if BOUTON == 0:
                         COMPTEUR_PAUSE += 1
@@ -849,18 +857,21 @@ while enintro:
                         PLANETE_EN_LISTE = []
                         spawn_planete()
                         deplace_planete()
+                        visible(vaisseau)
+                        COMPTEUR_COLLISION=0
+                        BOUTON=0
 
                         #Reprise des paramètres de la difficulté choisie dans le menu
                         MENU, AJOUT_MUNITION, MUNITIONS, VITESSE_JEU, VITESSE_MISSILE,NOMBRE_VIE,DEPLACEMENT_VAISSEAU = difficulte(niveau_difficulte)
+            ########FIN BOUTON PAUSE########
 
-        #Pause
-        if COMPTEUR_PAUSE % 2 != 0:
+
+        ########Déplacement du vaisseau########
+        if COMPTEUR_PAUSE % 2 != 0: #Vérification si on est en pause
             pause()
             pygame.display.flip()
         else:
-            #Déplacement du vaisseau
             keys = pygame.key.get_pressed()
-
             # DROITE
             if keys[pygame.K_RIGHT]:
                 if position(vaisseau)[0] + VAISSEAU_LARGEUR > FENETRE_LARGEUR:
@@ -898,9 +909,9 @@ while enintro:
                     prendsPose(vaisseau, POSE_VAISSEAU[1])
                     position_vaisseau = position(vaisseau)
                     place(vaisseau, position_vaisseau[0], position_vaisseau[1] - DEPLACEMENT_VAISSEAU, 0)
+            ########FIN CONTROLE DU VAISSEAU#######
 
-            #remplissage de l'écran en NOIR
-            fenetre.fill(ESPACE)
+
 
             # incrémentation du Score, compteur, et missiles
             if COMPTEUR_BOUCLE % 60 == 0 and SCORE <= 1000:
@@ -931,7 +942,7 @@ while enintro:
                 COMPTEUR_COLLISION -= 1
 
             # Affichage
-
+            fenetre.fill(ESPACE)
             dessiner_missile(missile, fenetre)
             afficher_etoiles(fenetre, VITESSE_JEU, etoiles)
             affiche(scene, fenetre)
