@@ -1,6 +1,6 @@
 [EN DEVELOPPEMENT] :
 
-(Collisions avec les planètes à diminuer)
+
 Changer image rocher rouge
 Tirer sur des aliens pour gagner des points
 Trou noir qui arrète le jeu instant

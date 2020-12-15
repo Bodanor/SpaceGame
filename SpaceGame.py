@@ -342,22 +342,23 @@ def collision_planete(PLANETE_EN_LISTE,  nombre_vie, COMPTEUR_COLLISION, collisi
         vies = nombre_vie
         for planete in PLANETE_EN_LISTE:
             # Test si vaisseau rentre dans un grand carré qui représente les planetes
-            if position(vaisseau)[1] <= position(planete)[1] + TAILLE_PLANETE and position_vaisseau[1] + VAISSEAU_HAUTEUR >= position(planete)[1] and position(planete)[0] <= position(vaisseau)[0] + VAISSEAU_LARGEUR and position(vaisseau)[0] <= position(planete)[0] + TAILLE_PLANETE:
+            #On fait -5 à la taille des planetes pour que les collisions soient moins "brutale"
+            if position(vaisseau)[1] <= position(planete)[1] + (TAILLE_PLANETE-10) and position_vaisseau[1] + VAISSEAU_HAUTEUR >= position(planete)[1] and position(planete)[0] <= position(vaisseau)[0] + VAISSEAU_LARGEUR and position(vaisseau)[0] <= position(planete)[0] + (TAILLE_PLANETE-10):
 
                 # Affinage des collisions au dessus à gauche du grand carré
-                if position(vaisseau)[1] + VAISSEAU_HAUTEUR <= position(planete)[1] + TAILLE_PLANETE / 8 and position_vaisseau[0] + VAISSEAU_LARGEUR >= position(planete)[0] and position(vaisseau)[0] + VAISSEAU_LARGEUR <= position(planete)[0] + TAILLE_PLANETE / 8:
+                if position(vaisseau)[1] + VAISSEAU_HAUTEUR <= position(planete)[1] + (TAILLE_PLANETE-10) / 8 and position_vaisseau[0] + VAISSEAU_LARGEUR >= position(planete)[0] and position(vaisseau)[0] + VAISSEAU_LARGEUR <= position(planete)[0] + (TAILLE_PLANETE-10) / 8:
                     None
 
                 # Affinage des collisions au dessus à droite du grand carré
-                elif position(vaisseau)[1] + VAISSEAU_HAUTEUR < position(planete)[1] + TAILLE_PLANETE / 8 and position(vaisseau)[0] > position(planete)[0] + (TAILLE_PLANETE * (7 / 8)):
+                elif position(vaisseau)[1] + VAISSEAU_HAUTEUR < position(planete)[1] + (TAILLE_PLANETE-10) / 8 and position(vaisseau)[0] > position(planete)[0] + ((TAILLE_PLANETE-10) * (7 / 8)):
                     None
 
                 # Affinage des collisions en bas à droite du grand carré
-                elif position(vaisseau)[1] > position(planete)[1] + (TAILLE_PLANETE * (7 / 8)) and position(vaisseau)[0] > position(planete)[0] + TAILLE_PLANETE * (7 / 8):
+                elif position(vaisseau)[1] > position(planete)[1] + ((TAILLE_PLANETE-10) * (7 / 8)) and position(vaisseau)[0] > position(planete)[0] + (TAILLE_PLANETE-10) * (7 / 8):
                     None
 
                 # Affinage des collisions en bas à gauche du grand carré
-                elif position(vaisseau)[1] > position(planete)[1] + (TAILLE_PLANETE * (7 / 8)) and position(vaisseau)[0] + VAISSEAU_LARGEUR < position(planete)[0] + TAILLE_PLANETE / 8:
+                elif position(vaisseau)[1] > position(planete)[1] + ((TAILLE_PLANETE-10) * (7 / 8)) and position(vaisseau)[0] + VAISSEAU_LARGEUR < position(planete)[0] + (TAILLE_PLANETE-10) / 8:
                     None
 
                 else:
@@ -922,11 +923,11 @@ while enintro:
             #Faire clignoter le vaisseau si collision
             if collision_active == False:
 
-                if COMPTEUR_COLLISION == 180 or COMPTEUR_COLLISION == 120 or COMPTEUR_COLLISION == 60:
+                if COMPTEUR_COLLISION == 180 or COMPTEUR_COLLISION == 150 or COMPTEUR_COLLISION == 120 or COMPTEUR_COLLISION ==90 or COMPTEUR_COLLISION ==60 or COMPTEUR_COLLISION ==30:
                     invisible(vaisseau)
 
 
-                if COMPTEUR_COLLISION == 150 or COMPTEUR_COLLISION == 90 or COMPTEUR_COLLISION == 30:
+                if COMPTEUR_COLLISION == 165 or COMPTEUR_COLLISION == 135 or COMPTEUR_COLLISION == 105 or COMPTEUR_COLLISION ==75 or COMPTEUR_COLLISION ==45 or COMPTEUR_COLLISION == 15:
                     visible(vaisseau)
 
 
