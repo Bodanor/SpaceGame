@@ -1,18 +1,7 @@
 [EN DEVELOPPEMENT] :
-
-
-
 Tirer sur des aliens pour gagner des points
-Trou noir qui arrète le jeu instant
-
-Rajouter un best score baser sur un fichier
-
 L'alien tire aussi
-
 Quand on resize il faut que les planetes changent de tailles (Recharegr les images pour que ca fonctionne sinon perte de qualité)
+Souris qui fonctionne dans le menu pause
 
 
-
-QUESTION
-1) Collisions avec le cercle
-2) Est ce que les collisions doivent etres precise

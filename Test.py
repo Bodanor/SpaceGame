@@ -15,6 +15,7 @@ BOUTON_COULEUR_FONCE = (100, 100, 100)
 # Etoile
 NOMBRE_ETOILES = 500
 NOMBRE_UFO = 5
+NOMBRE_TROU_NOIR = 5
 
 # Dimension Fenetre
 FENETRE_LARGEUR = 1080
@@ -28,14 +29,19 @@ DEPLACEMENT_VAISSEAU = 7
 # Dimension UFO
 UFO_TAILLE = 80
 
+# trou noir
+TROU_NOIR_TAILLE = 80
+FREQUENCE_APPARITION_TROU_NOIR = 1000
+
 # Apparence vie
 VIE_LARGEUR = 30
 VIE_HAUTEUR = 25
 
 
 # dimension planete
-
 TAILLE_PLANETE = 180
+
+
 
 # Pose Planete
 POSE_PLANETE = (
@@ -50,6 +56,8 @@ VITESSE_JEU = 3
 MUNITIONS = 20
 VITESSE_MISSILE = 1
 AJOUT_MUNITION = 20
+
+
 
 # Score et compteur
 SCORE = 0
@@ -74,11 +82,13 @@ BOUTON = 0
 
 
 
-# DEFINITION PLANETE
+# DEFINITION ENTITE
 LISTE_PLANETE = []
 PLANETE_EN_LISTE = []
 LISTE_UFO = []
 UFO_EN_LISTE = []
+LISTE_TROU_NOIR = []
+TROU_NOIR_EN_LISTE = []
 COULOIRS = []
 
 ########FIN CONSTANTE#######
@@ -339,7 +349,7 @@ def deplace_planete(vitesse_jeu):
                 couloir_utilise.remove(couloir_planete)
 
 #Gérer les collisions
-def collision_planete(PLANETE_EN_LISTE,  nombre_vie, COMPTEUR_COLLISION, collision_active):
+def collision_entite(PLANETE_EN_LISTE,  nombre_vie, COMPTEUR_COLLISION, collision_active):
     compteur = COMPTEUR_COLLISION
     vies = nombre_vie
     collision = collision_active
@@ -381,6 +391,22 @@ def collision_planete(PLANETE_EN_LISTE,  nombre_vie, COMPTEUR_COLLISION, collisi
                 UFO_EN_LISTE.remove(ufo)
                 couloir_ufo = afficherCouloir(ufo)
                 couloir_utilise_ufo.remove(couloir_ufo)
+                return vies, compteur, collision
+
+        for trou_noir in TROU_NOIR_EN_LISTE:
+
+            centre_trou_noir_x = position(trou_noir)[0] + TROU_NOIR_TAILLE / 2
+            centre_trou_noir_y = position(trou_noir)[1] + TROU_NOIR_TAILLE / 2
+            centre_vaisseau_x = position(vaisseau)[0] + VAISSEAU_LARGEUR / 2
+            centre_vaisseau_y = position(vaisseau)[1] + VAISSEAU_HAUTEUR / 2
+            distance_vaisseau_trou_noir = math.sqrt((centre_trou_noir_x - centre_vaisseau_x) ** 2 + (centre_trou_noir_y - centre_vaisseau_y) ** 2)
+
+            if distance_vaisseau_trou_noir < 70:
+                vies = 0
+                compteur = 180
+                collision = False
+                couloir_trou_noir = afficherCouloir(trou_noir)
+                couloir_utilise_trou_noir.remove(couloir_trou_noir)
                 return vies, compteur, collision
     else:
        return vies, compteur, collision
@@ -431,6 +457,48 @@ def deplace_ufo(vitesse_jeu):
                 couloir_utilise_ufo.remove(couloir_ufo)
 
 
+###TROU NOIR#######
+def spawn_trou_noir():
+
+    random_timer = random.randint(0, FREQUENCE_APPARITION_TROU_NOIR)
+    if random_timer == 2:
+        if len(TROU_NOIR_EN_LISTE) < 1:
+            couloir_random = random.randint(0, 4)
+            trou_noir_random = random.randint(0, 4)
+            hauteur_random = random.randint(-200,-80)
+            if couloir_random in couloir_utilise_trou_noir:
+                pass
+            else:
+                if LISTE_TROU_NOIR[trou_noir_random] in TROU_NOIR_EN_LISTE:
+                    pass
+                else:
+                    #On verifie qu'il n'existe pas deja une planete a l'emplacement du trou noir
+                    for planete in PLANETE_EN_LISTE:
+
+                        couloir_planete = afficherCouloir(planete)
+                        if couloir_planete == couloir_random:
+                            if hauteur_random > position(planete)[1] + TAILLE_PLANETE or hauteur_random + TROU_NOIR_TAILLE< position(planete)[1]:
+                                place(LISTE_TROU_NOIR[trou_noir_random], COULOIRS[couloir_random][0], hauteur_random, couloir_random)
+                                TROU_NOIR_EN_LISTE.append(LISTE_TROU_NOIR[trou_noir_random])
+                                couloir_utilise_trou_noir.append(couloir_random)
+
+
+
+def deplace_trou_noir(vitesse_jeu):
+    #Si en pause alors on freeze le trou noir
+    if COMPTEUR_PAUSE %2 != 0:
+       vitesse_jeu = 0
+    else:
+
+        for trou_noir in TROU_NOIR_EN_LISTE:
+            x, y = position(trou_noir)
+            couloir_trou_noir = afficherCouloir(trou_noir)
+            place(trou_noir, x, y+vitesse_jeu, couloir_trou_noir)
+            #Si l'UFO sort de la fenetre alors on met un nombre random de pixel avant une nouvelle apparition
+            if position(trou_noir)[1] > FENETRE_HAUTEUR + random.randint(100,9000):
+                TROU_NOIR_EN_LISTE.remove(trou_noir)
+                couloir_trou_noir = afficherCouloir(trou_noir)
+                couloir_utilise_trou_noir.remove(couloir_trou_noir)
 
 
 
@@ -446,6 +514,7 @@ def difficulte (niveau_difficulte):
         VITESSE_MISSILE = 1
         NOMBRE_VIE = 3
         DEPLACEMENT_VAISSEAU = 7
+        FREQUENCE_APPARITION_TROU_NOIR = 1000
 
     elif niveau_difficulte == 1:
         MENU = ['Jouer', '<Moyen>', 'Quitter']
@@ -455,6 +524,7 @@ def difficulte (niveau_difficulte):
         VITESSE_MISSILE = 0.8
         NOMBRE_VIE = 2
         DEPLACEMENT_VAISSEAU = 6
+        FREQUENCE_APPARITION_TROU_NOIR = 500
     elif niveau_difficulte == 2:
         MENU = ['Jouer', '<Difficile', 'Quitter']
         AJOUT_MUNITION = 10
@@ -463,8 +533,9 @@ def difficulte (niveau_difficulte):
         VITESSE_MISSILE = 0.6
         NOMBRE_VIE = 1
         DEPLACEMENT_VAISSEAU = 5
+        FREQUENCE_APPARITION_TROU_NOIR = 250
 
-    return MENU,AJOUT_MUNITION, MUNITIONS,VITESSE_JEU,VITESSE_MISSILE,NOMBRE_VIE,DEPLACEMENT_VAISSEAU
+    return MENU,AJOUT_MUNITION, MUNITIONS,VITESSE_JEU,VITESSE_MISSILE,NOMBRE_VIE,DEPLACEMENT_VAISSEAU, FREQUENCE_APPARITION_TROU_NOIR
 
 
 
@@ -575,6 +646,17 @@ for i in range(NOMBRE_UFO):
     LISTE_UFO.append(ufo)
 print("[LOG] TOUT LES UFO SONT CHARGéES")
 
+print("[LOG] CHARGEMENT DU TROU NOIR")
+
+for i in range(NOMBRE_TROU_NOIR):
+    chemin = 'Images/trou_noir.png'
+    image = pygame.image.load(chemin).convert_alpha(fenetre)
+    image = pygame.transform.scale(image, (TROU_NOIR_TAILLE,TROU_NOIR_TAILLE))
+    trou_noir = nouvelleEntite()
+    ajouteImage(trou_noir, 'trou_noir{}'.format(i), image)
+    prendsPose(trou_noir, 'trou_noir{}'.format(i))
+    LISTE_TROU_NOIR.append(trou_noir)
+print("[LOG]  LES TROUS NOIR SONT CHARGéES")
 
 
 print("[LOG] TOUTES LES IMAGES SONT CHARGéES")
@@ -604,6 +686,7 @@ etoiles = cree_etoiles()
 creation_couloirs_planete()
 couloir_utilise = []
 couloir_utilise_ufo = []
+couloir_utilise_trou_noir = []
 collision_active = True
 ######CREATION DU MENU######
 while enintro:
@@ -664,7 +747,7 @@ while enintro:
                 if BOUTON == 1:
                     if niveau_difficulte < 2:
                         niveau_difficulte += 1
-                        MENU, AJOUT_MUNITION, MUNITIONS, VITESSE_JEU, VITESSE_MISSILE,NOMBRE_VIE,DEPLACEMENT_VAISSEAU = difficulte(niveau_difficulte)
+                        MENU, AJOUT_MUNITION, MUNITIONS, VITESSE_JEU, VITESSE_MISSILE,NOMBRE_VIE,DEPLACEMENT_VAISSEAU, FREQUENCE_APPARITION_TROU_NOIR = difficulte(niveau_difficulte)
                     else:
                         None
             # Décrémentation de la difficulté
@@ -672,7 +755,7 @@ while enintro:
                 if BOUTON == 1:
                     if niveau_difficulte > 0:
                         niveau_difficulte -= 1
-                        MENU, AJOUT_MUNITION, MUNITIONS, VITESSE_JEU, VITESSE_MISSILE,NOMBRE_VIE,DEPLACEMENT_VAISSEAU = difficulte(niveau_difficulte)
+                        MENU, AJOUT_MUNITION, MUNITIONS, VITESSE_JEU, VITESSE_MISSILE,NOMBRE_VIE,DEPLACEMENT_VAISSEAU, FREQUENCE_APPARITION_TROU_NOIR = difficulte(niveau_difficulte)
                     else:
                         None
             # déplacement dans le menu
@@ -771,13 +854,14 @@ while enintro:
             couloir_utilise = []
             PLANETE_EN_LISTE = []
             UFO_EN_LISTE = []
+            TROU_NOIR_EN_LISTE = []
             spawn_planete()
             deplace_planete(VITESSE_JEU)
             visible(vaisseau)
             COMPTEUR_COLLISION = 0
 
             # Reprise des paramètres de la difficulté choisie dans le menu
-            MENU, AJOUT_MUNITION, MUNITIONS, VITESSE_JEU, VITESSE_MISSILE, NOMBRE_VIE, DEPLACEMENT_VAISSEAU = difficulte(
+            MENU, AJOUT_MUNITION, MUNITIONS, VITESSE_JEU, VITESSE_MISSILE, NOMBRE_VIE, DEPLACEMENT_VAISSEAU, FREQUENCE_APPARITION_TROU_NOIR = difficulte(
                 niveau_difficulte)
 
             fenetre.fill(ESPACE)
@@ -786,7 +870,9 @@ while enintro:
         spawn_planete()
         deplace_planete(VITESSE_JEU)
         spawn_ufo()
+        spawn_trou_noir()
         deplace_ufo(VITESSE_JEU)
+        deplace_trou_noir(VITESSE_JEU)
         temps_maintenant = pygame.time.get_ticks()
         prendsPose(vaisseau, POSE_VAISSEAU[0])
 
@@ -816,6 +902,12 @@ while enintro:
                     position_x, position_y = position(ufo)
 
                     place(ufo, COULOIRS[couloir][0], position_y, couloir)
+
+                for trou_noir in TROU_NOIR_EN_LISTE:
+                    couloir = afficherCouloir(trou_noir)
+                    position_x, position_y = position(trou_noir)
+
+                    place(trou_noir, COULOIRS[couloir][0], position_y, couloir)
 
                 etoiles = cree_etoiles()
 
@@ -858,12 +950,14 @@ while enintro:
                             BOUTON += 1
                         else:
                             BOUTON = 0
+
                     # Haut
                     if event.key == pygame.K_UP:
                         if BOUTON == 1:
                             BOUTON = 0
                         elif BOUTON == 0:
                             BOUTON = 1
+
 
 
                 ####Enter#####
@@ -949,6 +1043,10 @@ while enintro:
             if COMPTEUR_BOUCLE % 6000 == 0:
                 MUNITIONS += AJOUT_MUNITION
 
+            if niveau_difficulte == 2: #On regagne une vie tous les 200 scores si on est en difficile
+                if SCORE % 200 == 0:
+                    NOMBRE_VIE += 1
+
 
             #Faire clignoter le vaisseau si collision
             if collision_active == False:
@@ -973,9 +1071,10 @@ while enintro:
             affiche(scene, fenetre)
             affiche(PLANETE_EN_LISTE, fenetre)
             affiche(UFO_EN_LISTE, fenetre)
+            affiche(TROU_NOIR_EN_LISTE, fenetre)
             score()
             afficher_munition(MUNITIONS)
-            NOMBRE_VIE, COMPTEUR_COLLISION, collision_active = collision_planete(PLANETE_EN_LISTE, NOMBRE_VIE, COMPTEUR_COLLISION, collision_active)
+            NOMBRE_VIE, COMPTEUR_COLLISION, collision_active = collision_entite(PLANETE_EN_LISTE, NOMBRE_VIE, COMPTEUR_COLLISION, collision_active)
             vie()
             pygame.display.flip()
             # Temps
