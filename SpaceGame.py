@@ -15,6 +15,7 @@ BOUTON_COULEUR_FONCE = (100, 100, 100)
 # Etoile
 NOMBRE_ETOILES = 500
 NOMBRE_UFO = 5
+NOMBRE_TROU_NOIR = 5
 
 # Dimension Fenetre
 FENETRE_LARGEUR = 1080
@@ -28,19 +29,22 @@ DEPLACEMENT_VAISSEAU = 7
 # Dimension UFO
 UFO_TAILLE = 80
 
+# trou noir
+TROU_NOIR_TAILLE = 80
+FREQUENCE_APPARITION_TROU_NOIR = 1000
+
 # Apparence vie
 VIE_LARGEUR = 30
 VIE_HAUTEUR = 25
 
-
 # dimension planete
-
 TAILLE_PLANETE = 180
 
 # Pose Planete
 POSE_PLANETE = (
-'Planete1', 'Planete2', 'Planete3', 'Planete4', 'Planete5', 'Planete6', 'Planete7', 'Planete8', 'Planete9', 'Planete10',
-'Planete11', 'Planete12', 'Planete13', 'Planete14', 'Planete15', 'Planete16')
+    'Planete1', 'Planete2', 'Planete3', 'Planete4', 'Planete5', 'Planete6', 'Planete7', 'Planete8', 'Planete9',
+    'Planete10',
+    'Planete11', 'Planete12', 'Planete13', 'Planete14', 'Planete15', 'Planete16')
 POSE_VAISSEAU = ('vaisseau_jaune_sans_flamme', 'vaisseau_jaune_avec_flamme')
 
 # Vitesse du Jeu
@@ -71,20 +75,20 @@ BOUTON_LARGEUR = 220
 BOUTON_HAUTEUR = 41
 BOUTON = 0
 
-
-
-
-# DEFINITION PLANETE
+# DEFINITION ENTITE
 LISTE_PLANETE = []
 PLANETE_EN_LISTE = []
 LISTE_UFO = []
 UFO_EN_LISTE = []
+LISTE_TROU_NOIR = []
+TROU_NOIR_EN_LISTE = []
 COULOIRS = []
 
 ########FIN CONSTANTE#######
 
-#Difficulté
+# Difficulté
 niveau_difficulte = 0
+
 
 #######FONCTIONS########
 
@@ -115,10 +119,8 @@ def nouvelleEntite():
         'position': [0, 0],
         'image': None,
         'listeImage': {},
-        'couloir' : 0
+        'couloir': 0
     }
-
-
 
 
 def visible(entite):
@@ -146,9 +148,9 @@ def position(entite):
 def afficherCouloir(entite):
     return entite['couloir']
 
+
 def prendsPose(entite, nom):
     entite['image'] = entite['listeImage'][nom]
-
 
 
 def ajouteImage(entite, nom, image):
@@ -158,13 +160,13 @@ def ajouteImage(entite, nom, image):
 def dessine(entite, ecran):
     ecran.blit(entite['image'], entite['position'])
 
+
 # Fin ENTITE #
 
 # AFFICHAGE
 def affiche(entites, ecran):
     for objet in entites:
         if estVisible(objet):
-
             dessine(objet, ecran)
 
 
@@ -182,7 +184,7 @@ def vie():
 
 # Tir et Munition
 def afficher_munition(nombre_munitions):
-    if nombre_munitions == 0: #Afficher les munitions en rouges quand il n'y en a plus
+    if nombre_munitions == 0:  # Afficher les munitions en rouges quand il n'y en a plus
 
         munition = police.render(str(": {}".format(int(MUNITIONS))), True, ROUGE)
         fenetre.blit(munition, (35, FENETRE_HAUTEUR - 35))
@@ -190,33 +192,28 @@ def afficher_munition(nombre_munitions):
         pygame.draw.circle(fenetre, BLEU, (17, FENETRE_HAUTEUR - 25), 10, width=1)
         pygame.draw.circle(fenetre, BLANC, (17, FENETRE_HAUTEUR - 25), 5)
 
-    else: #Afficher les munitions normalement
+    else:  # Afficher les munitions normalement
         munition = police.render(str(": {}".format(int(MUNITIONS))), True, BLANC)
         fenetre.blit(munition, (35, FENETRE_HAUTEUR - 35))
         pygame.draw.rect(fenetre, BLANC, pygame.Rect(5, FENETRE_HAUTEUR - 40, munition.get_size()[0] + 40, 30), width=1)
         pygame.draw.circle(fenetre, BLEU, (17, FENETRE_HAUTEUR - 25), 10, width=1)
         pygame.draw.circle(fenetre, BLANC, (17, FENETRE_HAUTEUR - 25), 5)
 
-#MRU pour les missiles
+
+# MRU pour les missiles
 def mru_1d(depart, temps_depart, vitesse, temps_maintenant, compteur_pause):
-
     if COMPTEUR_PAUSE % 2 != 0:
-
-
         return 0
     mru_1d = depart + (vitesse * (temps_maintenant - temps_depart))
     return (mru_1d)
 
 
-
-#Affichage des missiles
+# Affichage des missiles
 def dessiner_missile(missile, fenetre):
-
     temps_maintenant = pygame.time.get_ticks()
 
     for missile in missile:
         missile_vitesse = missile['vitesse_verticale']
-
 
         if COMPTEUR_PAUSE % 2 != 0:  # stopper missiles pendant menu pause
             temps_maintenant = temps_maintenant - TEMPS_AVANT_PAUSE
@@ -247,7 +244,7 @@ def afficherBoutonMenu(Menu):
         text_afficher = POLICE_ECRITURE_BOUTON.render(text, True, BLANC)
         texte_largeur, texte_hauteur = text_afficher.get_size()
 
-        #détection de la souris qui passe au dessus des boutons et les afficher en couleur clair si elle est au dessus
+        # détection de la souris qui passe au dessus des boutons et les afficher en couleur clair si elle est au dessus
         if FENETRE_LARGEUR / 2 - BOUTON_LARGEUR // 2 <= mouse[
             0] <= FENETRE_LARGEUR / 2 + BOUTON_LARGEUR // 2 and FENETRE_HAUTEUR / MENU_LONGUEUR - BOUTON_HAUTEUR + (
                 HAUTEUR / 2 * index) <= mouse[1] <= (FENETRE_HAUTEUR / MENU_LONGUEUR) + (
@@ -257,7 +254,7 @@ def afficherBoutonMenu(Menu):
                               ((FENETRE_HAUTEUR / MENU_LONGUEUR) - BOUTON_HAUTEUR) + (HAUTEUR / 2 * index),
                               BOUTON_LARGEUR, 40])
 
-        else: #Afficher les boutons d'une couleur normale
+        else:  # Afficher les boutons d'une couleur normale
             pygame.draw.rect(fenetre, BOUTON_COULEUR_FONCE,
                              [(FENETRE_LARGEUR / 2) - BOUTON_LARGEUR // 2,
                               ((FENETRE_HAUTEUR / MENU_LONGUEUR) - BOUTON_HAUTEUR) + (HAUTEUR / 2 * index),
@@ -274,14 +271,18 @@ def pause():
         text_afficher = POLICE_ECRITURE_BOUTON.render(text, True, BLANC)
         texte_largeur, texte_hauteur = text_afficher.get_size()
 
-        #affichage des boutons de couleurs différentes selon celui qui est sélectionné
-        if BOUTON == index:
+        # affichage des boutons de couleurs différentes selon celui qui est sélectionné
+        if BOUTON == index or FENETRE_LARGEUR / 2 - BOUTON_LARGEUR // 2 <= mouse[
+            0] <= FENETRE_LARGEUR / 2 + BOUTON_LARGEUR // 2 and FENETRE_HAUTEUR / MENU_LONGUEUR - BOUTON_HAUTEUR + (
+                HAUTEUR / 2 * index) <= mouse[1] <= (FENETRE_HAUTEUR / MENU_LONGUEUR) + (
+                HAUTEUR / 2 * index):
             pygame.draw.rect(fenetre, BOUTON_COULEUR_CLAIR,
                              [(FENETRE_LARGEUR / 2) - BOUTON_LARGEUR // 2,
                               ((FENETRE_HAUTEUR / MENU_LONGUEUR) - BOUTON_HAUTEUR) + (HAUTEUR / 2 * index),
                               BOUTON_LARGEUR, 40])
 
         else:
+
             pygame.draw.rect(fenetre, BOUTON_COULEUR_FONCE,
                              [(FENETRE_LARGEUR / 2) - BOUTON_LARGEUR // 2,
                               ((FENETRE_HAUTEUR / MENU_LONGUEUR) - BOUTON_HAUTEUR) + (HAUTEUR / 2 * index),
@@ -293,23 +294,23 @@ def pause():
     pygame.display.flip()
     temps.tick(60)
 
+
 def creation_couloirs_planete():
+    for x in range(0, 5):
+        COULOIRS.append(((FENETRE_LARGEUR / 5) * x, (FENETRE_LARGEUR / 5) * (x + 1)))
 
-    for x in range(0,5):
-        COULOIRS.append(((FENETRE_LARGEUR/5) * x, (FENETRE_LARGEUR/5)*(x+1)))
 
-#GERER PLANETES
+# GERER PLANETES
 def spawn_planete():
-
-    #Nombre de chances de spawn une planete
+    # Nombre de chances de spawn une planete
     random_timer = random.randint(0, 14)
     if random_timer == 3:
-        #Pas plus de 4 planetes a l'ecran
+        # Pas plus de 4 planetes a l'ecran
         if len(PLANETE_EN_LISTE) < 4:
             couloir_random = random.randint(0, 4)
             planete_random = random.randint(0, 15)
 
-            #Une seule planete par couloir
+            # Une seule planete par couloir
             if couloir_random in couloir_utilise:
                 pass
 
@@ -323,23 +324,24 @@ def spawn_planete():
 
 
 def deplace_planete(vitesse_jeu):
-    #Freeze des planete si en pause
-    if COMPTEUR_PAUSE %2 != 0:
-       vitesse_jeu = 0
+    # Freeze des planete si en pause
+    if COMPTEUR_PAUSE % 2 != 0:
+        vitesse_jeu = 0
     else:
 
         for planete in PLANETE_EN_LISTE:
             x, y = position(planete)
             couloir_planete = afficherCouloir(planete)
-            place(planete, x, y+vitesse_jeu, couloir_planete)
-            #Respawn la planete si elle est en dessous de l'ecran (donc plus affichée)
+            place(planete, x, y + vitesse_jeu, couloir_planete)
+            # Respawn la planete si elle est en dessous de l'ecran (donc plus affichée)
             if position(planete)[1] > FENETRE_HAUTEUR:
                 PLANETE_EN_LISTE.remove(planete)
                 couloir_planete = afficherCouloir(planete)
                 couloir_utilise.remove(couloir_planete)
 
-#Gérer les collisions
-def collision_planete(PLANETE_EN_LISTE,  nombre_vie, COMPTEUR_COLLISION, collision_active):
+
+# Gérer les collisions
+def collision_entite(PLANETE_EN_LISTE,  nombre_vie, COMPTEUR_COLLISION, collision_active):
     compteur = COMPTEUR_COLLISION
     vies = nombre_vie
     collision = collision_active
@@ -350,12 +352,7 @@ def collision_planete(PLANETE_EN_LISTE,  nombre_vie, COMPTEUR_COLLISION, collisi
         for planete in PLANETE_EN_LISTE:
 
                 #Calcul de la distance entre le centre des objets et des vaisseaux
-                centre_cercle_x = position(planete)[0] + TAILLE_PLANETE / 2
-                centre_cercle_y = position(planete)[1] + TAILLE_PLANETE / 2
-                centre_vaisseau_x = position(vaisseau)[0] + VAISSEAU_LARGEUR / 2
-                centre_vaisseau_y = position(vaisseau)[1] + VAISSEAU_HAUTEUR / 2
-                distance_vaisseau_planete = math.sqrt((centre_cercle_x - centre_vaisseau_x) ** 2 + (centre_cercle_y - centre_vaisseau_y) ** 2)
-
+                distance_vaisseau_planete = distance_objets(vaisseau,VAISSEAU_HAUTEUR,VAISSEAU_LARGEUR,planete,TAILLE_PLANETE,TAILLE_PLANETE)
 
                 if distance_vaisseau_planete < 125:
                     vies = vies - 1
@@ -367,12 +364,7 @@ def collision_planete(PLANETE_EN_LISTE,  nombre_vie, COMPTEUR_COLLISION, collisi
                     return vies, compteur, collision
 
         for ufo in UFO_EN_LISTE:
-
-            centre_ufo_x = position(ufo)[0] + UFO_TAILLE / 2
-            centre_ufo_y = position(ufo)[1] + UFO_TAILLE / 2
-            centre_vaisseau_x = position(vaisseau)[0] + VAISSEAU_LARGEUR / 2
-            centre_vaisseau_y = position(vaisseau)[1] + VAISSEAU_HAUTEUR / 2
-            distance_vaisseau_UFO = math.sqrt((centre_ufo_x - centre_vaisseau_x) ** 2 + (centre_ufo_y - centre_vaisseau_y) ** 2)
+            distance_vaisseau_UFO = distance_objets(vaisseau,VAISSEAU_LARGEUR,VAISSEAU_HAUTEUR,ufo,UFO_TAILLE,UFO_TAILLE)
 
             if distance_vaisseau_UFO < 70:
                 vies = vies -1
@@ -382,62 +374,122 @@ def collision_planete(PLANETE_EN_LISTE,  nombre_vie, COMPTEUR_COLLISION, collisi
                 couloir_ufo = afficherCouloir(ufo)
                 couloir_utilise_ufo.remove(couloir_ufo)
                 return vies, compteur, collision
+
+        for trou_noir in TROU_NOIR_EN_LISTE:
+            distance_vaisseau_trou_noir = distance_objets(trou_noir,TROU_NOIR_TAILLE,TROU_NOIR_TAILLE, vaisseau, VAISSEAU_LARGEUR, VAISSEAU_HAUTEUR )
+
+            if distance_vaisseau_trou_noir < 70:
+                vies = 0
+                compteur = 180
+                collision = False
+                couloir_trou_noir = afficherCouloir(trou_noir)
+                couloir_utilise_trou_noir.remove(couloir_trou_noir)
+                return vies, compteur, collision
     else:
        return vies, compteur, collision
     return vies, compteur, collision
 
+def distance_objets(objet1, HAUTEUR_OBJET1,LARGEUR_OBJET1, objet2, HAUTEUR_OBJET2,LARGEUR_OBJET2):
+    centre_objet1_x = position(objet1)[0] + LARGEUR_OBJET1 / 2
+    centre_objet1_y = position(objet1)[1] + HAUTEUR_OBJET1 / 2
+    centre_objet2_x = position(objet2)[0] + LARGEUR_OBJET2 / 2
+    centre_objet2_y = position(objet2)[1] + HAUTEUR_OBJET2 / 2
+    distance = math.sqrt((centre_objet1_x - centre_objet2_x) ** 2 + (centre_objet1_y - centre_objet2_y) ** 2)
 
-#GERER UFO
+    return distance
+
+
+# GERER UFO
 def spawn_ufo():
-
     random_timer = random.randint(0, 14)
     if random_timer == 2:
         if len(UFO_EN_LISTE) < 1:
             couloir_random = random.randint(0, 4)
             ufo_random = random.randint(0, 4)
-            hauteur_random = random.randint(-200,-80)
+            hauteur_random = random.randint(-200, -80)
             if couloir_random in couloir_utilise_ufo:
                 pass
             else:
                 if LISTE_UFO[ufo_random] in UFO_EN_LISTE:
                     pass
                 else:
-                    #On verifie qu'il n'existe pas deja une planete a l'emplacement de l'UFO
+                    # On verifie qu'il n'existe pas deja une planete a l'emplacement de l'UFO
                     for planete in PLANETE_EN_LISTE:
 
                         couloir_planete = afficherCouloir(planete)
                         if couloir_planete == couloir_random:
-                            if hauteur_random > position(planete)[1] + TAILLE_PLANETE or hauteur_random + UFO_TAILLE< position(planete)[1]:
-                                place(LISTE_UFO[ufo_random], COULOIRS[couloir_random][0], hauteur_random, couloir_random)
+                            if hauteur_random > position(planete)[1] + TAILLE_PLANETE or hauteur_random + UFO_TAILLE < \
+                                    position(planete)[1]:
+                                place(LISTE_UFO[ufo_random], COULOIRS[couloir_random][0], hauteur_random,
+                                      couloir_random)
                                 UFO_EN_LISTE.append(LISTE_UFO[ufo_random])
                                 couloir_utilise_ufo.append(couloir_random)
 
 
-
 def deplace_ufo(vitesse_jeu):
-    #Si en pause alors on freeze l'UFO
-    if COMPTEUR_PAUSE %2 != 0:
-       vitesse_jeu = 0
+    # Si en pause alors on freeze l'UFO
+    if COMPTEUR_PAUSE % 2 != 0:
+        vitesse_jeu = 0
     else:
 
         for ufo in UFO_EN_LISTE:
             x, y = position(ufo)
             couloir_ufo = afficherCouloir(ufo)
-            place(ufo, x, y+vitesse_jeu, couloir_ufo)
-            #Si l'UFO sort de la fenetre alors on met un nombre random de pixel avant une nouvelle apparition
-            if position(ufo)[1] > FENETRE_HAUTEUR + random.randint(100,9000):
+            place(ufo, x, y + vitesse_jeu, couloir_ufo)
+            # Si l'UFO sort de la fenetre alors on met un nombre random de pixel avant une nouvelle apparition
+            if position(ufo)[1] > FENETRE_HAUTEUR + random.randint(100, 9000):
                 UFO_EN_LISTE.remove(ufo)
                 couloir_ufo = afficherCouloir(ufo)
                 couloir_utilise_ufo.remove(couloir_ufo)
 
 
+###TROU NOIR#######
+def spawn_trou_noir():
+    random_timer = random.randint(0, FREQUENCE_APPARITION_TROU_NOIR)
+    if random_timer == 2:
+        if len(TROU_NOIR_EN_LISTE) < 1:
+            couloir_random = random.randint(0, 4)
+            trou_noir_random = random.randint(0, 4)
+            hauteur_random = random.randint(-200, -80)
+            if couloir_random in couloir_utilise_trou_noir:
+                pass
+            else:
+                if LISTE_TROU_NOIR[trou_noir_random] in TROU_NOIR_EN_LISTE:
+                    pass
+                else:
+                    # On verifie qu'il n'existe pas deja une planete a l'emplacement du trou noir
+                    for planete in PLANETE_EN_LISTE:
+
+                        couloir_planete = afficherCouloir(planete)
+                        if couloir_planete == couloir_random:
+                            if hauteur_random > position(planete)[
+                                1] + TAILLE_PLANETE or hauteur_random + TROU_NOIR_TAILLE < position(planete)[1]:
+                                place(LISTE_TROU_NOIR[trou_noir_random], COULOIRS[couloir_random][0], hauteur_random,
+                                      couloir_random)
+                                TROU_NOIR_EN_LISTE.append(LISTE_TROU_NOIR[trou_noir_random])
+                                couloir_utilise_trou_noir.append(couloir_random)
 
 
+def deplace_trou_noir(vitesse_jeu):
+    # Si en pause alors on freeze le trou noir
+    if COMPTEUR_PAUSE % 2 != 0:
+        vitesse_jeu = 0
+    else:
 
-#Difficulté
-def difficulte (niveau_difficulte):
+        for trou_noir in TROU_NOIR_EN_LISTE:
+            x, y = position(trou_noir)
+            couloir_trou_noir = afficherCouloir(trou_noir)
+            place(trou_noir, x, y + vitesse_jeu, couloir_trou_noir)
+            # Si l'UFO sort de la fenetre alors on met un nombre random de pixel avant une nouvelle apparition
+            if position(trou_noir)[1] > FENETRE_HAUTEUR + random.randint(100, 9000):
+                TROU_NOIR_EN_LISTE.remove(trou_noir)
+                couloir_trou_noir = afficherCouloir(trou_noir)
+                couloir_utilise_trou_noir.remove(couloir_trou_noir)
 
-    #Les valeures du jeu changent en fonction de la difficulté choisie
+
+# Difficulté
+def difficulte(niveau_difficulte):
+    # Les valeures du jeu changent en fonction de la difficulté choisie
     if niveau_difficulte == 0:
         MENU = ['Jouer', 'Facile>', 'Quitter']
         AJOUT_MUNITION = 20
@@ -446,6 +498,7 @@ def difficulte (niveau_difficulte):
         VITESSE_MISSILE = 1
         NOMBRE_VIE = 3
         DEPLACEMENT_VAISSEAU = 7
+        FREQUENCE_APPARITION_TROU_NOIR = 1000
 
     elif niveau_difficulte == 1:
         MENU = ['Jouer', '<Moyen>', 'Quitter']
@@ -455,6 +508,7 @@ def difficulte (niveau_difficulte):
         VITESSE_MISSILE = 0.8
         NOMBRE_VIE = 2
         DEPLACEMENT_VAISSEAU = 6
+        FREQUENCE_APPARITION_TROU_NOIR = 500
     elif niveau_difficulte == 2:
         MENU = ['Jouer', '<Difficile', 'Quitter']
         AJOUT_MUNITION = 10
@@ -463,13 +517,12 @@ def difficulte (niveau_difficulte):
         VITESSE_MISSILE = 0.6
         NOMBRE_VIE = 1
         DEPLACEMENT_VAISSEAU = 5
+        FREQUENCE_APPARITION_TROU_NOIR = 250
 
-    return MENU,AJOUT_MUNITION, MUNITIONS,VITESSE_JEU,VITESSE_MISSILE,NOMBRE_VIE,DEPLACEMENT_VAISSEAU
-
+    return MENU, AJOUT_MUNITION, MUNITIONS, VITESSE_JEU, VITESSE_MISSILE, NOMBRE_VIE, DEPLACEMENT_VAISSEAU, FREQUENCE_APPARITION_TROU_NOIR
 
 
 def bestscore(bestscore):
-
     try:
         with open('scoreboard.txt', 'r+') as fichier:
             meilleurscore = fichier.readline()
@@ -483,7 +536,7 @@ def bestscore(bestscore):
             if meilleurscore == "":
                 fichier.write("0")
             marquoir = police.render(str("Meilleur score: {}".format(int(round(meilleurscore, 0)))), True, BLANC)
-            fenetre.blit(marquoir,(20, FENETRE_HAUTEUR//24))
+            fenetre.blit(marquoir, (20, FENETRE_HAUTEUR // 24))
 
     except FileNotFoundError:
         fichier = open('scoreboard.txt', 'w')
@@ -543,7 +596,6 @@ for nom_image, nom_fichier in (('Planete1', 'planete1.png'),
                                ('Planete15', 'planete15.png'),
                                ('Planete16', 'planete16.png'),
                                ('trou_noir', 'trou_noir.png')):
-
     chemin = 'Images/' + nom_fichier
     image = pygame.image.load(chemin).convert_alpha(fenetre)
     image = pygame.transform.scale(image, (TAILLE_PLANETE, TAILLE_PLANETE))
@@ -575,7 +627,17 @@ for i in range(NOMBRE_UFO):
     LISTE_UFO.append(ufo)
 print("[LOG] TOUT LES UFO SONT CHARGéES")
 
+print("[LOG] CHARGEMENT DU TROU NOIR")
 
+for i in range(NOMBRE_TROU_NOIR):
+    chemin = 'Images/trou_noir.png'
+    image = pygame.image.load(chemin).convert_alpha(fenetre)
+    image = pygame.transform.scale(image, (TROU_NOIR_TAILLE, TROU_NOIR_TAILLE))
+    trou_noir = nouvelleEntite()
+    ajouteImage(trou_noir, 'trou_noir{}'.format(i), image)
+    prendsPose(trou_noir, 'trou_noir{}'.format(i))
+    LISTE_TROU_NOIR.append(trou_noir)
+print("[LOG]  LES TROUS NOIR SONT CHARGéES")
 
 print("[LOG] TOUTES LES IMAGES SONT CHARGéES")
 # FIN CHARGEMENT IMAGES #
@@ -604,6 +666,7 @@ etoiles = cree_etoiles()
 creation_couloirs_planete()
 couloir_utilise = []
 couloir_utilise_ufo = []
+couloir_utilise_trou_noir = []
 collision_active = True
 ######CREATION DU MENU######
 while enintro:
@@ -620,7 +683,7 @@ while enintro:
             FENETRE_LARGEUR, FENETRE_HAUTEUR = fenetre.get_size()
 
             etoiles = cree_etoiles()
-            place(vaisseau, (FENETRE_LARGEUR / 2) - VAISSEAU_LARGEUR / 2, FENETRE_HAUTEUR - VAISSEAU_HAUTEUR,0)
+            place(vaisseau, (FENETRE_LARGEUR / 2) - VAISSEAU_LARGEUR / 2, FENETRE_HAUTEUR - VAISSEAU_HAUTEUR, 0)
 
         # Quitter avec la croix
         if event.type == pygame.QUIT:
@@ -647,8 +710,6 @@ while enintro:
                 COMPTEUR_BOUCLE = 1
                 BOUTON = 0
 
-
-
             # Quitter le jeu avec le bouton quitter
             if FENETRE_LARGEUR / 2 - BOUTON_LARGEUR // 2 <= mouse[
                 0] <= FENETRE_LARGEUR / 2 + BOUTON_LARGEUR // 2 and FENETRE_HAUTEUR / MENU_LONGUEUR - BOUTON_HAUTEUR + (
@@ -664,7 +725,8 @@ while enintro:
                 if BOUTON == 1:
                     if niveau_difficulte < 2:
                         niveau_difficulte += 1
-                        MENU, AJOUT_MUNITION, MUNITIONS, VITESSE_JEU, VITESSE_MISSILE,NOMBRE_VIE,DEPLACEMENT_VAISSEAU = difficulte(niveau_difficulte)
+                        MENU, AJOUT_MUNITION, MUNITIONS, VITESSE_JEU, VITESSE_MISSILE, NOMBRE_VIE, DEPLACEMENT_VAISSEAU, FREQUENCE_APPARITION_TROU_NOIR = difficulte(
+                            niveau_difficulte)
                     else:
                         None
             # Décrémentation de la difficulté
@@ -672,7 +734,8 @@ while enintro:
                 if BOUTON == 1:
                     if niveau_difficulte > 0:
                         niveau_difficulte -= 1
-                        MENU, AJOUT_MUNITION, MUNITIONS, VITESSE_JEU, VITESSE_MISSILE,NOMBRE_VIE,DEPLACEMENT_VAISSEAU = difficulte(niveau_difficulte)
+                        MENU, AJOUT_MUNITION, MUNITIONS, VITESSE_JEU, VITESSE_MISSILE, NOMBRE_VIE, DEPLACEMENT_VAISSEAU, FREQUENCE_APPARITION_TROU_NOIR = difficulte(
+                            niveau_difficulte)
                     else:
                         None
             # déplacement dans le menu
@@ -692,7 +755,7 @@ while enintro:
             # lancer/quitter le jeu
             if event.key == pygame.K_RETURN:
 
-                #Jouer
+                # Jouer
                 if BOUTON == 0 or BOUTON == 1:
                     if niveau_difficulte == 0:
                         VITESSE_JEU = 3
@@ -708,19 +771,16 @@ while enintro:
                     COMPTEUR_BOUCLE = 1
                     BOUTON = 0
 
-                #Quitter le programme
+                # Quitter le programme
                 if BOUTON == 2:
                     enjeu = False
                     enintro = False
                     NOMBRE_VIE = 0
 
-
     # Mécanique du jeu
     # Incrémentation de la vitesse du jeu dans le menu
     if COMPTEUR_BOUCLE % 60 == 0 and COMPTEUR_BOUCLE < 3600:
         VITESSE_JEU += 0.10
-
-
 
     # Tir auto
     if COMPTEUR_BOUCLE % 150 == 0:
@@ -729,17 +789,17 @@ while enintro:
                             temps_maintenant,
                             -VITESSE_MISSILE)
 
-
     # Contrôle souris
     mouse = pygame.mouse.get_pos()
 
     # Affichage Vaisseau, etoile, vie, score
     prendsPose(vaisseau, POSE_VAISSEAU[0])
+    mouse = pygame.mouse.get_pos()
     fenetre.fill(ESPACE)
     afficher_etoiles(fenetre, VITESSE_JEU, etoiles)
     dessiner_missile(missile, fenetre)
 
-    #Affichage général
+    # Affichage général
     affiche(scene, fenetre)
 
     score()
@@ -752,18 +812,15 @@ while enintro:
     # Temps
     temps_maintenant = pygame.time.get_ticks()
     temps.tick(60)
-    COMPTEUR_BOUCLE +=1
-
+    COMPTEUR_BOUCLE += 1
 
     #####FIN DU MENU#####
-
 
     #####BOUCLE DU JEU#####
     while enjeu:
 
         # Arrêter le jeu si plus de vie
         if NOMBRE_VIE == 0:
-
             bestscore(SCORE)
             SCORE = 0
             enintro = True
@@ -771,45 +828,47 @@ while enintro:
             couloir_utilise = []
             PLANETE_EN_LISTE = []
             UFO_EN_LISTE = []
+            TROU_NOIR_EN_LISTE = []
             spawn_planete()
             deplace_planete(VITESSE_JEU)
             visible(vaisseau)
             COMPTEUR_COLLISION = 0
 
             # Reprise des paramètres de la difficulté choisie dans le menu
-            MENU, AJOUT_MUNITION, MUNITIONS, VITESSE_JEU, VITESSE_MISSILE, NOMBRE_VIE, DEPLACEMENT_VAISSEAU = difficulte(
+            MENU, AJOUT_MUNITION, MUNITIONS, VITESSE_JEU, VITESSE_MISSILE, NOMBRE_VIE, DEPLACEMENT_VAISSEAU, FREQUENCE_APPARITION_TROU_NOIR = difficulte(
                 niveau_difficulte)
 
             fenetre.fill(ESPACE)
 
-        #Spawn des entités ennemies
+        # Spawn des entités ennemies
         spawn_planete()
         deplace_planete(VITESSE_JEU)
         spawn_ufo()
+        spawn_trou_noir()
         deplace_ufo(VITESSE_JEU)
+        deplace_trou_noir(VITESSE_JEU)
         temps_maintenant = pygame.time.get_ticks()
         prendsPose(vaisseau, POSE_VAISSEAU[0])
 
         evenement = pygame.event.get()
+        mouse = pygame.mouse.get_pos()
+
         for event in evenement:
-
-
             # Changement de l'écran
             if event.type == pygame.VIDEORESIZE:
 
                 position_x, position_y = position(vaisseau)
-                place(vaisseau, (position_x/FENETRE_LARGEUR)*fenetre.get_size()[0], (position_y/FENETRE_HAUTEUR)*fenetre.get_size()[1], 0)
+                place(vaisseau, (position_x / FENETRE_LARGEUR) * fenetre.get_size()[0],
+                      (position_y / FENETRE_HAUTEUR) * fenetre.get_size()[1], 0)
 
                 FENETRE_LARGEUR, FENETRE_HAUTEUR = fenetre.get_size()
                 COULOIRS = []
                 creation_couloirs_planete()
                 for planete in PLANETE_EN_LISTE:
-
                     couloir = afficherCouloir(planete)
                     position_x, position_y = position(planete)
 
-                    place(planete,COULOIRS[couloir][0] ,position_y,couloir)
-
+                    place(planete, COULOIRS[couloir][0], position_y, couloir)
 
                 for ufo in UFO_EN_LISTE:
                     couloir = afficherCouloir(ufo)
@@ -817,8 +876,13 @@ while enintro:
 
                     place(ufo, COULOIRS[couloir][0], position_y, couloir)
 
-                etoiles = cree_etoiles()
+                for trou_noir in TROU_NOIR_EN_LISTE:
+                    couloir = afficherCouloir(trou_noir)
+                    position_x, position_y = position(trou_noir)
 
+                    place(trou_noir, COULOIRS[couloir][0], position_y, couloir)
+
+                etoiles = cree_etoiles()
 
             # Quitter avec la croix
             if event.type == pygame.QUIT:
@@ -826,9 +890,32 @@ while enintro:
                 pygame.quit()
                 quit()
 
+            if event.type == pygame.MOUSEBUTTONDOWN:
+
+                if FENETRE_LARGEUR / 2 - BOUTON_LARGEUR // 2 <= mouse[
+                    0] <= FENETRE_LARGEUR / 2 + BOUTON_LARGEUR // 2 and FENETRE_HAUTEUR / MENU_LONGUEUR - BOUTON_HAUTEUR + (
+                        HAUTEUR / 2 * 0) <= mouse[1] <= (FENETRE_HAUTEUR / MENU_LONGUEUR) + (HAUTEUR / 2 * 0):
+                    COMPTEUR_PAUSE += 1
+
+                if FENETRE_LARGEUR / 2 - BOUTON_LARGEUR // 2 <= mouse[
+                    0] <= FENETRE_LARGEUR / 2 + BOUTON_LARGEUR // 2 and FENETRE_HAUTEUR / MENU_LONGUEUR - BOUTON_HAUTEUR + (
+                        HAUTEUR / 2 * 1) <= mouse[1] <= (FENETRE_HAUTEUR / MENU_LONGUEUR) + (HAUTEUR / 2 * 1):
+                    bestscore(SCORE)
+                    COMPTEUR_PAUSE += 1
+                    SCORE = 0
+                    enintro = True
+                    enjeu = False
+                    couloir_utilise = []
+                    PLANETE_EN_LISTE = []
+                    spawn_planete()
+                    deplace_planete(VITESSE_JEU)
+                    visible(vaisseau)
+                    COMPTEUR_COLLISION = 0
+                    BOUTON = 0
+
             # Tir
             if event.type == pygame.KEYDOWN:
-                #Vérification qu'on est pas en pause
+                # Vérification qu'on est pas en pause
                 if event.key == pygame.K_SPACE:
                     if COMPTEUR_PAUSE % 2 != 0:
                         None
@@ -845,19 +932,20 @@ while enintro:
                                             -VITESSE_MISSILE)
                             MUNITIONS -= 1
 
-            ######## Touche dans le menu Pause########
+                ######## Touche dans le menu Pause########
                 # Quitter le menu pause avec echap
                 if event.key == pygame.K_ESCAPE:
                     TEMPS_AVANT_PAUSE = pygame.time.get_ticks()
                     COMPTEUR_PAUSE += 1
 
-                if COMPTEUR_PAUSE%2 != 0:
+                if COMPTEUR_PAUSE % 2 != 0:
                     # Bas
                     if event.key == pygame.K_DOWN:
                         if BOUTON < 1:
                             BOUTON += 1
                         else:
                             BOUTON = 0
+
                     # Haut
                     if event.key == pygame.K_UP:
                         if BOUTON == 1:
@@ -865,16 +953,15 @@ while enintro:
                         elif BOUTON == 0:
                             BOUTON = 1
 
-
                 ####Enter#####
-                if event.key == pygame.K_RETURN: #continuer le jeu
+                if event.key == pygame.K_RETURN:  # continuer le jeu
                     if BOUTON == 0:
                         COMPTEUR_PAUSE += 1
 
                     # Revenir au menu principal
                     if BOUTON == 1:
                         bestscore(SCORE)
-                        COMPTEUR_PAUSE+=1
+                        COMPTEUR_PAUSE += 1
                         SCORE = 0
                         enintro = True
                         enjeu = False
@@ -883,16 +970,16 @@ while enintro:
                         spawn_planete()
                         deplace_planete(VITESSE_JEU)
                         visible(vaisseau)
-                        COMPTEUR_COLLISION=0
-                        BOUTON=0
+                        COMPTEUR_COLLISION = 0
+                        BOUTON = 0
 
-                        #Reprise des paramètres de la difficulté choisie dans le menu
-                        MENU, AJOUT_MUNITION, MUNITIONS, VITESSE_JEU, VITESSE_MISSILE,NOMBRE_VIE,DEPLACEMENT_VAISSEAU = difficulte(niveau_difficulte)
+                        # Reprise des paramètres de la difficulté choisie dans le menu
+                        MENU, AJOUT_MUNITION, MUNITIONS, VITESSE_JEU, VITESSE_MISSILE, NOMBRE_VIE, DEPLACEMENT_VAISSEAU, FREQUENCE_APPARITION_TROU_NOIR = difficulte(
+                            niveau_difficulte)
             ########FIN BOUTON PAUSE########
 
-
         ########Déplacement du vaisseau########
-        if COMPTEUR_PAUSE % 2 != 0: #Vérification si on est en pause
+        if COMPTEUR_PAUSE % 2 != 0:  # Vérification si on est en pause
             pause()
             pygame.display.flip()
         else:
@@ -906,7 +993,6 @@ while enintro:
                     position_vaisseau = position(vaisseau)
                     place(vaisseau, position_vaisseau[0] + DEPLACEMENT_VAISSEAU, position_vaisseau[1], 0)
 
-
             # GAUCHE
             if keys[pygame.K_LEFT]:
                 if position(vaisseau)[0] <= 0:
@@ -915,7 +1001,7 @@ while enintro:
                 else:
                     prendsPose(vaisseau, POSE_VAISSEAU[1])
                     position_vaisseau = position(vaisseau)
-                    place(vaisseau, position_vaisseau[0] - DEPLACEMENT_VAISSEAU, position_vaisseau[1],0)
+                    place(vaisseau, position_vaisseau[0] - DEPLACEMENT_VAISSEAU, position_vaisseau[1], 0)
 
             # BAS
             if keys[pygame.K_DOWN]:
@@ -924,7 +1010,7 @@ while enintro:
                 else:
                     prendsPose(vaisseau, POSE_VAISSEAU[0])
                     position_vaisseau = position(vaisseau)
-                    place(vaisseau, position_vaisseau[0], position_vaisseau[1] + DEPLACEMENT_VAISSEAU,0)
+                    place(vaisseau, position_vaisseau[0], position_vaisseau[1] + DEPLACEMENT_VAISSEAU, 0)
 
             # HAUT
             if keys[pygame.K_UP]:
@@ -935,8 +1021,6 @@ while enintro:
                     position_vaisseau = position(vaisseau)
                     place(vaisseau, position_vaisseau[0], position_vaisseau[1] - DEPLACEMENT_VAISSEAU, 0)
             ########FIN CONTROLE DU VAISSEAU#######
-
-
 
             # incrémentation du Score, compteur, et missiles
             if COMPTEUR_BOUCLE % 60 == 0 and SCORE <= 1000:
@@ -949,18 +1033,19 @@ while enintro:
             if COMPTEUR_BOUCLE % 6000 == 0:
                 MUNITIONS += AJOUT_MUNITION
 
+            if niveau_difficulte == 2:  # On regagne une vie tous les 200 scores si on est en difficile
+                if COMPTEUR_BOUCLE % 12000 == 0:
+                    NOMBRE_VIE += 1
 
-            #Faire clignoter le vaisseau si collision
+            # Faire clignoter le vaisseau si collision
             if collision_active == False:
 
-                if COMPTEUR_COLLISION == 180 or COMPTEUR_COLLISION == 150 or COMPTEUR_COLLISION == 120 or COMPTEUR_COLLISION ==90 or COMPTEUR_COLLISION ==60 or COMPTEUR_COLLISION ==30:
+                if COMPTEUR_COLLISION == 180 or COMPTEUR_COLLISION == 150 or COMPTEUR_COLLISION == 120 or COMPTEUR_COLLISION == 90 or COMPTEUR_COLLISION == 60 or COMPTEUR_COLLISION == 30:
                     invisible(vaisseau)
-
-
-                if COMPTEUR_COLLISION == 165 or COMPTEUR_COLLISION == 135 or COMPTEUR_COLLISION == 105 or COMPTEUR_COLLISION ==75 or COMPTEUR_COLLISION ==45 or COMPTEUR_COLLISION == 15:
+                    print("invisible")
+                if COMPTEUR_COLLISION == 165 or COMPTEUR_COLLISION == 135 or COMPTEUR_COLLISION == 105 or COMPTEUR_COLLISION == 75 or COMPTEUR_COLLISION == 45 or COMPTEUR_COLLISION == 15:
                     visible(vaisseau)
-
-
+                    print("visible")
                 if COMPTEUR_COLLISION == 0:
                     collision_active = True
                     visible(vaisseau)
@@ -973,9 +1058,11 @@ while enintro:
             affiche(scene, fenetre)
             affiche(PLANETE_EN_LISTE, fenetre)
             affiche(UFO_EN_LISTE, fenetre)
+            affiche(TROU_NOIR_EN_LISTE, fenetre)
             score()
             afficher_munition(MUNITIONS)
-            NOMBRE_VIE, COMPTEUR_COLLISION, collision_active = collision_planete(PLANETE_EN_LISTE, NOMBRE_VIE, COMPTEUR_COLLISION, collision_active)
+            NOMBRE_VIE, COMPTEUR_COLLISION, collision_active = collision_entite(PLANETE_EN_LISTE, NOMBRE_VIE,
+                                                                                COMPTEUR_COLLISION, collision_active)
             vie()
             pygame.display.flip()
             # Temps
