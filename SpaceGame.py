@@ -342,24 +342,18 @@ def collision_planete(PLANETE_EN_LISTE,  nombre_vie, COMPTEUR_COLLISION, collisi
         vies = nombre_vie
         for planete in PLANETE_EN_LISTE:
             # Test si vaisseau rentre dans un grand carré qui représente les planetes
-            if position_vaisseau[1] <= position(planete)[1] + TAILLE_PLANETE and position_vaisseau[
-                1] + VAISSEAU_HAUTEUR >= position(planete)[1] and position(planete)[0] <= position_vaisseau[
-                0] + VAISSEAU_LARGEUR and position_vaisseau[0] <= position(planete)[0] + TAILLE_PLANETE:
+            if position(vaisseau)[1] <= position(planete)[1] + TAILLE_PLANETE and position_vaisseau[1] + VAISSEAU_HAUTEUR >= position(planete)[1] and position(planete)[0] <= position(vaisseau)[0] + VAISSEAU_LARGEUR and position(vaisseau)[0] <= position(planete)[0] + TAILLE_PLANETE:
 
                 # Affinage des collisions au dessus à gauche du grand carré
-                if position_vaisseau[1] + VAISSEAU_HAUTEUR <= position(planete)[1] + TAILLE_PLANETE / 8 and \
-                        position_vaisseau[0] + VAISSEAU_LARGEUR >= position(planete)[0] and position_vaisseau[
-                    0] + VAISSEAU_LARGEUR <= position(planete)[0] + TAILLE_PLANETE / 8:
+                if position(vaisseau)[1] + VAISSEAU_HAUTEUR <= position(planete)[1] + TAILLE_PLANETE / 8 and position_vaisseau[0] + VAISSEAU_LARGEUR >= position(planete)[0] and position(vaisseau)[0] + VAISSEAU_LARGEUR <= position(planete)[0] + TAILLE_PLANETE / 8:
                     None
 
                 # Affinage des collisions au dessus à droite du grand carré
-                elif position_vaisseau[1] + VAISSEAU_HAUTEUR < position(planete)[1] + TAILLE_PLANETE / 8 and \
-                        position_vaisseau[0] > position(planete)[0] + (TAILLE_PLANETE * (7 / 8)):
+                elif position(vaisseau)[1] + VAISSEAU_HAUTEUR < position(planete)[1] + TAILLE_PLANETE / 8 and position(vaisseau)[0] > position(planete)[0] + (TAILLE_PLANETE * (7 / 8)):
                     None
 
                 # Affinage des collisions en bas à droite du grand carré
-                elif position_vaisseau[1] > position(planete)[1] + (TAILLE_PLANETE * (7 / 8)) and position_vaisseau[0] > \
-                        position(planete)[0] + TAILLE_PLANETE * (7 / 8):
+                elif position(vaisseau)[1] > position(planete)[1] + (TAILLE_PLANETE * (7 / 8)) and position(vaisseau)[0] > position(planete)[0] + TAILLE_PLANETE * (7 / 8):
                     None
 
                 # Affinage des collisions en bas à gauche du grand carré
@@ -378,7 +372,7 @@ def collision_planete(PLANETE_EN_LISTE,  nombre_vie, COMPTEUR_COLLISION, collisi
 
         for ufo in UFO_EN_LISTE:
 
-            if position_vaisseau[1] <= position(ufo)[1] + UFO_TAILLE and position_vaisseau[1]+VAISSEAU_HAUTEUR >= position(ufo)[1] and position(ufo)[0] <= position_vaisseau[0]+VAISSEAU_LARGEUR and position_vaisseau[0] <= position(ufo)[0]+UFO_TAILLE:
+            if position(vaisseau)[1] <= position(ufo)[1] + UFO_TAILLE and position_vaisseau[1]+VAISSEAU_HAUTEUR >= position(ufo)[1] and position(ufo)[0] <= position(vaisseau)[0]+VAISSEAU_LARGEUR and position(vaisseau)[0] <= position(ufo)[0]+UFO_TAILLE:
                 vies = vies -1
                 compteur = 180
                 collision = False
@@ -950,7 +944,7 @@ while enintro:
             affiche(UFO_EN_LISTE, fenetre)
             score()
             afficher_munition(MUNITIONS)
-            NOMBRE_VIE, COMPTEUR_COLLISION, collision_active = collision_planete(PLANETE_EN_LISTE, position(vaisseau), NOMBRE_VIE, COMPTEUR_COLLISION, collision_active)
+            NOMBRE_VIE, COMPTEUR_COLLISION, collision_active = collision_planete(PLANETE_EN_LISTE, NOMBRE_VIE, COMPTEUR_COLLISION, collision_active)
             vie()
             pygame.display.flip()
             # Temps
