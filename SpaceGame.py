@@ -197,7 +197,12 @@ def afficher_munition(nombre_munitions):
         pygame.draw.circle(fenetre, BLANC, (17, FENETRE_HAUTEUR - 25), 5)
 
 #MRU pour les missiles
-def mru_1d(depart, temps_depart, vitesse, temps_maintenant):
+def mru_1d(depart, temps_depart, vitesse, temps_maintenant, compteur_pause):
+
+    if COMPTEUR_PAUSE % 2 != 0:
+
+
+        return 0
     mru_1d = depart + (vitesse * (temps_maintenant - temps_depart))
     return (mru_1d)
 
@@ -220,7 +225,7 @@ def dessiner_missile(missile, fenetre):
                     mru_1d(missile['position_depart'][1],
                            missile['temps_depart'],
                            missile_vitesse,
-                           temps_maintenant))
+                           temps_maintenant, COMPTEUR_PAUSE))
 
         pygame.draw.circle(fenetre, BLEU, list(map(int, position)), 10, width=1)
         pygame.draw.circle(fenetre, BLANC, list(map(int, position)), 5)
@@ -384,6 +389,8 @@ def collision_planete(PLANETE_EN_LISTE,  nombre_vie, COMPTEUR_COLLISION, collisi
     else:
        return vies, compteur, collision
     return vies, compteur, collision
+
+
 #GERER UFO
 def spawn_ufo():
 
@@ -463,6 +470,30 @@ def difficulte (niveau_difficulte):
 
 
 
+def bestscore(bestscore):
+
+    try:
+        with open('scoreboard.txt', 'r+') as fichier:
+            meilleurscore = fichier.readline()
+            meilleurscore = int(meilleurscore)
+            if meilleurscore != bestscore:
+                if meilleurscore < bestscore:
+                    fichier.close()
+                    fichier = open('scoreboard.txt', 'w+')
+                    fichier.write("{}".format(bestscore))
+                    fichier.close()
+            if meilleurscore == "":
+                fichier.write("0")
+            marquoir = police.render(str("Meilleur score: {}".format(int(round(meilleurscore, 0)))), True, BLANC)
+            fenetre.blit(marquoir,(20, FENETRE_HAUTEUR//24))
+
+    except FileNotFoundError:
+        fichier = open('scoreboard.txt', 'w')
+        fichier.write("0")
+        fichier.close()
+
+    except ValueError:
+        pass
 
 
 #####FIN FONCTIONS######
@@ -714,6 +745,7 @@ while enintro:
     affiche(scene, fenetre)
 
     score()
+    bestscore(0)
     vie()
     afficher_munition(MUNITIONS)
     afficherBoutonMenu(MENU)
@@ -734,6 +766,7 @@ while enintro:
         # Arrêter le jeu si plus de vie
         if NOMBRE_VIE == 0:
 
+            bestscore(SCORE)
             SCORE = 0
             enintro = True
             enjeu = False
@@ -791,6 +824,7 @@ while enintro:
 
             # Quitter avec la croix
             if event.type == pygame.QUIT:
+                bestscore(SCORE)
                 pygame.quit()
                 quit()
 
@@ -840,6 +874,7 @@ while enintro:
 
                     # Revenir au menu principal
                     if BOUTON == 1:
+                        bestscore(SCORE)
                         COMPTEUR_PAUSE+=1
                         SCORE = 0
                         enintro = True
