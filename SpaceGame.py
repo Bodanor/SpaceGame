@@ -328,7 +328,6 @@ def deplace_planete(vitesse_jeu):
     if COMPTEUR_PAUSE % 2 != 0:
         vitesse_jeu = 0
     else:
-
         for planete in PLANETE_EN_LISTE:
             x, y = position(planete)
             couloir_planete = afficherCouloir(planete)
