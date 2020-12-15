@@ -1,5 +1,6 @@
 import pygame
 import random
+import math
 
 ######CONSTANTES#######
 # Couleur
@@ -343,31 +344,20 @@ def collision_planete(PLANETE_EN_LISTE,  nombre_vie, COMPTEUR_COLLISION, collisi
     vies = nombre_vie
     collision = collision_active
 
+    #Test si on vient de percuter un objet
     if collision:
         vies = nombre_vie
         for planete in PLANETE_EN_LISTE:
-            # Test si vaisseau rentre dans un grand carré qui représente les planetes
-            #On diminue un peu la taille des planetes pour que les collisions soient moins "brutale"
-            if position(vaisseau)[1] <= position(planete)[1] + (TAILLE_PLANETE-5) and position_vaisseau[1] + VAISSEAU_HAUTEUR >= position(planete)[1] and position(planete)[0] <= position(vaisseau)[0] + VAISSEAU_LARGEUR and position(vaisseau)[0] <= position(planete)[0] + (TAILLE_PLANETE-10):
 
-                # Affinage des collisions au dessus à gauche du grand carré
-                if position(vaisseau)[1] + VAISSEAU_HAUTEUR <= position(planete)[1] + (TAILLE_PLANETE-10) / 8 and position_vaisseau[0] + VAISSEAU_LARGEUR >= position(planete)[0] and position(vaisseau)[0] + VAISSEAU_LARGEUR <= position(planete)[0] + (TAILLE_PLANETE-10) / 8:
-                    None
+                #Calcul de la distance entre le centre des objets et des vaisseaux
+                centre_cercle_x = position(planete)[0] + TAILLE_PLANETE / 2
+                centre_cercle_y = position(planete)[1] + TAILLE_PLANETE / 2
+                centre_vaisseau_x = position(vaisseau)[0] + VAISSEAU_LARGEUR / 2
+                centre_vaisseau_y = position(vaisseau)[1] + VAISSEAU_HAUTEUR / 2
+                distance_vaisseau_planete = math.sqrt((centre_cercle_x - centre_vaisseau_x) ** 2 + (centre_cercle_y - centre_vaisseau_y) ** 2)
 
-                # Affinage des collisions au dessus à droite du grand carré
-                elif position(vaisseau)[1] + VAISSEAU_HAUTEUR < position(planete)[1] + (TAILLE_PLANETE-10) / 8 and position(vaisseau)[0] > position(planete)[0] + ((TAILLE_PLANETE-10) * (7 / 8)):
-                    None
 
-                # Affinage des collisions en bas à droite du grand carré
-                elif position(vaisseau)[1] > position(planete)[1] + ((TAILLE_PLANETE-10) * (7 / 8)) and position(vaisseau)[0] > position(planete)[0] + (TAILLE_PLANETE-10) * (7 / 8):
-                    None
-
-                # Affinage des collisions en bas à gauche du grand carré
-                elif position(vaisseau)[1] > position(planete)[1] + ((TAILLE_PLANETE-10) * (7 / 8)) and position(vaisseau)[0] + VAISSEAU_LARGEUR < position(planete)[0] + (TAILLE_PLANETE-10) / 8:
-                    None
-
-                else:
-
+                if distance_vaisseau_planete < 125:
                     vies = vies - 1
                     compteur = 180
                     collision = False
@@ -378,7 +368,13 @@ def collision_planete(PLANETE_EN_LISTE,  nombre_vie, COMPTEUR_COLLISION, collisi
 
         for ufo in UFO_EN_LISTE:
 
-            if position(vaisseau)[1] <= position(ufo)[1] + UFO_TAILLE and position_vaisseau[1]+VAISSEAU_HAUTEUR >= position(ufo)[1] and position(ufo)[0] <= position(vaisseau)[0]+VAISSEAU_LARGEUR and position(vaisseau)[0] <= position(ufo)[0]+UFO_TAILLE:
+            centre_ufo_x = position(ufo)[0] + UFO_TAILLE / 2
+            centre_ufo_y = position(ufo)[1] + UFO_TAILLE / 2
+            centre_vaisseau_x = position(vaisseau)[0] + VAISSEAU_LARGEUR / 2
+            centre_vaisseau_y = position(vaisseau)[1] + VAISSEAU_HAUTEUR / 2
+            distance_vaisseau_UFO = math.sqrt((centre_ufo_x - centre_vaisseau_x) ** 2 + (centre_ufo_y - centre_vaisseau_y) ** 2)
+
+            if distance_vaisseau_UFO < 70:
                 vies = vies -1
                 compteur = 180
                 collision = False
