@@ -322,16 +322,16 @@ def spawn_planete():
                     couloir_utilise.append(couloir_random)
 
 
-def deplace_planete():
+def deplace_planete(vitesse_jeu):
     #Freeze des planete si en pause
     if COMPTEUR_PAUSE %2 != 0:
-       VITESSE_JEU = 0
+       vitesse_jeu = 0
     else:
-        VITESSE_JEU = 3
+
         for planete in PLANETE_EN_LISTE:
             x, y = position(planete)
             couloir_planete = afficherCouloir(planete)
-            place(planete, x, y+VITESSE_JEU, couloir_planete)
+            place(planete, x, y+vitesse_jeu, couloir_planete)
             #Respawn la planete si elle est en dessous de l'ecran (donc plus affichée)
             if position(planete)[1] > FENETRE_HAUTEUR:
                 PLANETE_EN_LISTE.remove(planete)
@@ -415,16 +415,16 @@ def spawn_ufo():
 
 
 
-def deplace_ufo():
+def deplace_ufo(vitesse_jeu):
     #Si en pause alors on freeze l'UFO
     if COMPTEUR_PAUSE %2 != 0:
-       VITESSE_JEU = 0
+       vitesse_jeu = 0
     else:
-        VITESSE_JEU = 3
+
         for ufo in UFO_EN_LISTE:
             x, y = position(ufo)
             couloir_ufo = afficherCouloir(ufo)
-            place(ufo, x, y+VITESSE_JEU, couloir_ufo)
+            place(ufo, x, y+vitesse_jeu, couloir_ufo)
             #Si l'UFO sort de la fenetre alors on met un nombre random de pixel avant une nouvelle apparition
             if position(ufo)[1] > FENETRE_HAUTEUR + random.randint(100,9000):
                 UFO_EN_LISTE.remove(ufo)
@@ -770,7 +770,7 @@ while enintro:
             PLANETE_EN_LISTE = []
             UFO_EN_LISTE = []
             spawn_planete()
-            deplace_planete()
+            deplace_planete(VITESSE_JEU)
             visible(vaisseau)
             COMPTEUR_COLLISION = 0
 
@@ -782,9 +782,9 @@ while enintro:
 
         #Spawn des entités ennemies
         spawn_planete()
-        deplace_planete()
+        deplace_planete(VITESSE_JEU)
         spawn_ufo()
-        deplace_ufo()
+        deplace_ufo(VITESSE_JEU)
         temps_maintenant = pygame.time.get_ticks()
         prendsPose(vaisseau, POSE_VAISSEAU[0])
 
@@ -878,7 +878,7 @@ while enintro:
                         couloir_utilise = []
                         PLANETE_EN_LISTE = []
                         spawn_planete()
-                        deplace_planete()
+                        deplace_planete(VITESSE_JEU)
                         visible(vaisseau)
                         COMPTEUR_COLLISION=0
                         BOUTON=0
@@ -938,7 +938,7 @@ while enintro:
             # incrémentation du Score, compteur, et missiles
             if COMPTEUR_BOUCLE % 60 == 0 and SCORE <= 1000:
                 SCORE += 1
-                VITESSE_JEU += 0.01
+                VITESSE_JEU += 0.5
 
             if COMPTEUR_BOUCLE % 60 == 0 and SCORE > 1000:
                 SCORE += 1
