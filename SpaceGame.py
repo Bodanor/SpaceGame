@@ -326,7 +326,7 @@ def pause():
                                      (FENETRE_HAUTEUR / MENU_LONGUEUR) - texte_hauteur + (HAUTEUR * index) / 2))
 
     pygame.display.flip()
-    temps.tick(60)
+
 
 
 def creation_couloirs_planete():
@@ -458,10 +458,39 @@ def distance_objets(objet1, HAUTEUR_OBJET1,LARGEUR_OBJET1, objet2, HAUTEUR_OBJET
 
     return distance
 
+# MRU pour les missiles
+def deplace_missile_ufo(missile_ufo, position_missile, vitesse_missile):
+    position_y = position_missile[1] + vitesse_missile
+    placeMissile(missile_ufo, position_missile[0], position_y)
+
+
+
+def ajouter_missile_ufo(position):
+
+    missiles_ufo = nouvelleEntiteMissile()
+    placeMissile(missiles_ufo, position[0] + UFO_TAILLE/2, position[1]+ UFO_TAILLE/2)
+    MISSILE_UFO_EN_LISTE.append(missiles_ufo)
+
+    return
+
+def dessine_missile_ufo(fenetre, vitesse_missile):
+
+        for missiles_ufo in MISSILE_UFO_EN_LISTE:
+            if estVisible(missiles_ufo):
+
+
+                deplace_missile_ufo(missiles_ufo, positionMissile(missiles_ufo) , VITESSE_JEU*2)
+                pygame.draw.circle(fenetre, ROUGE, list(map(int, positionMissile(missiles_ufo))), 7)
+                pygame.draw.circle(fenetre, ROUGE, list(map(int, positionMissile(missiles_ufo))), 10, width=1)
+                pygame.draw.circle(fenetre, BLANC, list(map(int, positionMissile(missiles_ufo))), 5)
+
+            if positionMissile(missiles_ufo)[1] > FENETRE_HAUTEUR:
+                MISSILE_UFO_EN_LISTE.remove(missiles_ufo)
+
+
 
 # GERER UFO
 def spawn_ufo():
-
     random_timer = random.randint(0, 14)
     if random_timer == 2:
         if len(UFO_EN_LISTE) < 1:
@@ -481,14 +510,23 @@ def spawn_ufo():
                         if couloir_planete == couloir_random:
                             if hauteur_random > position(planete)[1] + TAILLE_PLANETE or hauteur_random + UFO_TAILLE < \
                                     position(planete)[1]:
+
                                 place(LISTE_UFO[ufo_random], COULOIRS[couloir_random][0], hauteur_random,
                                       couloir_random)
                                 UFO_EN_LISTE.append(LISTE_UFO[ufo_random])
                                 couloir_utilise_ufo.append(couloir_random)
+                                ajouter_missile_ufo(position(LISTE_UFO[ufo_random]))
 
+
+def tir_random_ufo():
+    for ufo in UFO_EN_LISTE:
+
+            if COMPTEUR_BOUCLE % FREQUENCE_TIR == 0:
+                ajouter_missile_ufo(position(ufo))
 
 def deplace_ufo(vitesse_jeu):
     # Si en pause alors on freeze l'UFO
+
     if COMPTEUR_PAUSE % 2 != 0:
         vitesse_jeu = 0
     else:
@@ -565,7 +603,7 @@ def difficulte(niveau_difficulte):
         MENU = ['Jouer', '<Moyen>', 'Quitter']
         AJOUT_MUNITION = 15
         MUNITIONS = 15
-        VITESSE_JEU = 3.5
+        VITESSE_JEU = 5
         VITESSE_MISSILE = 10
         NOMBRE_VIE = 2
         DEPLACEMENT_VAISSEAU = 6
@@ -574,7 +612,7 @@ def difficulte(niveau_difficulte):
         MENU = ['Jouer', '<Difficile', 'Quitter']
         AJOUT_MUNITION = 10
         MUNITIONS = 10
-        VITESSE_JEU = 4
+        VITESSE_JEU = 7
         VITESSE_MISSILE = 7
         NOMBRE_VIE = 1
         DEPLACEMENT_VAISSEAU = 5
@@ -750,7 +788,6 @@ couloir_utilise_ufo = []
 couloir_utilise_trou_noir = []
 collision_active = True
 pygame.mixer.music.play(-1)
-son_deja_jouer = False
 
 ######CREATION DU MENU######
 while enintro:
@@ -784,19 +821,13 @@ while enintro:
                 0] <= FENETRE_LARGEUR / 2 + BOUTON_LARGEUR // 2 and FENETRE_HAUTEUR / MENU_LONGUEUR - BOUTON_HAUTEUR + (
                     HAUTEUR / 2 * 0) <= mouse[1] <= (FENETRE_HAUTEUR / MENU_LONGUEUR) + (HAUTEUR / 2 * 0):
                 start.play()
-                if niveau_difficulte == 0:
-                    VITESSE_JEU = 3
-                elif niveau_difficulte == 1:
-                    VITESSE_JEU = 3.5
-
-                elif niveau_difficulte == 2:
-                    VITESSE_JEU = 4
 
                 enintro = False
                 enjeu = True
                 SCORE = 0
                 COMPTEUR_BOUCLE = 1
                 BOUTON = 0
+
 
             # Quitter le jeu avec le bouton quitter
             if FENETRE_LARGEUR / 2 - BOUTON_LARGEUR // 2 <= mouse[
@@ -854,8 +885,10 @@ while enintro:
                     elif niveau_difficulte == 1:
                         VITESSE_JEU = 5
 
+
                     elif niveau_difficulte == 2:
                         VITESSE_JEU = 7
+
 
                     enintro = False
                     enjeu = True
@@ -947,34 +980,41 @@ while enintro:
             # Changement de l'écran
             if event.type == pygame.VIDEORESIZE:
 
-                position_x, position_y = position(vaisseau)
-                place(vaisseau, (position_x / FENETRE_LARGEUR) * fenetre.get_size()[0],
-                      (position_y / FENETRE_HAUTEUR) * fenetre.get_size()[1], 0)
+                position_x_vaisseau, position_y_vaisseau = position(vaisseau)
+
+                ancienne_largeur, ancienne_hauteur = FENETRE_LARGEUR, FENETRE_HAUTEUR
 
                 FENETRE_LARGEUR, FENETRE_HAUTEUR = fenetre.get_size()
+
+                etoiles.clear()
+                etoiles = cree_etoiles()
                 COULOIRS = []
                 creation_couloirs_planete()
                 for planete in PLANETE_EN_LISTE:
                     couloir = afficherCouloir(planete)
-                    position_x, position_y = position(planete)
+                    position_x_planete, position_y_planete = position(planete)
 
-                    place(planete, COULOIRS[couloir][0], position_y, couloir)
+                    place(planete, COULOIRS[couloir][0], position_y_planete, couloir)
 
                 for ufo in UFO_EN_LISTE:
                     couloir = afficherCouloir(ufo)
-                    position_x, position_y = position(ufo)
+                    position_x_ufo, position_y_ufo = position(ufo)
 
-                    place(ufo, COULOIRS[couloir][0], position_y, couloir)
+                    place(ufo, COULOIRS[couloir][0], position_y_ufo, couloir)
 
                 for trou_noir in TROU_NOIR_EN_LISTE:
                     couloir = afficherCouloir(trou_noir)
-                    position_x, position_y = position(trou_noir)
+                    position_x_trou_nooir, position_y_trou_noir = position(trou_noir)
 
-                    place(trou_noir, COULOIRS[couloir][0], position_y, couloir)
+                    place(trou_noir, COULOIRS[couloir][0], position_y_trou_noir, couloir)
 
-                etoiles = cree_etoiles()
+
+
+                place(vaisseau, (position_x_vaisseau / ancienne_largeur) * fenetre.get_size()[0],
+                      (position_y_vaisseau / ancienne_hauteur) * fenetre.get_size()[1], 0)
 
             # Quitter avec la croix
+
             if event.type == pygame.QUIT:
                 bestscore(SCORE)
                 pygame.quit()
@@ -1070,9 +1110,12 @@ while enintro:
 
         ########Déplacement du vaisseau########
         if COMPTEUR_PAUSE % 2 != 0:  # Vérification si on est en pause
+            pygame.mixer.music.pause()
             pause()
             pygame.display.flip()
+
         else:
+            pygame.mixer.music.unpause()
             keys = pygame.key.get_pressed()
             # DROITE
             if keys[pygame.K_RIGHT]:
@@ -1145,6 +1188,7 @@ while enintro:
             # Affichage
             fenetre.fill(ESPACE)
             dessine_missile(fenetre, VITESSE_MISSILE)
+            dessine_missile_ufo(fenetre, VITESSE_MISSILE)
             afficher_etoiles(fenetre, VITESSE_JEU, etoiles)
             affiche(scene, fenetre)
             affiche(PLANETE_EN_LISTE, fenetre)
