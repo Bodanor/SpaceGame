@@ -8,6 +8,8 @@ ESPACE = (0, 0, 15)
 BLANC = (255, 255, 255)
 BLEU = (129, 78, 216)
 ROUGE = (255, 0, 0)
+VERT = (0,255,0)
+ORANGE = (255, 165, 0)
 
 BOUTON_COULEUR_CLAIR = (170, 170, 170)
 BOUTON_COULEUR_FONCE = (100, 100, 100)
@@ -277,12 +279,16 @@ def afficherBoutonMenu(Menu):
             0] <= FENETRE_LARGEUR / 2 + BOUTON_LARGEUR // 2 and FENETRE_HAUTEUR / MENU_LONGUEUR - BOUTON_HAUTEUR + (
                 HAUTEUR / 2 * index) <= mouse[1] <= (FENETRE_HAUTEUR / MENU_LONGUEUR) + (
                 HAUTEUR / 2 * index) or index == BOUTON:
+
+
             pygame.draw.rect(fenetre, BOUTON_COULEUR_CLAIR,
                              [(FENETRE_LARGEUR / 2) - BOUTON_LARGEUR // 2,
                               ((FENETRE_HAUTEUR / MENU_LONGUEUR) - BOUTON_HAUTEUR) + (HAUTEUR / 2 * index),
                               BOUTON_LARGEUR, 40])
 
         else:  # Afficher les boutons d'une couleur normale
+
+
             pygame.draw.rect(fenetre, BOUTON_COULEUR_FONCE,
                              [(FENETRE_LARGEUR / 2) - BOUTON_LARGEUR // 2,
                               ((FENETRE_HAUTEUR / MENU_LONGUEUR) - BOUTON_HAUTEUR) + (HAUTEUR / 2 * index),
@@ -419,6 +425,7 @@ def collision_entite(PLANETE_EN_LISTE,  nombre_vie, COMPTEUR_COLLISION, collisio
                 distance_missile_ufo = distance_objets(missiles, 10, 10, ufo, UFO_TAILLE, UFO_TAILLE)
 
                 if distance_missile_ufo < 43:
+                    explosion_ufo.play()
                     missile.remove(missiles)
                     UFO_EN_LISTE.remove(ufo)
                     score += 25
@@ -588,8 +595,11 @@ def bestscore(bestscore):
                     fichier.close()
             if meilleurscore == "":
                 fichier.write("0")
-            marquoir = police.render(str("Meilleur score: {}".format(int(round(meilleurscore, 0)))), True, BLANC)
-            fenetre.blit(marquoir, (20, FENETRE_HAUTEUR // 24))
+
+            phrase = str("Meilleur score: {}".format(int(round(meilleurscore, 0))))
+            marquoir = police.render(phrase, True, VERT)
+            longueur_text_x, longueur_text_y = marquoir.get_size()
+            fenetre.blit(marquoir, (FENETRE_LARGEUR//2 - longueur_text_x//2, FENETRE_HAUTEUR // 24))
 
     except FileNotFoundError:
         fichier = open('scoreboard.txt', 'w')
@@ -597,7 +607,11 @@ def bestscore(bestscore):
         fichier.close()
 
     except ValueError:
-        pass
+        phrase = str("Meilleur score : Probleme avec le fichier Scoreboard. Veuillez le supprimer")
+        marquoir = police.render(phrase, True, ROUGE)
+        longueur_text_x, longueur_text_y = marquoir.get_size()
+
+        fenetre.blit(marquoir, (FENETRE_LARGEUR // 2 - longueur_text_x // 2, FENETRE_HAUTEUR // 24))
 
 
 #####FIN FONCTIONS######
@@ -615,11 +629,23 @@ pygame.init()
 
 # Son
 pygame.mixer.init()
+explosion_ufo = pygame.mixer.Sound("Son/explosion_ufo.wav")
+explosion_ufo.set_volume(0.5)
+choix = pygame.mixer.Sound("Son/choix_menu.wav")
+choix_doite_gauche = pygame.mixer.Sound("Son/droite_gauche.wav")
+choix_gauche_droite = pygame.mixer.Sound("Son/gauche_droite.wav")
 piou = pygame.mixer.Sound("Son/piou.wav")
 no_bullets = pygame.mixer.Sound("Son/no_bullets.wav")
 moinsvie = pygame.mixer.Sound("Son/moinsvie.wav")
+start = pygame.mixer.Sound("Son/start.wav")
+back = pygame.mixer.Sound("Son/back.wav")
 print("[LOG] BRUITAGES CHARGE !")
 
+print("[LOG] CHARGEMENT BANDE SON...")
+pygame.mixer.music.load("Bande Son/musiquePrincipal.wav")
+pygame.mixer.music.set_volume(0.5)
+
+print("[LOG] CHARGEMENT BANDE SON CHARGE!")
 # Missile
 missile = []
 
@@ -722,6 +748,9 @@ couloir_utilise = []
 couloir_utilise_ufo = []
 couloir_utilise_trou_noir = []
 collision_active = True
+pygame.mixer.music.play(-1)
+son_deja_jouer = False
+
 ######CREATION DU MENU######
 while enintro:
 
@@ -753,7 +782,7 @@ while enintro:
             if FENETRE_LARGEUR / 2 - BOUTON_LARGEUR // 2 <= mouse[
                 0] <= FENETRE_LARGEUR / 2 + BOUTON_LARGEUR // 2 and FENETRE_HAUTEUR / MENU_LONGUEUR - BOUTON_HAUTEUR + (
                     HAUTEUR / 2 * 0) <= mouse[1] <= (FENETRE_HAUTEUR / MENU_LONGUEUR) + (HAUTEUR / 2 * 0):
-
+                start.play()
                 if niveau_difficulte == 0:
                     VITESSE_JEU = 3
                 elif niveau_difficulte == 1:
@@ -782,6 +811,7 @@ while enintro:
             if event.key == pygame.K_RIGHT:
                 if BOUTON == 1:
                     if niveau_difficulte < 2:
+                        choix_gauche_droite.play()
                         niveau_difficulte += 1
                         MENU, AJOUT_MUNITION, MUNITIONS, VITESSE_JEU, VITESSE_MISSILE, NOMBRE_VIE, DEPLACEMENT_VAISSEAU, FREQUENCE_APPARITION_TROU_NOIR = difficulte(
                             niveau_difficulte)
@@ -791,6 +821,7 @@ while enintro:
             if event.key == pygame.K_LEFT:
                 if BOUTON == 1:
                     if niveau_difficulte > 0:
+                        choix_doite_gauche.play()
                         niveau_difficulte -= 1
                         MENU, AJOUT_MUNITION, MUNITIONS, VITESSE_JEU, VITESSE_MISSILE, NOMBRE_VIE, DEPLACEMENT_VAISSEAU, FREQUENCE_APPARITION_TROU_NOIR = difficulte(
                             niveau_difficulte)
@@ -798,6 +829,7 @@ while enintro:
                         None
             # déplacement dans le menu
             if event.key == pygame.K_DOWN:
+                choix.play()
                 if BOUTON < 2:
                     BOUTON += 1
                 else:
@@ -805,6 +837,7 @@ while enintro:
 
             # déplacement dans le menu
             if event.key == pygame.K_UP:
+                choix.play()
                 if BOUTON < 1:
                     BOUTON = 2
                 else:
@@ -812,7 +845,7 @@ while enintro:
 
             # lancer/quitter le jeu
             if event.key == pygame.K_RETURN:
-
+                start.play()
                 # Jouer
                 if BOUTON == 0 or BOUTON == 1:
                     if niveau_difficulte == 0:
@@ -994,6 +1027,7 @@ while enintro:
                 if COMPTEUR_PAUSE % 2 != 0:
                     # Bas
                     if event.key == pygame.K_DOWN:
+                        choix.play()
                         if BOUTON < 1:
                             BOUTON += 1
                         else:
@@ -1001,6 +1035,7 @@ while enintro:
 
                     # Haut
                     if event.key == pygame.K_UP:
+                        choix.play()
                         if BOUTON == 1:
                             BOUTON = 0
                         elif BOUTON == 0:
@@ -1013,6 +1048,7 @@ while enintro:
 
                     # Revenir au menu principal
                     if BOUTON == 1:
+                        back.play()
                         bestscore(SCORE)
                         COMPTEUR_PAUSE += 1
                         SCORE = 0
