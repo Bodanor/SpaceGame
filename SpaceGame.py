@@ -90,6 +90,8 @@ LISTE_TROU_NOIR = []
 TROU_NOIR_EN_LISTE = []
 COULOIRS = []
 
+SON_EN_PAUSE = False
+
 ########FIN CONSTANTE#######
 
 # Difficulté
@@ -470,7 +472,7 @@ def collision_entite(PLANETE_EN_LISTE,  nombre_vie, COMPTEUR_COLLISION, collisio
                                                              TROU_NOIR_TAILLE)
                 if distance_missileUFO_trou_noir < 43:
 
-                    missiles_ufo.remove(missiles_ufo)
+                    MISSILE_UFO_EN_LISTE.remove(missiles_ufo)
                     return vies, compteur, collision, score
 
 
@@ -734,8 +736,8 @@ back = pygame.mixer.Sound("Son/back.wav")
 print("[LOG] BRUITAGES CHARGE !")
 
 print("[LOG] CHARGEMENT BANDE SON...")
-pygame.mixer.music.load("Bande Son/musiquePrincipal.wav")
-pygame.mixer.music.set_volume(0.3)
+musique = pygame.mixer.Sound("Bande Son/musiquePrincipal.wav")
+musique.set_volume(0.3)
 
 print("[LOG] CHARGEMENT BANDE SON CHARGE!")
 # Missile
@@ -840,7 +842,8 @@ couloir_utilise = []
 couloir_utilise_ufo = []
 couloir_utilise_trou_noir = []
 collision_active = True
-pygame.mixer.music.play(-1)
+
+musique.play(-1)
 
 ######CREATION DU MENU######
 while enintro:
@@ -933,6 +936,15 @@ while enintro:
                     enjeu = False
                     enintro = False
                     NOMBRE_VIE = 0
+
+            #Supprimer le son du jeu
+            if event.key == pygame.K_m:
+                if SON_EN_PAUSE == True:
+                    musique.play(-1)
+                    SON_EN_PAUSE = False
+                else:
+                    pygame.mixer.stop()
+                    SON_EN_PAUSE = True
 
     # Mécanique du jeu
     # Incrémentation de la vitesse du jeu dans le menu
@@ -1081,6 +1093,14 @@ while enintro:
                             piou.play()
                             ajouter_missile((position(vaisseau)[0] + VAISSEAU_LARGEUR / 2, position(vaisseau)[1]))
                             MUNITIONS -= 1
+                if event.key == pygame.K_m:
+
+                    if SON_EN_PAUSE == True:
+                        musique.play(-1)
+                        SON_EN_PAUSE = False
+                    else:
+                        pygame.mixer.stop()
+                        SON_EN_PAUSE = True
 
                 ######## Touche dans le menu Pause########
                 # Quitter le menu pause avec echap
@@ -1096,6 +1116,8 @@ while enintro:
                             BOUTON += 1
                         else:
                             BOUTON = 0
+
+
 
                     # Haut
                     if event.key == pygame.K_UP:
