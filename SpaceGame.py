@@ -380,11 +380,11 @@ def collision_entite(PLANETE_EN_LISTE,  nombre_vie, COMPTEUR_COLLISION, collisio
         vies = nombre_vie
         for planete in PLANETE_EN_LISTE:
 
-
                 #Calcul de la distance entre le centre des objets et des vaisseaux
                 distance_vaisseau_planete = distance_objets(vaisseau,VAISSEAU_HAUTEUR,VAISSEAU_LARGEUR,planete,TAILLE_PLANETE,TAILLE_PLANETE)
 
                 if distance_vaisseau_planete < 125:
+                    moinsvie.play()
                     vies = vies - 1
                     compteur = 180
                     collision = False
@@ -406,6 +406,7 @@ def collision_entite(PLANETE_EN_LISTE,  nombre_vie, COMPTEUR_COLLISION, collisio
             distance_vaisseau_UFO = distance_objets(vaisseau,VAISSEAU_LARGEUR,VAISSEAU_HAUTEUR,ufo,UFO_TAILLE,UFO_TAILLE)
 
             if distance_vaisseau_UFO < 70:
+                moinsvie.play()
                 vies = vies -1
                 compteur = 180
                 collision = False
@@ -616,7 +617,7 @@ pygame.init()
 pygame.mixer.init()
 piou = pygame.mixer.Sound("Son/piou.wav")
 no_bullets = pygame.mixer.Sound("Son/no_bullets.wav")
-collision = pygame.mixer.Sound("Son/collision.wav")
+moinsvie = pygame.mixer.Sound("Son/moinsvie.wav")
 print("[LOG] BRUITAGES CHARGE !")
 
 # Missile
@@ -729,13 +730,16 @@ while enintro:
     prendsPose(vaisseau, POSE_VAISSEAU[0])
     place(vaisseau, (FENETRE_LARGEUR / 2) - VAISSEAU_LARGEUR / 2,
           FENETRE_HAUTEUR - VAISSEAU_HAUTEUR, 0)
+
     evenement = pygame.event.get()
     for event in evenement:
 
         # Changement de taille d'écran
         if event.type == pygame.VIDEORESIZE:
             FENETRE_LARGEUR, FENETRE_HAUTEUR = fenetre.get_size()
+            COULOIRS =[]
 
+            creation_couloirs_planete()
             etoiles = cree_etoiles()
             place(vaisseau, (FENETRE_LARGEUR / 2) - VAISSEAU_LARGEUR / 2, FENETRE_HAUTEUR - VAISSEAU_HAUTEUR, 0)
 
