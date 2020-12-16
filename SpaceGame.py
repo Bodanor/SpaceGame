@@ -54,6 +54,7 @@ VITESSE_JEU = 3
 # Info tir
 MUNITIONS = 20
 AJOUT_MUNITION = 20
+VITESSE_MISSILE = 15
 
 # Score et compteur
 SCORE = 0
@@ -372,6 +373,7 @@ def collision_entite(PLANETE_EN_LISTE,  nombre_vie, COMPTEUR_COLLISION, collisio
 
     vies = nombre_vie
     collision = collision_active
+    score = SCORE
 
     #Test si on vient de percuter un objet
     if collision == True:
@@ -389,7 +391,16 @@ def collision_entite(PLANETE_EN_LISTE,  nombre_vie, COMPTEUR_COLLISION, collisio
                     PLANETE_EN_LISTE.remove(planete)
                     couloir_planete = afficherCouloir(planete)
                     couloir_utilise.remove(couloir_planete)
-                    return vies, compteur, collision
+                    return vies, compteur, collision, score
+
+                for missiles in missile:
+                    distance_missile_planete = distance_objets(missiles, 10, 10, planete, TAILLE_PLANETE, TAILLE_PLANETE)
+
+                    if distance_missile_planete < 92:
+                        missile.remove(missiles)
+
+                        return vies, compteur, collision, score
+
 
         for ufo in UFO_EN_LISTE:
             distance_vaisseau_UFO = distance_objets(vaisseau,VAISSEAU_LARGEUR,VAISSEAU_HAUTEUR,ufo,UFO_TAILLE,UFO_TAILLE)
@@ -401,7 +412,16 @@ def collision_entite(PLANETE_EN_LISTE,  nombre_vie, COMPTEUR_COLLISION, collisio
                 UFO_EN_LISTE.remove(ufo)
                 couloir_ufo = afficherCouloir(ufo)
                 couloir_utilise_ufo.remove(couloir_ufo)
-                return vies, compteur, collision
+                return vies, compteur, collision, score
+
+            for missiles in missile:
+                distance_missile_ufo = distance_objets(missiles, 10, 10, ufo, UFO_TAILLE, UFO_TAILLE)
+
+                if distance_missile_ufo < 43:
+                    missile.remove(missiles)
+                    UFO_EN_LISTE.remove(ufo)
+                    score += 25
+                    return vies, compteur, collision, score
 
         for trou_noir in TROU_NOIR_EN_LISTE:
             distance_vaisseau_trou_noir = distance_objets(trou_noir,TROU_NOIR_TAILLE,TROU_NOIR_TAILLE, vaisseau, VAISSEAU_LARGEUR, VAISSEAU_HAUTEUR )
@@ -412,10 +432,14 @@ def collision_entite(PLANETE_EN_LISTE,  nombre_vie, COMPTEUR_COLLISION, collisio
                 collision = False
                 couloir_trou_noir = afficherCouloir(trou_noir)
                 couloir_utilise_trou_noir.remove(couloir_trou_noir)
-                return vies, compteur, collision
+                return vies, compteur, collision, score
+
+
+
     else:
-       return vies, compteur, collision
-    return vies, compteur, collision
+
+        return vies, compteur, collision, score
+    return vies, compteur, collision, score
 
 def distance_objets(objet1, HAUTEUR_OBJET1,LARGEUR_OBJET1, objet2, HAUTEUR_OBJET2,LARGEUR_OBJET2):
     centre_objet1_x = position(objet1)[0] + LARGEUR_OBJET1 / 2
@@ -523,7 +547,7 @@ def difficulte(niveau_difficulte):
         AJOUT_MUNITION = 20
         MUNITIONS = 20
         VITESSE_JEU = 3
-        VITESSE_MISSILE = 1
+        VITESSE_MISSILE = 15
         NOMBRE_VIE = 3
         DEPLACEMENT_VAISSEAU = 7
         FREQUENCE_APPARITION_TROU_NOIR = 1000
@@ -533,7 +557,7 @@ def difficulte(niveau_difficulte):
         AJOUT_MUNITION = 15
         MUNITIONS = 15
         VITESSE_JEU = 3.5
-        VITESSE_MISSILE = 0.8
+        VITESSE_MISSILE = 10
         NOMBRE_VIE = 2
         DEPLACEMENT_VAISSEAU = 6
         FREQUENCE_APPARITION_TROU_NOIR = 500
@@ -542,7 +566,7 @@ def difficulte(niveau_difficulte):
         AJOUT_MUNITION = 10
         MUNITIONS = 10
         VITESSE_JEU = 4
-        VITESSE_MISSILE = 0.6
+        VITESSE_MISSILE = 7
         NOMBRE_VIE = 1
         DEPLACEMENT_VAISSEAU = 5
         FREQUENCE_APPARITION_TROU_NOIR = 250
@@ -790,10 +814,10 @@ while enintro:
                     if niveau_difficulte == 0:
                         VITESSE_JEU = 3
                     elif niveau_difficulte == 1:
-                        VITESSE_JEU = 3.5
+                        VITESSE_JEU = 5
 
                     elif niveau_difficulte == 2:
-                        VITESSE_JEU = 4
+                        VITESSE_JEU = 7
 
                     enintro = False
                     enjeu = True
@@ -1087,7 +1111,7 @@ while enintro:
             affiche(TROU_NOIR_EN_LISTE, fenetre)
             score()
             afficher_munition(MUNITIONS)
-            NOMBRE_VIE, COMPTEUR_COLLISION, collision_active = collision_entite(PLANETE_EN_LISTE, NOMBRE_VIE,
+            NOMBRE_VIE, COMPTEUR_COLLISION, collision_active, SCORE = collision_entite(PLANETE_EN_LISTE, NOMBRE_VIE,
                                                                                 COMPTEUR_COLLISION, collision_active)
             vie()
             pygame.display.flip()
