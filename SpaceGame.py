@@ -1,3 +1,6 @@
+#PAPADOPOULOS Christos
+#DERAVET Maxime
+#(CHARLIER Samuel)
 import pygame
 import random
 import math
@@ -632,13 +635,15 @@ def spawn_trou_noir():
             couloir_random = random.randint(0, 4)
             trou_noir_random = random.randint(0, 4)
             hauteur_random = random.randint(-200, -80)
+
+            # On verifie qu'il n'existe pas deja une planete a l'emplacement du trou noir
             if couloir_random in couloir_utilise_trou_noir:
                 pass
             else:
                 if LISTE_TROU_NOIR[trou_noir_random] in TROU_NOIR_EN_LISTE:
                     pass
                 else:
-                    # On verifie qu'il n'existe pas deja une planete a l'emplacement du trou noir
+
                     for planete in PLANETE_EN_LISTE:
 
                         couloir_planete = afficherCouloir(planete)
@@ -753,14 +758,18 @@ pygame.init()
 # Son
 pygame.mixer.init()
 explosion_ufo = pygame.mixer.Sound("Son/explosion_ufo.wav")
-explosion_ufo.set_volume(0.5)
+explosion_ufo.set_volume(0.2)
 choix = pygame.mixer.Sound("Son/choix_menu.wav")
 choix_doite_gauche = pygame.mixer.Sound("Son/droite_gauche.wav")
 choix_gauche_droite = pygame.mixer.Sound("Son/gauche_droite.wav")
 piou = pygame.mixer.Sound("Son/piou.wav")
 no_bullets = pygame.mixer.Sound("Son/no_bullets.wav")
+no_bullets.set_volume(0.15)
+
 
 moinsvie = pygame.mixer.Sound("Son/moinsvie.wav")
+moinsvie.set_volume(0.2)
+
 start = pygame.mixer.Sound("Son/start.wav")
 start.set_volume(0.2)
 back = pygame.mixer.Sound("Son/back.wav")
