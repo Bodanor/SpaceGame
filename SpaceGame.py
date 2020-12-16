@@ -461,6 +461,7 @@ def distance_objets(objet1, HAUTEUR_OBJET1,LARGEUR_OBJET1, objet2, HAUTEUR_OBJET
 
 # GERER UFO
 def spawn_ufo():
+
     random_timer = random.randint(0, 14)
     if random_timer == 2:
         if len(UFO_EN_LISTE) < 1:
