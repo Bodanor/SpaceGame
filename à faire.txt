@@ -1,5 +1,7 @@
 [EN DEVELOPPEMENT] :
-Tirer sur des aliens pour gagner des points
-L'alien tire aussi
+
+(L'alien tire aussi)
+Rajouter de l'audio : Son explosion de l'UFO, Son trou noir, son perte de vie
+Changer image trou noir
 
 

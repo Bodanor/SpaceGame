@@ -17,7 +17,6 @@ NOMBRE_ETOILES = 500
 NOMBRE_UFO = 5
 NOMBRE_TROU_NOIR = 5
 
-
 # Dimension Fenetre
 FENETRE_LARGEUR = 1080
 FENETRE_HAUTEUR = 720
@@ -53,6 +52,7 @@ VITESSE_JEU = 3
 
 # Info tir
 MUNITIONS = 20
+VITESSE_MISSILE = 1
 AJOUT_MUNITION = 20
 
 # Score et compteur
@@ -160,51 +160,14 @@ def ajouteImage(entite, nom, image):
 def dessine(entite, ecran):
     ecran.blit(entite['image'], entite['position'])
 
+
+# Fin ENTITE #
+
+# AFFICHAGE
 def affiche(entites, ecran):
     for objet in entites:
         if estVisible(objet):
             dessine(objet, ecran)
-
-
-# Fin ENTITE #
-
-#DEFINITION MISSILE
-
-def nouvelleEntiteMissile():
-    return {
-        'visible': True,
-        'position': [0, 0],
-        'vitesse_missile' : VITESSE_MISSILE
-    }
-def visibleMissile(entite):
-    entite['visible'] = True
-
-
-def invisibleMissile(entite):
-    entite['visible'] = False
-
-def estVisibleMissile(entite):
-    return entite['visible']
-
-def placeMissile(entite, x, y):
-    entite['position'][0] = x
-    entite['position'][1] = y
-
-
-def positionMissile(entite):
-    return entite['position']
-
-
-
-def dessineMissile(entite, ecran):
-    ecran.blit(entite['image'], entite['position'])
-
-
-# AFFICHAGE
-def afficheMissile(entites, ecran):
-    for missile in entites:
-        if estVisible(missile):
-            dessine(missile, ecran)
 
 
 # Affichage du score et vies
@@ -238,29 +201,26 @@ def afficher_munition(nombre_munitions):
 
 
 # MRU pour les missiles
-def deplace_missile(missile, position_missile, vitesse_missile):
-    position_y = position_missile[1] - vitesse_missile
-    placeMissile(missile, position_missile[0], position_y)
+def mru_1d(depart, temps_depart, vitesse, temps_maintenant):
+    mru_1d = depart + (vitesse * (temps_maintenant - temps_depart))
+    return (mru_1d)
 
 
-def dessine_missile(fenetre, vitesse_missile):
+def dessiner_missile(missile, fenetre):
+    for missile in missile:
+        position = (missile['position_depart'][0],
+                    mru_1d(missile['position_depart'][1],
+                           missile['temps_depart'],
+                           missile['vitesse_verticale'],
+                           pygame.time.get_ticks()))
 
-    for missiles in missile:
-        if estVisible(missiles):
-            if positionMissile(missiles)[1] < 0:
-                missile.remove(missiles)
-            deplace_missile(missiles, positionMissile(missiles), vitesse_missile)
+        pygame.draw.circle(fenetre, BLANC, list(map(int, position)), 5)
+    return
 
-            pygame.draw.circle(fenetre, BLEU, list(map(int,positionMissile(missiles))), 7)
-            pygame.draw.circle(fenetre, BLEU, list(map(int, positionMissile(missiles))), 10, width=1)
-            pygame.draw.circle(fenetre, BLANC, list(map(int, positionMissile(missiles))), 5)
-
-def ajouter_missile(position):
-
-    missiles = nouvelleEntiteMissile()
-    placeMissile(missiles, position[0], position[1])
-    missile.append(missiles)
-
+def ajouter_missile(missile, position, temps_depart, vitesse):
+    missile.append({'position_depart': position,
+                   'temps_depart': temps_depart,
+                   'vitesse_verticale': vitesse})
     return
 
 
@@ -367,17 +327,16 @@ def deplace_planete(vitesse_jeu):
 
 
 # Gérer les collisions
-def collision_entite(PLANETE_EN_LISTE,  nombre_vie, COMPTEUR_COLLISION, collision_active):
+def collision_entite(PLANETE_EN_LISTE,  nombre_vie, COMPTEUR_COLLISION, collision_active, SCORE):
     compteur = COMPTEUR_COLLISION
-
     vies = nombre_vie
     collision = collision_active
+    score = SCORE
 
     #Test si on vient de percuter un objet
-    if collision == True:
+    if collision:
         vies = nombre_vie
         for planete in PLANETE_EN_LISTE:
-
 
                 #Calcul de la distance entre le centre des objets et des vaisseaux
                 distance_vaisseau_planete = distance_objets(vaisseau,VAISSEAU_HAUTEUR,VAISSEAU_LARGEUR,planete,TAILLE_PLANETE,TAILLE_PLANETE)
@@ -389,7 +348,7 @@ def collision_entite(PLANETE_EN_LISTE,  nombre_vie, COMPTEUR_COLLISION, collisio
                     PLANETE_EN_LISTE.remove(planete)
                     couloir_planete = afficherCouloir(planete)
                     couloir_utilise.remove(couloir_planete)
-                    return vies, compteur, collision
+                    return vies, compteur, collision, score
 
         for ufo in UFO_EN_LISTE:
             distance_vaisseau_UFO = distance_objets(vaisseau,VAISSEAU_LARGEUR,VAISSEAU_HAUTEUR,ufo,UFO_TAILLE,UFO_TAILLE)
@@ -401,7 +360,7 @@ def collision_entite(PLANETE_EN_LISTE,  nombre_vie, COMPTEUR_COLLISION, collisio
                 UFO_EN_LISTE.remove(ufo)
                 couloir_ufo = afficherCouloir(ufo)
                 couloir_utilise_ufo.remove(couloir_ufo)
-                return vies, compteur, collision
+                return vies, compteur, collision, score
 
         for trou_noir in TROU_NOIR_EN_LISTE:
             distance_vaisseau_trou_noir = distance_objets(trou_noir,TROU_NOIR_TAILLE,TROU_NOIR_TAILLE, vaisseau, VAISSEAU_LARGEUR, VAISSEAU_HAUTEUR )
@@ -412,10 +371,22 @@ def collision_entite(PLANETE_EN_LISTE,  nombre_vie, COMPTEUR_COLLISION, collisio
                 collision = False
                 couloir_trou_noir = afficherCouloir(trou_noir)
                 couloir_utilise_trou_noir.remove(couloir_trou_noir)
-                return vies, compteur, collision
+                return vies, compteur, collision, score
+
+        for missiles in missile:
+            distance_missile_ufo = distance_objets(missiles,10,10,ufo,UFO_TAILLE,UFO_TAILLE)
+
+            if distance_missile_ufo < 43:
+                UFO_EN_LISTE.remove(ufo)
+                score += 25
+                return score
+
+
+
+
     else:
-       return vies, compteur, collision
-    return vies, compteur, collision
+       return vies, compteur, collision, score
+    return vies, compteur, collision, score
 
 def distance_objets(objet1, HAUTEUR_OBJET1,LARGEUR_OBJET1, objet2, HAUTEUR_OBJET2,LARGEUR_OBJET2):
     centre_objet1_x = position(objet1)[0] + LARGEUR_OBJET1 / 2
@@ -592,7 +563,6 @@ pygame.init()
 pygame.mixer.init()
 piou = pygame.mixer.Sound("Son/piou.wav")
 no_bullets = pygame.mixer.Sound("Son/no_bullets.wav")
-collision = pygame.mixer.Sound("Son/collision.wav")
 print("[LOG] BRUITAGES CHARGE !")
 
 # Missile
@@ -815,17 +785,19 @@ while enintro:
     # Tir auto
     if COMPTEUR_BOUCLE % 150 == 0:
         if MUNITIONS > 0:
-            ajouter_missile((position(vaisseau)[0] + VAISSEAU_LARGEUR / 2, position(vaisseau)[1]))
+            ajouter_missile(missile, (position(vaisseau)[0] + VAISSEAU_LARGEUR / 2, position(vaisseau)[1]),
+                            temps_maintenant,
+                            -VITESSE_MISSILE)
 
     # Contrôle souris
     mouse = pygame.mouse.get_pos()
 
     # Affichage Vaisseau, etoile, vie, score
     prendsPose(vaisseau, POSE_VAISSEAU[0])
-
+    mouse = pygame.mouse.get_pos()
     fenetre.fill(ESPACE)
     afficher_etoiles(fenetre, VITESSE_JEU, etoiles)
-    dessine_missile(fenetre, VITESSE_MISSILE)
+    dessiner_missile(missile, fenetre)
 
     # Affichage général
     affiche(scene, fenetre)
@@ -849,8 +821,6 @@ while enintro:
 
         # Arrêter le jeu si plus de vie
         if NOMBRE_VIE == 0:
-
-            missile = []
             bestscore(SCORE)
             SCORE = 0
             enintro = True
@@ -867,6 +837,8 @@ while enintro:
             # Reprise des paramètres de la difficulté choisie dans le menu
             MENU, AJOUT_MUNITION, MUNITIONS, VITESSE_JEU, VITESSE_MISSILE, NOMBRE_VIE, DEPLACEMENT_VAISSEAU, FREQUENCE_APPARITION_TROU_NOIR = difficulte(
                 niveau_difficulte)
+
+            fenetre.fill(ESPACE)
 
         # Spawn des entités ennemies
         spawn_planete()
@@ -954,7 +926,10 @@ while enintro:
                         else:
                             # Tir de munitions
                             piou.play()
-                            ajouter_missile((position(vaisseau)[0] + VAISSEAU_LARGEUR / 2, position(vaisseau)[1]))
+                            ajouter_missile(missile,
+                                            (position(vaisseau)[0] + VAISSEAU_LARGEUR / 2, position(vaisseau)[1]),
+                                            temps_maintenant,
+                                            -VITESSE_MISSILE)
                             MUNITIONS -= 1
 
                 ######## Touche dans le menu Pause########
@@ -1067,11 +1042,10 @@ while enintro:
 
                 if COMPTEUR_COLLISION == 180 or COMPTEUR_COLLISION == 150 or COMPTEUR_COLLISION == 120 or COMPTEUR_COLLISION == 90 or COMPTEUR_COLLISION == 60 or COMPTEUR_COLLISION == 30:
                     invisible(vaisseau)
-
+                    print("invisible")
                 if COMPTEUR_COLLISION == 165 or COMPTEUR_COLLISION == 135 or COMPTEUR_COLLISION == 105 or COMPTEUR_COLLISION == 75 or COMPTEUR_COLLISION == 45 or COMPTEUR_COLLISION == 15:
                     visible(vaisseau)
-
-
+                    print("visible")
                 if COMPTEUR_COLLISION == 0:
                     collision_active = True
                     visible(vaisseau)
@@ -1079,7 +1053,7 @@ while enintro:
 
             # Affichage
             fenetre.fill(ESPACE)
-            dessine_missile(fenetre, VITESSE_MISSILE)
+            dessiner_missile(missile, fenetre)
             afficher_etoiles(fenetre, VITESSE_JEU, etoiles)
             affiche(scene, fenetre)
             affiche(PLANETE_EN_LISTE, fenetre)
@@ -1087,8 +1061,8 @@ while enintro:
             affiche(TROU_NOIR_EN_LISTE, fenetre)
             score()
             afficher_munition(MUNITIONS)
-            NOMBRE_VIE, COMPTEUR_COLLISION, collision_active = collision_entite(PLANETE_EN_LISTE, NOMBRE_VIE,
-                                                                                COMPTEUR_COLLISION, collision_active)
+            NOMBRE_VIE, COMPTEUR_COLLISION, collision_active, SCORE = collision_entite(PLANETE_EN_LISTE, NOMBRE_VIE,
+                                                                                COMPTEUR_COLLISION, collision_active, SCORE)
             vie()
             pygame.display.flip()
             # Temps
