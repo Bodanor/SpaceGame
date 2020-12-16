@@ -1,7 +1,9 @@
 import pygame
 import random
 import math
+import time
 
+temps_debut_complet = time.time()
 ######CONSTANTES#######
 # Couleur
 ESPACE = (0, 0, 15)
@@ -10,6 +12,10 @@ BLEU = (129, 78, 216)
 ROUGE = (255, 0, 0)
 VERT = (0,255,0)
 ORANGE = (255, 165, 0)
+JAUNE = (255,255,0)
+VERT_CLAIR = (51,255,51)
+GRIS = (128,128,128)
+CYAN = (51,255,255)
 
 BOUTON_COULEUR_CLAIR = (170, 170, 170)
 BOUTON_COULEUR_FONCE = (100, 100, 100)
@@ -93,6 +99,7 @@ COULOIRS = []
 SON_EN_PAUSE = False
 SON_EN_COURS = True
 
+Premiere_fois = True
 ########FIN CONSTANTE#######
 
 # Difficulté
@@ -210,9 +217,29 @@ def afficheMissile(entites, ecran):
             dessine(missile, ecran)
 
 
+def afficher_controles():
+    controle_echap = police.render(str("ECHAP : Mettre le jeu en pause"), True, BLANC)
+    controle_mute = police.render(str("M : Couper le son du jeu"), True, BLANC)
+    fleche_vie = police.render(str("Vies ►"), True, BLANC)
+    controle_touche = pygame.image.load("Images/fleche.png")
+    controle_touche = pygame.transform.scale(controle_touche, (80, 50))
+    controle_touche_texte = police.render(str("Controles ►"), True, BLANC)
+    controle_espace = pygame.image.load("Images/espace.png")
+    controle_espace = pygame.transform.scale(controle_espace, (120, 30))
+
+
+    fenetre.blit(controle_echap, (0, FENETRE_HAUTEUR*(6.5/8)))
+    fenetre.blit(controle_mute, (0, FENETRE_HAUTEUR * (7 / 8)))
+    fenetre.blit(fleche_vie, (FENETRE_LARGEUR - 6*VIE_LARGEUR, FENETRE_HAUTEUR - VIE_HAUTEUR + 5))
+    fenetre.blit(controle_touche, (FENETRE_LARGEUR-140, FENETRE_HAUTEUR * (6 / 8)))
+    fenetre.blit(controle_touche_texte, (FENETRE_LARGEUR -280, FENETRE_HAUTEUR * (6.3 / 8)))
+    fenetre.blit(controle_espace, (FENETRE_LARGEUR -170, FENETRE_HAUTEUR * (5 / 8)))
+
+
+
 # Affichage du score et vies
 def score():
-    marquoir = police.render(str("Score: {}".format(int(round(SCORE, 0)))), True, BLANC)
+    marquoir = police.render(str("Score: {}".format(int(round(SCORE, 0)))), True, VERT_CLAIR)
     fenetre.blit(marquoir, (20, FENETRE_HAUTEUR // 12))
 
 
@@ -694,7 +721,7 @@ def bestscore(bestscore):
                 fichier.write("0")
 
             phrase = str("Meilleur score: {}".format(int(round(meilleurscore, 0))))
-            marquoir = police.render(phrase, True, VERT)
+            marquoir = police.render(phrase, True, JAUNE)
             longueur_text_x, longueur_text_y = marquoir.get_size()
             fenetre.blit(marquoir, (FENETRE_LARGEUR//2 - longueur_text_x//2, FENETRE_HAUTEUR // 24))
 
@@ -709,7 +736,6 @@ def bestscore(bestscore):
         longueur_text_x, longueur_text_y = marquoir.get_size()
 
         fenetre.blit(marquoir, (FENETRE_LARGEUR // 2 - longueur_text_x // 2, FENETRE_HAUTEUR // 24))
-
 
 #####FIN FONCTIONS######
 
@@ -848,11 +874,12 @@ couloir_utilise_ufo = []
 couloir_utilise_trou_noir = []
 collision_active = True
 musique.play(-1)
-
+Premiere_fois = True
+print("[LOG] LE CHARGEMENT COMPLET A PRIS {}".format(time.time() - temps_debut_complet))
 ######CREATION DU MENU######
 while enintro:
 
-    print(SON_EN_PAUSE, SON_EN_COURS)
+
     if SON_EN_PAUSE == False:
         if SON_EN_COURS == True:
             musique.play(-1)
@@ -993,6 +1020,8 @@ while enintro:
     vie()
     afficher_munition(MUNITIONS)
     afficherBoutonMenu(MENU)
+    if Premiere_fois:
+        afficher_controles()
     pygame.display.flip()
 
     # Temps
@@ -1004,10 +1033,12 @@ while enintro:
 
     #####BOUCLE DU JEU#####
     while enjeu:
-
+        Premiere_fois = False
         if SON_EN_PAUSE == False:
-            if SON_EN_COURS == False:
+            if SON_EN_COURS == True:
                 musique.play(-1)
+                SON_EN_COURS = False
+                SON_EN_PAUSE = False
 
         else:
             musique.stop()
