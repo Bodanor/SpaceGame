@@ -469,7 +469,8 @@ def collision_entite(PLANETE_EN_LISTE,  nombre_vie, COMPTEUR_COLLISION, collisio
                 distance_missileUFO_trou_noir = distance_objets(missiles_ufo, 10, 10, trou_noir, TROU_NOIR_TAILLE,
                                                              TROU_NOIR_TAILLE)
                 if distance_missileUFO_trou_noir < 43:
-                    missile.remove(missiles_ufo)
+
+                    missiles_ufo.remove(missiles_ufo)
                     return vies, compteur, collision, score
 
 
@@ -733,7 +734,7 @@ back = pygame.mixer.Sound("Son/back.wav")
 print("[LOG] BRUITAGES CHARGE !")
 
 print("[LOG] CHARGEMENT BANDE SON...")
-pygame.mixer.music.load("Bande Son/musiquePrincipal.ogg")
+pygame.mixer.music.load("Bande Son/musiquePrincipal.wav")
 pygame.mixer.music.set_volume(0.3)
 
 print("[LOG] CHARGEMENT BANDE SON CHARGE!")
