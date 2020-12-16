@@ -272,10 +272,7 @@ def afficherBoutonMenu(Menu):
         texte_largeur, texte_hauteur = text_afficher.get_size()
 
         # détection de la souris qui passe au dessus des boutons et les afficher en couleur clair si elle est au dessus
-        if FENETRE_LARGEUR / 2 - BOUTON_LARGEUR // 2 <= mouse[
-            0] <= FENETRE_LARGEUR / 2 + BOUTON_LARGEUR // 2 and FENETRE_HAUTEUR / MENU_LONGUEUR - BOUTON_HAUTEUR + (
-                HAUTEUR / 2 * index) <= mouse[1] <= (FENETRE_HAUTEUR / MENU_LONGUEUR) + (
-                HAUTEUR / 2 * index) or index == BOUTON:
+        if index == BOUTON:
 
 
             pygame.draw.rect(fenetre, BOUTON_COULEUR_CLAIR,
@@ -303,10 +300,7 @@ def pause():
         texte_largeur, texte_hauteur = text_afficher.get_size()
 
         # affichage des boutons de couleurs différentes selon celui qui est sélectionné
-        if BOUTON == index or FENETRE_LARGEUR / 2 - BOUTON_LARGEUR // 2 <= mouse[
-            0] <= FENETRE_LARGEUR / 2 + BOUTON_LARGEUR // 2 and FENETRE_HAUTEUR / MENU_LONGUEUR - BOUTON_HAUTEUR + (
-                HAUTEUR / 2 * index) <= mouse[1] <= (FENETRE_HAUTEUR / MENU_LONGUEUR) + (
-                HAUTEUR / 2 * index):
+        if BOUTON == index:
             pygame.draw.rect(fenetre, BOUTON_COULEUR_CLAIR,
                              [(FENETRE_LARGEUR / 2) - BOUTON_LARGEUR // 2,
                               ((FENETRE_HAUTEUR / MENU_LONGUEUR) - BOUTON_HAUTEUR) + (HAUTEUR / 2 * index),
@@ -322,7 +316,6 @@ def pause():
         fenetre.blit(text_afficher, ((FENETRE_LARGEUR / 2) - texte_largeur // 2,
                                      (FENETRE_HAUTEUR / MENU_LONGUEUR) - texte_hauteur + (HAUTEUR * index) / 2))
 
-    pygame.display.flip()
 
 
 # GERER PLANETES
@@ -874,27 +867,6 @@ while enintro:
             pygame.quit()
             quit()
 
-        # Lancer le jeu
-        if event.type == pygame.MOUSEBUTTONDOWN:
-            if FENETRE_LARGEUR / 2 - BOUTON_LARGEUR // 2 <= mouse[
-                0] <= FENETRE_LARGEUR / 2 + BOUTON_LARGEUR // 2 and FENETRE_HAUTEUR / MENU_LONGUEUR - BOUTON_HAUTEUR + (
-                    HAUTEUR / 2 * 0) <= mouse[1] <= (FENETRE_HAUTEUR / MENU_LONGUEUR) + (HAUTEUR / 2 * 0):
-                start.play()
-
-                enintro = False
-                enjeu = True
-                SCORE = 0
-                COMPTEUR_BOUCLE = 1
-                BOUTON = 0
-
-
-            # Quitter le jeu avec le bouton quitter
-            if FENETRE_LARGEUR / 2 - BOUTON_LARGEUR // 2 <= mouse[
-                0] <= FENETRE_LARGEUR / 2 + BOUTON_LARGEUR // 2 and FENETRE_HAUTEUR / MENU_LONGUEUR - BOUTON_HAUTEUR + (
-                    HAUTEUR / 2 * 2) <= mouse[1] <= (FENETRE_HAUTEUR / MENU_LONGUEUR) + (HAUTEUR / 2 * 2):
-                enjeu = False
-                enintro = False
-                NOMBRE_VIE = 0
 
         # Controle clavier
         if event.type == pygame.KEYDOWN:
@@ -971,8 +943,6 @@ while enintro:
         if MUNITIONS > 0:
             ajouter_missile((position(vaisseau)[0] + VAISSEAU_LARGEUR / 2, position(vaisseau)[1]))
 
-    # Contrôle souris
-    mouse = pygame.mouse.get_pos()
 
     # Affichage Vaisseau, etoile, vie, score
     prendsPose(vaisseau, POSE_VAISSEAU[0])
@@ -1033,7 +1003,6 @@ while enintro:
         prendsPose(vaisseau, POSE_VAISSEAU[0])
 
         evenement = pygame.event.get()
-        mouse = pygame.mouse.get_pos()
 
         for event in evenement:
             # Changement de l'écran
@@ -1044,7 +1013,7 @@ while enintro:
                 ancienne_largeur, ancienne_hauteur = FENETRE_LARGEUR, FENETRE_HAUTEUR
 
                 FENETRE_LARGEUR, FENETRE_HAUTEUR = fenetre.get_size()
-
+                fenetre.fill(ESPACE)
                 etoiles.clear()
                 etoiles = cree_etoiles()
                 COULOIRS = []
@@ -1054,6 +1023,7 @@ while enintro:
                     position_x_planete, position_y_planete = position(planete)
 
                     place(planete, COULOIRS[couloir][0], position_y_planete, couloir)
+
 
                 for ufo in UFO_EN_LISTE:
                     couloir = afficherCouloir(ufo)
@@ -1068,10 +1038,25 @@ while enintro:
                     place(trou_noir, COULOIRS[couloir][0], position_y_trou_noir, couloir)
 
 
+                for missiles in missile:
+                    position_x_missile, position_y_missile = positionMissile(missiles)[0], positionMissile(missiles)[1]
+
+                    placeMissile(missiles, (position_x_missile / ancienne_largeur) * fenetre.get_size()[0],
+                          (position_y_missile / ancienne_hauteur) * fenetre.get_size()[1])
 
                 place(vaisseau, (position_x_vaisseau / ancienne_largeur) * fenetre.get_size()[0],
                       (position_y_vaisseau / ancienne_hauteur) * fenetre.get_size()[1], 0)
 
+                dessine_missile(fenetre, VITESSE_MISSILE)
+                dessine_missile_ufo(fenetre, VITESSE_MISSILE)
+                afficher_etoiles(fenetre, VITESSE_JEU, etoiles)
+                affiche(scene, fenetre)
+                affiche(PLANETE_EN_LISTE, fenetre)
+                affiche(UFO_EN_LISTE, fenetre)
+                affiche(TROU_NOIR_EN_LISTE, fenetre)
+                score()
+                afficher_munition(MUNITIONS)
+                vie()
             # Quitter avec la croix
 
             if event.type == pygame.QUIT:
@@ -1079,28 +1064,6 @@ while enintro:
                 pygame.quit()
                 quit()
 
-            if event.type == pygame.MOUSEBUTTONDOWN:
-
-                if FENETRE_LARGEUR / 2 - BOUTON_LARGEUR // 2 <= mouse[
-                    0] <= FENETRE_LARGEUR / 2 + BOUTON_LARGEUR // 2 and FENETRE_HAUTEUR / MENU_LONGUEUR - BOUTON_HAUTEUR + (
-                        HAUTEUR / 2 * 0) <= mouse[1] <= (FENETRE_HAUTEUR / MENU_LONGUEUR) + (HAUTEUR / 2 * 0):
-                    COMPTEUR_PAUSE += 1
-
-                if FENETRE_LARGEUR / 2 - BOUTON_LARGEUR // 2 <= mouse[
-                    0] <= FENETRE_LARGEUR / 2 + BOUTON_LARGEUR // 2 and FENETRE_HAUTEUR / MENU_LONGUEUR - BOUTON_HAUTEUR + (
-                        HAUTEUR / 2 * 1) <= mouse[1] <= (FENETRE_HAUTEUR / MENU_LONGUEUR) + (HAUTEUR / 2 * 1):
-                    bestscore(SCORE)
-                    COMPTEUR_PAUSE += 1
-                    SCORE = 0
-                    enintro = True
-                    enjeu = False
-                    couloir_utilise = []
-                    PLANETE_EN_LISTE = []
-                    spawn_planete()
-                    deplace_planete(VITESSE_JEU)
-                    visible(vaisseau)
-                    COMPTEUR_COLLISION = 0
-                    BOUTON = 0
 
             # Tir
             if event.type == pygame.KEYDOWN:
@@ -1161,6 +1124,9 @@ while enintro:
                         visible(vaisseau)
                         COMPTEUR_COLLISION = 0
                         BOUTON = 0
+                        MISSILE_UFO_EN_LISTE = []
+                        TROU_NOIR_EN_LISTE = []
+                        missiles = []
 
                         # Reprise des paramètres de la difficulté choisie dans le menu
                         MENU, AJOUT_MUNITION, MUNITIONS, VITESSE_JEU, VITESSE_MISSILE, NOMBRE_VIE, DEPLACEMENT_VAISSEAU, FREQUENCE_APPARITION_TROU_NOIR = difficulte(
@@ -1172,6 +1138,7 @@ while enintro:
             pygame.mixer.music.pause()
             pause()
             pygame.display.flip()
+            temps.tick(60)
 
         else:
             pygame.mixer.music.unpause()
