@@ -91,6 +91,7 @@ TROU_NOIR_EN_LISTE = []
 COULOIRS = []
 
 SON_EN_PAUSE = False
+SON_EN_COURS = True
 
 ########FIN CONSTANTE#######
 
@@ -385,7 +386,8 @@ def collision_entite(PLANETE_EN_LISTE,  nombre_vie, COMPTEUR_COLLISION, collisio
                 distance_vaisseau_planete = distance_objets(vaisseau,VAISSEAU_HAUTEUR,VAISSEAU_LARGEUR,planete,TAILLE_PLANETE,TAILLE_PLANETE)
 
                 if distance_vaisseau_planete < 125: #Si il y a collision avec une planète, on enlève une vie, on joue un son et on désactive les collisions
-                    moinsvie.play()
+                    if SON_EN_PAUSE == False:
+                        moinsvie.play()
                     vies = vies - 1
                     compteur = 180
                     collision = False
@@ -419,8 +421,9 @@ def collision_entite(PLANETE_EN_LISTE,  nombre_vie, COMPTEUR_COLLISION, collisio
 
             # Collisions entre le vaisseau et l'ufo
             if distance_vaisseau_UFO < 70:
-                moinsvie.play()
-                explosion_ufo.play()
+                if SON_EN_PAUSE == False:
+                    moinsvie.play()
+                    explosion_ufo.play()
                 vies = vies -1
                 compteur = 180
                 collision = False
@@ -435,7 +438,8 @@ def collision_entite(PLANETE_EN_LISTE,  nombre_vie, COMPTEUR_COLLISION, collisio
                 distance_missile_ufo = distance_objets(missiles, 10, 10, ufo, UFO_TAILLE, UFO_TAILLE)
 
                 if distance_missile_ufo < 43:
-                    explosion_ufo.play()
+                    if SON_EN_PAUSE == False:
+                        explosion_ufo.play()
                     missile.remove(missiles)
                     UFO_EN_LISTE.remove(ufo)
                     couloir_ufo = afficherCouloir(ufo)
@@ -484,7 +488,8 @@ def collision_entite(PLANETE_EN_LISTE,  nombre_vie, COMPTEUR_COLLISION, collisio
                 distance_missileUFO_vaisseau = distance_objets(vaisseau,VAISSEAU_HAUTEUR,VAISSEAU_LARGEUR,missile_ufo,10,10)
 
                 if distance_missileUFO_vaisseau < 45:
-                    moinsvie.play()
+                    if SON_EN_PAUSE == False:
+                        moinsvie.play()
                     vies = vies - 1
                     compteur = 180
                     collision = False
@@ -842,11 +847,20 @@ couloir_utilise = []
 couloir_utilise_ufo = []
 couloir_utilise_trou_noir = []
 collision_active = True
-
 musique.play(-1)
 
 ######CREATION DU MENU######
 while enintro:
+
+    print(SON_EN_PAUSE, SON_EN_COURS)
+    if SON_EN_PAUSE == False:
+        if SON_EN_COURS == True:
+            musique.play(-1)
+            SON_EN_COURS = False
+            SON_EN_PAUSE = False
+
+    else:
+        musique.stop()
 
     visible(vaisseau)
     temps_maintenant = pygame.time.get_ticks()
@@ -878,7 +892,8 @@ while enintro:
             if event.key == pygame.K_RIGHT:
                 if BOUTON == 1:
                     if niveau_difficulte < 2:
-                        choix_gauche_droite.play()
+                        if SON_EN_PAUSE == False:
+                            choix_gauche_droite.play()
                         niveau_difficulte += 1
                         MENU, AJOUT_MUNITION, MUNITIONS, VITESSE_JEU, VITESSE_MISSILE, NOMBRE_VIE, DEPLACEMENT_VAISSEAU, FREQUENCE_APPARITION_TROU_NOIR = difficulte(
                             niveau_difficulte)
@@ -888,7 +903,8 @@ while enintro:
             if event.key == pygame.K_LEFT:
                 if BOUTON == 1:
                     if niveau_difficulte > 0:
-                        choix_doite_gauche.play()
+                        if SON_EN_PAUSE == False:
+                            choix_doite_gauche.play()
                         niveau_difficulte -= 1
                         MENU, AJOUT_MUNITION, MUNITIONS, VITESSE_JEU, VITESSE_MISSILE, NOMBRE_VIE, DEPLACEMENT_VAISSEAU, FREQUENCE_APPARITION_TROU_NOIR = difficulte(
                             niveau_difficulte)
@@ -896,7 +912,8 @@ while enintro:
                         None
             # déplacement dans le menu
             if event.key == pygame.K_DOWN:
-                choix.play()
+                if SON_EN_PAUSE == False:
+                    choix.play()
                 if BOUTON < 2:
                     BOUTON += 1
                 else:
@@ -904,7 +921,8 @@ while enintro:
 
             # déplacement dans le menu
             if event.key == pygame.K_UP:
-                choix.play()
+                if SON_EN_PAUSE == False:
+                    choix.play()
                 if BOUTON < 1:
                     BOUTON = 2
                 else:
@@ -912,7 +930,8 @@ while enintro:
 
             # lancer/quitter le jeu
             if event.key == pygame.K_RETURN:
-                start.play()
+                if SON_EN_PAUSE == False:
+                    start.play()
                 # Jouer
                 if BOUTON == 0 or BOUTON == 1:
                     if niveau_difficulte == 0:
@@ -940,11 +959,13 @@ while enintro:
             #Supprimer le son du jeu
             if event.key == pygame.K_m:
                 if SON_EN_PAUSE == True:
-                    musique.play(-1)
+
                     SON_EN_PAUSE = False
+                    SON_EN_COURS = True
                 else:
-                    pygame.mixer.stop()
+
                     SON_EN_PAUSE = True
+                    SON_EN_COURS = False
 
     # Mécanique du jeu
     # Incrémentation de la vitesse du jeu dans le menu
@@ -983,6 +1004,13 @@ while enintro:
 
     #####BOUCLE DU JEU#####
     while enjeu:
+
+        if SON_EN_PAUSE == False:
+            if SON_EN_COURS == False:
+                musique.play(-1)
+
+        else:
+            musique.stop()
 
         # Arrêter le jeu si plus de vie
         if NOMBRE_VIE == 0:
@@ -1087,20 +1115,23 @@ while enintro:
                     else:
                         # Pas de munition
                         if MUNITIONS == 0:
-                            no_bullets.play()
+                            if SON_EN_PAUSE == False:
+                                no_bullets.play()
                         else:
                             # Tir de munitions
-                            piou.play()
+                            if SON_EN_PAUSE == False:
+                                piou.play()
                             ajouter_missile((position(vaisseau)[0] + VAISSEAU_LARGEUR / 2, position(vaisseau)[1]))
                             MUNITIONS -= 1
                 if event.key == pygame.K_m:
 
                     if SON_EN_PAUSE == True:
-                        musique.play(-1)
                         SON_EN_PAUSE = False
+                        SON_EN_COURS = True
+
                     else:
-                        pygame.mixer.stop()
                         SON_EN_PAUSE = True
+                        SON_EN_COURS = False
 
                 ######## Touche dans le menu Pause########
                 # Quitter le menu pause avec echap
@@ -1111,7 +1142,8 @@ while enintro:
                 if COMPTEUR_PAUSE % 2 != 0:
                     # Bas
                     if event.key == pygame.K_DOWN:
-                        choix.play()
+                        if SON_EN_PAUSE == False:
+                            choix.play()
                         if BOUTON < 1:
                             BOUTON += 1
                         else:
@@ -1121,7 +1153,8 @@ while enintro:
 
                     # Haut
                     if event.key == pygame.K_UP:
-                        choix.play()
+                        if SON_EN_PAUSE == False:
+                            choix.play()
                         if BOUTON == 1:
                             BOUTON = 0
                         elif BOUTON == 0:
@@ -1134,7 +1167,8 @@ while enintro:
 
                     # Revenir au menu principal
                     if BOUTON == 1:
-                        back.play()
+                        if SON_EN_PAUSE == False:
+                            back.play()
                         bestscore(SCORE)
                         COMPTEUR_PAUSE += 1
                         SCORE = 0
