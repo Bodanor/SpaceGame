@@ -1,7 +1,10 @@
 import pygame
 import random
 import math
+import time
 
+
+temps_chargement_initial = time.time()
 ######CONSTANTES#######
 # Couleur
 ESPACE = (0, 0, 15)
@@ -428,6 +431,8 @@ def collision_entite(PLANETE_EN_LISTE,  nombre_vie, COMPTEUR_COLLISION, collisio
                     explosion_ufo.play()
                     missile.remove(missiles)
                     UFO_EN_LISTE.remove(ufo)
+                    couloir = afficherCouloir(ufo)
+                    couloir_utilise_ufo.remove(couloir)
                     score += 25
                     return vies, compteur, collision, score
 
@@ -462,12 +467,15 @@ def distance_objets(objet1, HAUTEUR_OBJET1,LARGEUR_OBJET1, objet2, HAUTEUR_OBJET
 # GERER UFO
 def spawn_ufo():
 
+
     random_timer = random.randint(0, 14)
     if random_timer == 2:
         if len(UFO_EN_LISTE) < 1:
+
             couloir_random = random.randint(0, 4)
             ufo_random = random.randint(0, 4)
             hauteur_random = random.randint(-200, -80)
+
             if couloir_random in couloir_utilise_ufo:
                 pass
             else:
@@ -481,6 +489,7 @@ def spawn_ufo():
                         if couloir_planete == couloir_random:
                             if hauteur_random > position(planete)[1] + TAILLE_PLANETE or hauteur_random + UFO_TAILLE < \
                                     position(planete)[1]:
+
                                 place(LISTE_UFO[ufo_random], COULOIRS[couloir_random][0], hauteur_random,
                                       couloir_random)
                                 UFO_EN_LISTE.append(LISTE_UFO[ufo_random])
@@ -619,17 +628,21 @@ def bestscore(bestscore):
 
 
 # Changement de l'icône de jeu
+print("[LOG] CHARGEMENT ICONE DU JEU")
 game_icon = pygame.image.load("Images/vaisseau_jaune_avec_flamme.png")
 pygame.display.set_icon(game_icon)
-
+print("[LOG] ICONE DU JEU CHANGé")
 # Icone vie
 vie_image = pygame.image.load('Images/vaisseau_rouge_avec_flamme.png')
 
+print("[LOG] INITIALISATION DE PYGAME")
 # Initiamisation de pygame
 pygame.init()
-
+print("[LOG] PYGAME INITIALISE")
 # Son
+print("[LOG] INITIALISATION DU MIXER")
 pygame.mixer.init()
+print("[LOG] MIXER INITIALISE")
 explosion_ufo = pygame.mixer.Sound("Son/explosion_ufo.wav")
 explosion_ufo.set_volume(0.5)
 choix = pygame.mixer.Sound("Son/choix_menu.wav")
@@ -723,7 +736,6 @@ print("[LOG]  LES TROUS NOIR SONT CHARGéES")
 print("[LOG] TOUTES LES IMAGES SONT CHARGéES")
 # FIN CHARGEMENT IMAGES #
 
-
 # Postionement du vaisseau
 place(vaisseau, (FENETRE_LARGEUR / 2) - VAISSEAU_LARGEUR / 2, FENETRE_HAUTEUR - VAISSEAU_HAUTEUR, 0)
 # Scene et planete
@@ -736,11 +748,9 @@ fini = False
 enintro = True
 enjeu = False
 temps = pygame.time.Clock()
-
 # Police d'écriture#
 police = pygame.font.SysFont('monospace', FENETRE_HAUTEUR // 40, True)
 POLICE_ECRITURE_BOUTON = pygame.font.SysFont('monospace', 36)
-
 # Création des étoiles
 etoiles = cree_etoiles()
 
@@ -751,6 +761,8 @@ couloir_utilise_trou_noir = []
 collision_active = True
 pygame.mixer.music.play(-1)
 son_deja_jouer = False
+
+print("Le chargement du jeu à pris {}".format(time.time() - temps_chargement_initial))
 
 ######CREATION DU MENU######
 while enintro:
@@ -855,7 +867,7 @@ while enintro:
                         VITESSE_JEU = 5
 
                     elif niveau_difficulte == 2:
-                        VITESSE_JEU = 7
+                        VITESSE_JEU = 4
 
                     enintro = False
                     enjeu = True
@@ -925,6 +937,8 @@ while enintro:
             deplace_planete(VITESSE_JEU)
             visible(vaisseau)
             COMPTEUR_COLLISION = 0
+            etoiles.clear()
+            etoiles = cree_etoiles()
 
             # Reprise des paramètres de la difficulté choisie dans le menu
             MENU, AJOUT_MUNITION, MUNITIONS, VITESSE_JEU, VITESSE_MISSILE, NOMBRE_VIE, DEPLACEMENT_VAISSEAU, FREQUENCE_APPARITION_TROU_NOIR = difficulte(
@@ -972,6 +986,7 @@ while enintro:
 
                     place(trou_noir, COULOIRS[couloir][0], position_y, couloir)
 
+                etoiles.clear()
                 etoiles = cree_etoiles()
 
             # Quitter avec la croix
@@ -990,6 +1005,7 @@ while enintro:
                 if FENETRE_LARGEUR / 2 - BOUTON_LARGEUR // 2 <= mouse[
                     0] <= FENETRE_LARGEUR / 2 + BOUTON_LARGEUR // 2 and FENETRE_HAUTEUR / MENU_LONGUEUR - BOUTON_HAUTEUR + (
                         HAUTEUR / 2 * 1) <= mouse[1] <= (FENETRE_HAUTEUR / MENU_LONGUEUR) + (HAUTEUR / 2 * 1):
+
                     bestscore(SCORE)
                     COMPTEUR_PAUSE += 1
                     SCORE = 0
@@ -1002,7 +1018,10 @@ while enintro:
                     visible(vaisseau)
                     COMPTEUR_COLLISION = 0
                     BOUTON = 0
-
+                    etoiles.clear()
+                    etoiles = cree_etoiles()
+                    MENU, AJOUT_MUNITION, MUNITIONS, VITESSE_JEU, VITESSE_MISSILE, NOMBRE_VIE, DEPLACEMENT_VAISSEAU, FREQUENCE_APPARITION_TROU_NOIR = difficulte(
+                        niveau_difficulte)
             # Tir
             if event.type == pygame.KEYDOWN:
                 # Vérification qu'on est pas en pause
@@ -1062,6 +1081,8 @@ while enintro:
                         visible(vaisseau)
                         COMPTEUR_COLLISION = 0
                         BOUTON = 0
+                        etoiles.clear()
+                        etoiles = cree_etoiles()
 
                         # Reprise des paramètres de la difficulté choisie dans le menu
                         MENU, AJOUT_MUNITION, MUNITIONS, VITESSE_JEU, VITESSE_MISSILE, NOMBRE_VIE, DEPLACEMENT_VAISSEAU, FREQUENCE_APPARITION_TROU_NOIR = difficulte(
