@@ -57,6 +57,7 @@ VITESSE_JEU = 3
 MUNITIONS = 20
 AJOUT_MUNITION = 20
 VITESSE_MISSILE = 15
+FREQUENCE_TIR = 180
 
 # Score et compteur
 SCORE = 0
@@ -64,7 +65,7 @@ COMPTEUR_BOUCLE = 0
 COMPTEUR_PAUSE = 0
 COMPTEUR_COLLISION = 0
 NOMBRE_VIE = 3
-TEMPS_AVANT_PAUSE = 0
+
 
 # CONSTANTE POUR LE MENU
 MENU = ['Jouer', 'Facile>', 'Quitter']
@@ -78,11 +79,13 @@ BOUTON_LARGEUR = 220
 BOUTON_HAUTEUR = 41
 BOUTON = 0
 
-# DEFINITION ENTITE
+# DECLARATION DES LISTES
 LISTE_PLANETE = []
 PLANETE_EN_LISTE = []
 LISTE_UFO = []
 UFO_EN_LISTE = []
+MISSILE_UFO = []
+MISSILE_UFO_EN_LISTE = []
 LISTE_TROU_NOIR = []
 TROU_NOIR_EN_LISTE = []
 COULOIRS = []
@@ -95,7 +98,7 @@ niveau_difficulte = 0
 
 #######FONCTIONS########
 
-# Etoile
+# Etoile en fond
 def cree_etoiles():
     etoile = []
     for x in range(NOMBRE_ETOILES):
@@ -182,7 +185,6 @@ def nouvelleEntiteMissile():
 def visibleMissile(entite):
     entite['visible'] = True
 
-
 def invisibleMissile(entite):
     entite['visible'] = False
 
@@ -193,17 +195,12 @@ def placeMissile(entite, x, y):
     entite['position'][0] = x
     entite['position'][1] = y
 
-
 def positionMissile(entite):
     return entite['position']
-
-
 
 def dessineMissile(entite, ecran):
     ecran.blit(entite['image'], entite['position'])
 
-
-# AFFICHAGE
 def afficheMissile(entites, ecran):
     for missile in entites:
         if estVisible(missile):
@@ -240,7 +237,7 @@ def afficher_munition(nombre_munitions):
         pygame.draw.circle(fenetre, BLANC, (17, FENETRE_HAUTEUR - 25), 5)
 
 
-# MRU pour les missiles
+# DEPLACEMENT ET AFFICHAGE DES MISSILES
 def deplace_missile(missile, position_missile, vitesse_missile):
     position_y = position_missile[1] - vitesse_missile
     placeMissile(missile, position_missile[0], position_y)
@@ -298,7 +295,7 @@ def afficherBoutonMenu(Menu):
                                      (FENETRE_HAUTEUR / MENU_LONGUEUR) - texte_hauteur + (HAUTEUR * index) / 2))
 
 
-# Pause
+#Menu Pause
 def pause():
     for index, text in enumerate(MENU_PAUSE):
 
@@ -328,13 +325,12 @@ def pause():
     pygame.display.flip()
 
 
-
+# GERER PLANETES
 def creation_couloirs_planete():
     for x in range(0, 5):
         COULOIRS.append(((FENETRE_LARGEUR / 5) * x, (FENETRE_LARGEUR / 5) * (x + 1)))
 
 
-# GERER PLANETES
 def spawn_planete():
     # Nombre de chances de spawn une planete
     random_timer = random.randint(0, 14)
@@ -362,6 +358,7 @@ def deplace_planete(vitesse_jeu):
     if COMPTEUR_PAUSE % 2 != 0:
         vitesse_jeu = 0
     else:
+        #Déplacment des planètes
         for planete in PLANETE_EN_LISTE:
             x, y = position(planete)
             couloir_planete = afficherCouloir(planete)
@@ -373,7 +370,7 @@ def deplace_planete(vitesse_jeu):
                 couloir_utilise.remove(couloir_planete)
 
 
-# Gérer les collisions
+# COLLISIONS
 def collision_entite(PLANETE_EN_LISTE,  nombre_vie, COMPTEUR_COLLISION, collision_active):
     compteur = COMPTEUR_COLLISION
 
@@ -381,15 +378,18 @@ def collision_entite(PLANETE_EN_LISTE,  nombre_vie, COMPTEUR_COLLISION, collisio
     collision = collision_active
     score = SCORE
 
-    #Test si on vient de percuter un objet
+    #Test si les collisions sontactivées
     if collision == True:
         vies = nombre_vie
+
+
+        #COllISION PLANETE
         for planete in PLANETE_EN_LISTE:
 
-                #Calcul de la distance entre le centre des objets et des vaisseaux
+                #Calcul de la distance entre le centre de la planete et du vaisseaux
                 distance_vaisseau_planete = distance_objets(vaisseau,VAISSEAU_HAUTEUR,VAISSEAU_LARGEUR,planete,TAILLE_PLANETE,TAILLE_PLANETE)
 
-                if distance_vaisseau_planete < 125:
+                if distance_vaisseau_planete < 125: #Si il y a collision avec une planète, on enlève une vie, on joue un son et on désactive les collisions
                     moinsvie.play()
                     vies = vies - 1
                     compteur = 180
@@ -400,6 +400,7 @@ def collision_entite(PLANETE_EN_LISTE,  nombre_vie, COMPTEUR_COLLISION, collisio
                     return vies, compteur, collision, score
 
                 for missiles in missile:
+            #On test si les missiles rentre en contact avec une planete. Si c'est le cas, on remove le missile
                     distance_missile_planete = distance_objets(missiles, 10, 10, planete, TAILLE_PLANETE, TAILLE_PLANETE)
 
                     if distance_missile_planete < 92:
@@ -407,20 +408,34 @@ def collision_entite(PLANETE_EN_LISTE,  nombre_vie, COMPTEUR_COLLISION, collisio
 
                         return vies, compteur, collision, score
 
+                for missile_ufo in MISSILE_UFO_EN_LISTE:
+                    distance_missileUFO_planete = distance_objets(missile_ufo, 10, 10, planete, TAILLE_PLANETE, TAILLE_PLANETE)
 
+                    if distance_missileUFO_planete < 92:
+                        MISSILE_UFO_EN_LISTE.remove(missile_ufo)
+
+                        return vies, compteur, collision, score
+
+
+        #COLLISION UFO
         for ufo in UFO_EN_LISTE:
+
             distance_vaisseau_UFO = distance_objets(vaisseau,VAISSEAU_LARGEUR,VAISSEAU_HAUTEUR,ufo,UFO_TAILLE,UFO_TAILLE)
 
+            # Collisions entre le vaisseau et l'ufo
             if distance_vaisseau_UFO < 70:
                 moinsvie.play()
+                explosion_ufo.play()
                 vies = vies -1
                 compteur = 180
                 collision = False
                 UFO_EN_LISTE.remove(ufo)
+
                 couloir_ufo = afficherCouloir(ufo)
                 couloir_utilise_ufo.remove(couloir_ufo)
                 return vies, compteur, collision, score
 
+            #Collision entre l'ufo et les missiles
             for missiles in missile:
                 distance_missile_ufo = distance_objets(missiles, 10, 10, ufo, UFO_TAILLE, UFO_TAILLE)
 
@@ -428,10 +443,16 @@ def collision_entite(PLANETE_EN_LISTE,  nombre_vie, COMPTEUR_COLLISION, collisio
                     explosion_ufo.play()
                     missile.remove(missiles)
                     UFO_EN_LISTE.remove(ufo)
+                    couloir_ufo = afficherCouloir(ufo)
+                    couloir_utilise_ufo.remove(couloir_ufo)
                     score += 25
                     return vies, compteur, collision, score
 
+
+        #COLLISIONS TROU NOIR
         for trou_noir in TROU_NOIR_EN_LISTE:
+
+            #Collision entre les trous noirs et le vaisseau. Si c'est le cas le jeu s'arrête instantanèment
             distance_vaisseau_trou_noir = distance_objets(trou_noir,TROU_NOIR_TAILLE,TROU_NOIR_TAILLE, vaisseau, VAISSEAU_LARGEUR, VAISSEAU_HAUTEUR )
 
             if distance_vaisseau_trou_noir < 70:
@@ -442,6 +463,38 @@ def collision_entite(PLANETE_EN_LISTE,  nombre_vie, COMPTEUR_COLLISION, collisio
                 couloir_utilise_trou_noir.remove(couloir_trou_noir)
                 return vies, compteur, collision, score
 
+            # Collisions entre les missiles et les trous noirs
+            for missiles in missile:
+                distance_missile_trou_noir = distance_objets(missiles, 10, 10, trou_noir, TROU_NOIR_TAILLE,
+                                                             TROU_NOIR_TAILLE)
+                if distance_missile_trou_noir < 43:
+                    missile.remove(missiles)
+                    return vies, compteur, collision, score
+
+            #Collisions entre les missiles de l'ufo et le trou noir
+            for missiles_ufo in MISSILE_UFO_EN_LISTE:
+                distance_missileUFO_trou_noir = distance_objets(missiles_ufo, 10, 10, trou_noir, TROU_NOIR_TAILLE,
+                                                             TROU_NOIR_TAILLE)
+                if distance_missileUFO_trou_noir < 43:
+                    missile.remove(missiles_ufo)
+                    return vies, compteur, collision, score
+
+
+
+
+        #COLLISIONS ENTRE MISSILES UFO ET VAISSEAU
+        for missile_ufo in MISSILE_UFO_EN_LISTE:
+
+                distance_missileUFO_vaisseau = distance_objets(vaisseau,VAISSEAU_HAUTEUR,VAISSEAU_LARGEUR,missile_ufo,10,10)
+
+                if distance_missileUFO_vaisseau < 45:
+                    moinsvie.play()
+                    vies = vies - 1
+                    compteur = 180
+                    collision = False
+                    MISSILE_UFO_EN_LISTE.remove(missile_ufo)
+
+                    return vies, compteur, collision, score
 
 
     else:
@@ -449,6 +502,7 @@ def collision_entite(PLANETE_EN_LISTE,  nombre_vie, COMPTEUR_COLLISION, collisio
         return vies, compteur, collision, score
     return vies, compteur, collision, score
 
+#Fonction permettant de calculer la disatnce entre deux entité
 def distance_objets(objet1, HAUTEUR_OBJET1,LARGEUR_OBJET1, objet2, HAUTEUR_OBJET2,LARGEUR_OBJET2):
     centre_objet1_x = position(objet1)[0] + LARGEUR_OBJET1 / 2
     centre_objet1_y = position(objet1)[1] + HAUTEUR_OBJET1 / 2
@@ -598,6 +652,7 @@ def difficulte(niveau_difficulte):
         NOMBRE_VIE = 3
         DEPLACEMENT_VAISSEAU = 7
         FREQUENCE_APPARITION_TROU_NOIR = 1000
+        FREQUENCE_TIR = 180
 
     elif niveau_difficulte == 1:
         MENU = ['Jouer', '<Moyen>', 'Quitter']
@@ -608,6 +663,7 @@ def difficulte(niveau_difficulte):
         NOMBRE_VIE = 2
         DEPLACEMENT_VAISSEAU = 6
         FREQUENCE_APPARITION_TROU_NOIR = 500
+        FREQUENCE_TIR = 120
     elif niveau_difficulte == 2:
         MENU = ['Jouer', '<Difficile', 'Quitter']
         AJOUT_MUNITION = 10
@@ -617,6 +673,7 @@ def difficulte(niveau_difficulte):
         NOMBRE_VIE = 1
         DEPLACEMENT_VAISSEAU = 5
         FREQUENCE_APPARITION_TROU_NOIR = 250
+        FREQUENCE_TIR = 60
 
     return MENU, AJOUT_MUNITION, MUNITIONS, VITESSE_JEU, VITESSE_MISSILE, NOMBRE_VIE, DEPLACEMENT_VAISSEAU, FREQUENCE_APPARITION_TROU_NOIR
 
@@ -675,14 +732,16 @@ choix_doite_gauche = pygame.mixer.Sound("Son/droite_gauche.wav")
 choix_gauche_droite = pygame.mixer.Sound("Son/gauche_droite.wav")
 piou = pygame.mixer.Sound("Son/piou.wav")
 no_bullets = pygame.mixer.Sound("Son/no_bullets.wav")
+
 moinsvie = pygame.mixer.Sound("Son/moinsvie.wav")
 start = pygame.mixer.Sound("Son/start.wav")
+start.set_volume(0.2)
 back = pygame.mixer.Sound("Son/back.wav")
 print("[LOG] BRUITAGES CHARGE !")
 
 print("[LOG] CHARGEMENT BANDE SON...")
-pygame.mixer.music.load("Bande Son/musiquePrincipal.wav")
-pygame.mixer.music.set_volume(0.5)
+pygame.mixer.music.load("Bande Son/musiquePrincipal.ogg")
+pygame.mixer.music.set_volume(0.3)
 
 print("[LOG] CHARGEMENT BANDE SON CHARGE!")
 # Missile
@@ -1062,7 +1121,7 @@ while enintro:
                 ######## Touche dans le menu Pause########
                 # Quitter le menu pause avec echap
                 if event.key == pygame.K_ESCAPE:
-                    TEMPS_AVANT_PAUSE = pygame.time.get_ticks()
+
                     COMPTEUR_PAUSE += 1
 
                 if COMPTEUR_PAUSE % 2 != 0:
@@ -1200,6 +1259,8 @@ while enintro:
                                                                                 COMPTEUR_COLLISION, collision_active)
             vie()
             pygame.display.flip()
+
+            tir_random_ufo()
             # Temps
             temps.tick(60)
             COMPTEUR_BOUCLE += 1
