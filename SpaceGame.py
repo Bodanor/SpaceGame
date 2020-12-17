@@ -124,7 +124,7 @@ def afficher_etoiles(ecran, vitesse_etoile, etoiles):
     for etoile in etoiles:
         pygame.draw.line(ecran, (255, 255, 255), (etoile[0], etoile[1]), (etoile[0], etoile[1]))
 
-        etoile[1] = etoile[1] + vitesse_etoile - (niveau_difficulte  + 1)
+        etoile[1] = etoile[1] + vitesse_etoile /2
         if etoile[1] > FENETRE_HAUTEUR:
             etoile[1] = 0
             etoile[0] = random.randint(0, FENETRE_LARGEUR)
