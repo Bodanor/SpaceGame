@@ -124,7 +124,7 @@ def afficher_etoiles(ecran, vitesse_etoile, etoiles):
     for etoile in etoiles:
         pygame.draw.line(ecran, (255, 255, 255), (etoile[0], etoile[1]), (etoile[0], etoile[1]))
 
-        etoile[1] = etoile[1] + vitesse_etoile
+        etoile[1] = etoile[1] + vitesse_etoile - (niveau_difficulte  + 1)
         if etoile[1] > FENETRE_HAUTEUR:
             etoile[1] = 0
             etoile[0] = random.randint(0, FENETRE_LARGEUR)
@@ -593,8 +593,7 @@ def spawn_ufo():
 
                         couloir_planete = afficherCouloir(planete)
                         if couloir_planete == couloir_random:
-                            if hauteur_random > position(planete)[1] + TAILLE_PLANETE or hauteur_random + UFO_TAILLE < \
-                                    position(planete)[1]:
+                            if hauteur_random > position(planete)[1] + TAILLE_PLANETE or hauteur_random < position(planete)[1] - TAILLE_PLANETE:
 
                                 place(LISTE_UFO[ufo_random], COULOIRS[couloir_random][0], hauteur_random,
                                       couloir_random)
@@ -629,9 +628,11 @@ def deplace_ufo(vitesse_jeu):
 
 ###TROU NOIR#######
 def spawn_trou_noir():
+
     random_timer = random.randint(0, FREQUENCE_APPARITION_TROU_NOIR)
     if random_timer == 2:
-        if len(TROU_NOIR_EN_LISTE) < 1:
+        if len(TROU_NOIR_EN_LISTE) < niveau_difficulte +1:
+
             couloir_random = random.randint(0, 4)
             trou_noir_random = random.randint(0, 4)
             hauteur_random = random.randint(-200, -80)
@@ -648,10 +649,11 @@ def spawn_trou_noir():
 
                         couloir_planete = afficherCouloir(planete)
                         if couloir_planete == couloir_random:
-                            if hauteur_random > position(planete)[
-                                1] + TAILLE_PLANETE or hauteur_random + TROU_NOIR_TAILLE < position(planete)[1]:
+
+                            if hauteur_random > position(planete)[1] + TAILLE_PLANETE or hauteur_random < position(planete)[1] - TAILLE_PLANETE:
                                 place(LISTE_TROU_NOIR[trou_noir_random], COULOIRS[couloir_random][0], hauteur_random,
                                       couloir_random)
+
                                 TROU_NOIR_EN_LISTE.append(LISTE_TROU_NOIR[trou_noir_random])
                                 couloir_utilise_trou_noir.append(couloir_random)
 
@@ -705,7 +707,7 @@ def difficulte(niveau_difficulte):
         VITESSE_MISSILE = 7
         NOMBRE_VIE = 1
         DEPLACEMENT_VAISSEAU = 5
-        FREQUENCE_APPARITION_TROU_NOIR = 250
+        FREQUENCE_APPARITION_TROU_NOIR = 100
         FREQUENCE_TIR = 60
 
     return MENU, AJOUT_MUNITION, MUNITIONS, VITESSE_JEU, VITESSE_MISSILE, NOMBRE_VIE, DEPLACEMENT_VAISSEAU, FREQUENCE_APPARITION_TROU_NOIR
@@ -884,7 +886,7 @@ couloir_utilise_trou_noir = []
 collision_active = True
 musique.play(-1)
 Premiere_fois = True
-print("[LOG] LE CHARGEMENT COMPLET A PRIS {}".format(time.time() - temps_debut_complet))
+print("[LOG] LE CHARGEMENT COMPLET A PRIS {} secondes".format(round(time.time() - temps_debut_complet, 2)))
 ######CREATION DU MENU######
 while enintro:
 
@@ -1068,6 +1070,7 @@ while enintro:
             deplace_planete(VITESSE_JEU)
             visible(vaisseau)
             COMPTEUR_COLLISION = 0
+            afficher_etoiles(fenetre, VITESSE_JEU, etoiles)
 
             # Reprise des paramètres de la difficulté choisie dans le menu
             MENU, AJOUT_MUNITION, MUNITIONS, VITESSE_JEU, VITESSE_MISSILE, NOMBRE_VIE, DEPLACEMENT_VAISSEAU, FREQUENCE_APPARITION_TROU_NOIR = difficulte(
@@ -1224,6 +1227,9 @@ while enintro:
                         MISSILE_UFO_EN_LISTE = []
                         TROU_NOIR_EN_LISTE = []
                         missiles = []
+                        etoiles.clear()
+                        etoiles = cree_etoiles()
+                        afficher_etoiles(fenetre, VITESSE_JEU, etoiles)
 
                         # Reprise des paramètres de la difficulté choisie dans le menu
                         MENU, AJOUT_MUNITION, MUNITIONS, VITESSE_JEU, VITESSE_MISSILE, NOMBRE_VIE, DEPLACEMENT_VAISSEAU, FREQUENCE_APPARITION_TROU_NOIR = difficulte(
