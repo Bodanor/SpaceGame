@@ -124,8 +124,7 @@ def afficher_etoiles(ecran, vitesse_etoile, etoiles):
     for etoile in etoiles:
         pygame.draw.line(ecran, (255, 255, 255), (etoile[0], etoile[1]), (etoile[0], etoile[1]))
 
-        etoile[1] = etoile[1] + vitesse_etoile /2
-
+        etoile[1] = etoile[1] + vitesse_etoile - (niveau_difficulte  + 1)
         if etoile[1] > FENETRE_HAUTEUR:
             etoile[1] = 0
             etoile[0] = random.randint(0, FENETRE_LARGEUR)
@@ -1073,9 +1072,6 @@ while enintro:
             visible(vaisseau)
             COMPTEUR_COLLISION = 0
             afficher_etoiles(fenetre, VITESSE_JEU, etoiles)
-            etoiles.clear()
-            etoiles=cree_etoiles()
-            afficher_etoiles(fenetre,VITESSE_JEU,etoiles)
 
             # Reprise des paramètres de la difficulté choisie dans le menu
             MENU, AJOUT_MUNITION, MUNITIONS, VITESSE_JEU, VITESSE_MISSILE, NOMBRE_VIE, DEPLACEMENT_VAISSEAU, FREQUENCE_APPARITION_TROU_NOIR = difficulte(
