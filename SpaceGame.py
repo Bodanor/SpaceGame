@@ -50,7 +50,7 @@ VIE_LARGEUR = 30
 VIE_HAUTEUR = 25
 
 # dimension planete
-TAILLE_PLANETE = 180
+TAILLE_PLANETE = int(FENETRE_LARGEUR / 6)
 
 # Pose Planete
 POSE_PLANETE = (
