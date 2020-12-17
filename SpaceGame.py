@@ -43,7 +43,7 @@ UFO_TAILLE = 80
 
 # trou noir
 TROU_NOIR_TAILLE = 80
-FREQUENCE_APPARITION_TROU_NOIR = 1000
+FREQUENCE_APPARITION_TROU_NOIR = 500
 
 # Apparence vie
 VIE_LARGEUR = 30
@@ -647,6 +647,7 @@ def spawn_trou_noir():
 
                     for planete in PLANETE_EN_LISTE:
 
+
                         couloir_planete = afficherCouloir(planete)
                         if couloir_planete == couloir_random:
 
@@ -686,7 +687,7 @@ def difficulte(niveau_difficulte):
         VITESSE_MISSILE = 15
         NOMBRE_VIE = 3
         DEPLACEMENT_VAISSEAU = 7
-        FREQUENCE_APPARITION_TROU_NOIR = 1000
+        FREQUENCE_APPARITION_TROU_NOIR = 500
         FREQUENCE_TIR = 180
 
     elif niveau_difficulte == 1:
@@ -697,7 +698,7 @@ def difficulte(niveau_difficulte):
         VITESSE_MISSILE = 10
         NOMBRE_VIE = 2
         DEPLACEMENT_VAISSEAU = 6
-        FREQUENCE_APPARITION_TROU_NOIR = 500
+        FREQUENCE_APPARITION_TROU_NOIR = 250
         FREQUENCE_TIR = 120
     elif niveau_difficulte == 2:
         MENU = ['Jouer', '<Difficile', 'Quitter']
