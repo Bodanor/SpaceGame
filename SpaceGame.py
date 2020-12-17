@@ -73,6 +73,8 @@ SCORE = 0
 COMPTEUR_BOUCLE = 0
 COMPTEUR_PAUSE = 0
 COMPTEUR_COLLISION = 0
+COMPTEUR_NOTIF = 180
+COMPTEUR_MUTE = 1
 NOMBRE_VIE = 3
 
 
@@ -745,6 +747,24 @@ def bestscore(bestscore):
 
         fenetre.blit(marquoir, (FENETRE_LARGEUR // 2 - longueur_text_x // 2, FENETRE_HAUTEUR // 24))
 
+
+def coinNotif():
+
+
+        if COMPTEUR_NOTIF > 0:
+            if COMPTEUR_MUTE % 2 != 0:
+                phrase = str("{}".format("Son Activé"))
+                notification = police.render(phrase, True, ROUGE)
+                longueur_text_x, longueur_text_y =notification.get_size()
+                fenetre.blit(notification, (FENETRE_LARGEUR - longueur_text_x, 0))
+
+            else:
+                phrase = str("{}".format("Son Désactivé"))
+                notification = police.render(phrase, True, ROUGE)
+                longueur_text_x, longueur_text_y = notification.get_size()
+                fenetre.blit(notification, (FENETRE_LARGEUR - longueur_text_x, 0))
+
+
 #####FIN FONCTIONS######
 
 
@@ -888,6 +908,8 @@ collision_active = True
 musique.play(-1)
 Premiere_fois = True
 print("[LOG] LE CHARGEMENT COMPLET A PRIS {} secondes".format(round(time.time() - temps_debut_complet, 2)))
+
+
 ######CREATION DU MENU######
 while enintro:
 
@@ -999,9 +1021,15 @@ while enintro:
             if event.key == pygame.K_m:
                 if SON_EN_PAUSE == True:
 
+                    COMPTEUR_NOTIF = 180
+                    COMPTEUR_MUTE += 1
+
                     SON_EN_PAUSE = False
                     SON_EN_COURS = True
                 else:
+
+                    COMPTEUR_NOTIF = 180
+                    COMPTEUR_MUTE +=1
 
                     SON_EN_PAUSE = True
                     SON_EN_COURS = False
@@ -1172,10 +1200,17 @@ while enintro:
                 if event.key == pygame.K_m:
 
                     if SON_EN_PAUSE == True:
+
+                        COMPTEUR_NOTIF = 180
+                        COMPTEUR_MUTE += 1
+
                         SON_EN_PAUSE = False
                         SON_EN_COURS = True
-
                     else:
+
+                        COMPTEUR_NOTIF = 180
+                        COMPTEUR_MUTE += 1
+
                         SON_EN_PAUSE = True
                         SON_EN_COURS = False
 
@@ -1331,8 +1366,10 @@ while enintro:
             NOMBRE_VIE, COMPTEUR_COLLISION, collision_active, SCORE = collision_entite(PLANETE_EN_LISTE, NOMBRE_VIE,
                                                                                 COMPTEUR_COLLISION, collision_active)
             vie()
+            if COMPTEUR_NOTIF>0:
+                coinNotif()
+                COMPTEUR_NOTIF -= 1
             pygame.display.flip()
-
             tir_random_ufo()
             # Temps
             temps.tick(60)
