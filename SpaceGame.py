@@ -1,6 +1,6 @@
 #PAPADOPOULOS Christos
 #DERAVET Maxime
-#(CHARLIER Samuel)
+#CHARLIER Samuel
 import pygame
 import random
 import math
@@ -1062,6 +1062,9 @@ while enintro:
     afficherBoutonMenu(MENU)
     if Premiere_fois:
         afficher_controles()
+    if COMPTEUR_NOTIF > 0:
+        coinNotif()
+        COMPTEUR_NOTIF -=1
     pygame.display.flip()
 
     # Temps
@@ -1374,6 +1377,7 @@ while enintro:
             # Temps
             temps.tick(60)
             COMPTEUR_BOUCLE += 1
+
 
 pygame.display.quit()
 pygame.quit()
