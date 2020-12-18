@@ -803,6 +803,7 @@ vie_image = pygame.image.load('Images/vaisseau_rouge_avec_flamme.png')
 # Initiamisation de pygame
 pygame.init()
 
+
 # Son
 print("[LOG] CHARGEMENTS DES BRUITAGES... ")
 pygame.mixer.init()
