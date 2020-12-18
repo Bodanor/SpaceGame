@@ -1,1 +1,1 @@
-Rajouter Message de status quand on mute en haut a droite
+ +- 1322 musique mixer changer
