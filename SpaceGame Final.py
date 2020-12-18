@@ -1315,7 +1315,7 @@ while enintro:
 
         ########Déplacement du vaisseau########
 
-#TODO changer ici
+#TODO changer ici, (on a un beug, quand on met  en pause, la musique ne reprend pas)
         if COMPTEUR_PAUSE % 2 != 0: #freez
             musique.stop()
             pause()
