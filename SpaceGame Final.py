@@ -105,8 +105,8 @@ COULOIRS = []
 missile = []
 
 #Son
-SON_EN_PAUSE = False
-SON_EN_COURS = True
+SON_EN_PAUSE = True
+SON_EN_COURS = False
 
 
 
@@ -742,29 +742,29 @@ def bestscore(bestscore):
 #TODO commenter ici
     #Garde en mémoire le meilleur score
     try:
-        with open('scoreboard.txt', 'r+') as fichier:
+        with open('scoreboard.txt', 'r+') as fichier: #Ouverture du fichier Scoreboard et lecture de celui-ci
             meilleurscore = fichier.readline()
             meilleurscore = int(meilleurscore)
-            if meilleurscore != bestscore:
-                if meilleurscore < bestscore:
+            if meilleurscore != bestscore:  #Check si le score en jeu est different du score dans le fichier
+                if meilleurscore < bestscore:   #Si le nouveau score est + grand que le score dasn le fichier alors on remplace
                     fichier.close()
                     fichier = open('scoreboard.txt', 'w+')
                     fichier.write("{}".format(bestscore))
                     fichier.close()
-            if meilleurscore == "":
+            if meilleurscore == "":     #Si le fichier est vide alors on ecrit 0
                 fichier.write("0")
 
-            phrase = str("Meilleur score: {}".format(int(round(meilleurscore, 0))))
+            phrase = str("Meilleur score: {}".format(int(round(meilleurscore, 0)))) #Affichage du mielleur score actuel qui se trouve dans le fichier
             marquoir = police.render(phrase, True, JAUNE)
             longueur_text_x, longueur_text_y = marquoir.get_size()
             fenetre.blit(marquoir, (FENETRE_LARGEUR//2 - longueur_text_x//2, FENETRE_HAUTEUR // 24))
 
-    except FileNotFoundError:
+    except FileNotFoundError: #Si le fichier n'existe pas alors on créer un nouveau fichier et on ecrit 0
         fichier = open('scoreboard.txt', 'w')
         fichier.write("0")
         fichier.close()
 
-    except ValueError:
+    except ValueError:  #Si la ligne lue n'est pas un nombre alors le fichier est corrompu et on affiche qu'il est corrompu
         phrase = str("Meilleur score : Probleme avec le fichier Scoreboard. Veuillez le supprimer")
         marquoir = police.render(phrase, True, ROUGE)
         longueur_text_x, longueur_text_y = marquoir.get_size()
@@ -777,7 +777,7 @@ def coinNotif():
 
 
         if COMPTEUR_NOTIF > 0:
-            if COMPTEUR_MUTE % 2 != 0:
+            if COMPTEUR_MUTE % 2 == 0:
                 phrase = str("{}".format("Son Activé"))
                 notification = police.render(phrase, True, ROUGE)
                 longueur_text_x, longueur_text_y =notification.get_size()
@@ -1107,6 +1107,7 @@ while enintro:
     while enjeu:
         Premiere_fois = False
 
+
         if SON_EN_PAUSE == False: #Joue la bande son
             if SON_EN_COURS == True:
                 musique.play(-1)
@@ -1315,14 +1316,13 @@ while enintro:
 
         ########Déplacement du vaisseau########
 
-#TODO changer ici, (on a un beug, quand on met  en pause, la musique ne reprend pas)
-        if COMPTEUR_PAUSE % 2 != 0: #freez
-            musique.stop()
+
+        if COMPTEUR_PAUSE % 2 != 0: #freez le jeu
             pause()
             pygame.display.flip()
 
         else:
-            pygame.mixer.music.unpause()
+
             keys = pygame.key.get_pressed()
 
 
