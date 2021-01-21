@@ -1,14 +1,9 @@
-import pygame
-import random
-import math
 import time
-from Variable import *
-from Entite import *
-from Etoile import *
-from Affichage import *
-from Spawn import *
-from Deplacement import *
-from Collisions import *
+from Source.Etoile import *
+from Source.Affichage import *
+from Source.Spawn import *
+from Source.Deplacement import *
+from Source.Collisions import *
 
 #Calcul du temps de chargement du jeu
 temps_debut_complet = time.time()
