@@ -17,3 +17,4 @@ Votre meilleur score sera enregistré au fil de vos parties.
 
 ## Développement :
 **Ajout de sauvegarde en ligne**
+**Meilleur score par niveau de difficulté**
