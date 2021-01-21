@@ -1,15 +1,16 @@
-from Variable import *
+from Source.Variable import *
 import pygame
+import os
 
 #Affichagedes controles quand on lance le jeu (uniquement)
 def afficher_controles(fenetre, police):
     controle_echap = police.render(str("ECHAP : Mettre le jeu en pause"), True, BLANC)
     controle_mute = police.render(str("M : Couper le son du jeu"), True, BLANC)
     fleche_vie = police.render(str("Vies ►"), True, BLANC)
-    controle_touche = pygame.image.load("../Images/fleche.png")
+    controle_touche = pygame.image.load("Images/fleche.png")
     controle_touche = pygame.transform.scale(controle_touche, (80, 50))
     controle_touche_texte = police.render(str("Controles ►"), True, BLANC)
-    controle_espace = pygame.image.load("../Images/espace.png")
+    controle_espace = pygame.image.load("Images/espace.png")
     controle_espace = pygame.transform.scale(controle_espace, (120, 30))
 
 

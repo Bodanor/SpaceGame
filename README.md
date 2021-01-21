@@ -11,12 +11,3 @@ Attention, vous avez une limite de munitions (affichées en bas à gauche), mais
 Vous gagnerez un point pour chaque seconde passée à survivre à bord du vaisseau.
 
 Votre meilleur score sera enregistré au fil de vos parties.
-
-
-
-ATTENTION : Nous avons un problème avec les sons, qui peut provoquer un freez du jeu à certains moment, surtout si vous spammer la touche espace.
-
-Le jeu est donc par défaut en mode silencieux, mais si vous désirez désactiver celui-ci, il vous suffit d'appuyer sur M à n'importe quel moment dans le jeu.
-
-Les crash sont rares, mais ils arrivent quand même, malheureusement.
-

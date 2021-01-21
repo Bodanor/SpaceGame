@@ -1,4 +1,4 @@
-from Entite import *
+from Source.Entite import *
 
 import math
 

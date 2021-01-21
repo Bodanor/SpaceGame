@@ -47,31 +47,81 @@ def difficulte(niveau_difficulte):
 ###### FIN DIFFICULTE #####
 
 ###### MEILLEUR SCORE ######
-def bestscore(bestscore):
+def bestscore(bestscore, niveau_difficulte):
 
-#TODO commenter ici
     #Garde en mémoire le meilleur score
     try:
         with open('scoreboard.txt', 'r+') as fichier: #Ouverture du fichier Scoreboard et lecture de celui-ci
-            meilleurscore = fichier.readline()
-            meilleurscore = int(meilleurscore)
-            if meilleurscore != bestscore:  #Check si le score en jeu est different du score dans le fichier
-                if meilleurscore < bestscore:   #Si le nouveau score est + grand que le score dasn le fichier alors on remplace
-                    fichier.close()
-                    fichier = open('scoreboard.txt', 'w+')
-                    fichier.write("{}".format(bestscore))
-                    fichier.close()
-            if meilleurscore == "":     #Si le fichier est vide alors on ecrit 0
-                fichier.write("0")
 
-            phrase = str("Meilleur score: {}".format(int(round(meilleurscore, 0)))) #Affichage du mielleur score actuel qui se trouve dans le fichier
-            marquoir = police.render(phrase, True, JAUNE)
-            longueur_text_x, longueur_text_y = marquoir.get_size()
-            fenetre.blit(marquoir, (FENETRE_LARGEUR//2 - longueur_text_x//2, FENETRE_HAUTEUR // 24))
+            meilleurs_scores = fichier.readlines()
+
+            if niveau_difficulte == 0:
+                meilleur_score = int(meilleurs_scores[0])
+                if meilleur_score != bestscore:  # Check si le score en jeu est different du score dans le fichier
+                    if meilleur_score < bestscore:
+                        meilleurs_scores[0] = str(bestscore) + '\n'
+                        fichier.close()
+                        fichier = open('scoreboard.txt', 'w+')
+                        fichier.writelines(meilleurs_scores)
+                        fichier.close()
+
+            if niveau_difficulte == 1:
+                meilleur_score = int(meilleurs_scores[1])
+                if meilleur_score != bestscore:  # Check si le score en jeu est different du score dans le fichier
+                    if meilleur_score < bestscore:
+                        meilleurs_scores[1] = str(bestscore) + '\n'
+                        fichier.close()
+                        fichier = open('scoreboard.txt', 'w+')
+                        fichier.writelines(meilleurs_scores)
+                        fichier.close()
+
+            if niveau_difficulte == 2:
+                meilleur_score = int(meilleurs_scores[2])
+                if meilleur_score != bestscore:  # Check si le score en jeu est different du score dans le fichier
+                    if meilleur_score < bestscore:
+                        meilleurs_scores[2] = str(bestscore) + '\n'
+                        fichier.close()
+                        fichier = open('scoreboard.txt', 'w+')
+                        fichier.writelines(meilleurs_scores)
+                        fichier.close()
+
+            if meilleur_score == "":  # Si le fichier est vide alors on ecrit 0
+                fichier.write("0")
+                fichier.close()
+
+            with open('scoreboard.txt', 'r+') as fichier:  # Ouverture du fichier Scoreboard et lecture de celui-ci
+                meilleurs_scores = fichier.readlines()
+                if niveau_difficulte == 0:
+                    meilleur_score = int(meilleurs_scores[0])
+                    phrase = str("Meilleur score: {}".format(int(round(meilleur_score, 0)))) #Affichage du mielleur score actuel qui se trouve dans le fichier
+                    marquoir = police.render(phrase, True, JAUNE)
+                    longueur_text_x, longueur_text_y = marquoir.get_size()
+                    fenetre.blit(marquoir, (FENETRE_LARGEUR//2 - longueur_text_x//2, FENETRE_HAUTEUR // 24))
+
+                if niveau_difficulte == 1:
+                    meilleur_score = int(meilleurs_scores[1])
+                    phrase = str("Meilleur score: {}".format(int(round(meilleur_score,
+                                                                       0))))  # Affichage du mielleur score actuel qui se trouve dans le fichier
+                    marquoir = police.render(phrase, True, JAUNE)
+                    longueur_text_x, longueur_text_y = marquoir.get_size()
+                    fenetre.blit(marquoir, (FENETRE_LARGEUR // 2 - longueur_text_x // 2, FENETRE_HAUTEUR // 24))
+
+                if niveau_difficulte == 2:
+                    meilleur_score = int(meilleurs_scores[2])
+                    phrase = str("Meilleur score: {}".format(int(round(meilleur_score,
+                                                                       0))))  # Affichage du mielleur score actuel qui se trouve dans le fichier
+                    marquoir = police.render(phrase, True, JAUNE)
+                    longueur_text_x, longueur_text_y = marquoir.get_size()
+                    fenetre.blit(marquoir, (FENETRE_LARGEUR // 2 - longueur_text_x // 2, FENETRE_HAUTEUR // 24))
 
     except FileNotFoundError: #Si le fichier n'existe pas alors on créer un nouveau fichier et on ecrit 0
         fichier = open('scoreboard.txt', 'w')
-        fichier.write("0")
+        fichier.write("0\n0\n0")
+        fichier.close()
+
+    except IndexError: #Si le fichier n'existe pas alors on créer un nouveau fichier et on ecrit 0
+        fichier = open('scoreboard.txt', 'w')
+        fichier.write("0\n0\n0")
         fichier.close()
 
     except ValueError:  #Si la ligne lue n'est pas un nombre alors le fichier est corrompu et on affiche qu'il est corrompu
@@ -376,7 +426,7 @@ while enintro:
     affiche(scene, fenetre)
 
     score(fenetre, police, SCORE, FENETRE_HAUTEUR)
-    bestscore(0)
+    bestscore(0, niveau_difficulte)
     vie(fenetre, vie_image, NOMBRE_VIE, FENETRE_HAUTEUR, FENETRE_LARGEUR)
     afficher_munition(fenetre, police,MUNITIONS, FENETRE_HAUTEUR)
     afficherBoutonMenu(fenetre, POLICE_ECRITURE_BOUTON, BOUTON, MENU)
@@ -411,7 +461,7 @@ while enintro:
         # Arrêter le jeu si plus de vie
         if NOMBRE_VIE == 0:
             # Réinitialisation des variables, sauvegarde du meilleur score
-            bestscore(SCORE)
+            bestscore(SCORE, niveau_difficulte)
             SCORE = 0
             enintro = True
             enjeu = False
@@ -504,7 +554,7 @@ while enintro:
             # Quitter avec la croix
 
             if event.type == pygame.QUIT:
-                bestscore(SCORE)
+                (SCORE, niveau_difficulte)
                 pygame.quit()
                 quit()
 
@@ -583,7 +633,7 @@ while enintro:
                                 back.play()
 
                             #Réinitialisation des variables, sauvegarde du meilleur score
-                            bestscore(SCORE)
+                            bestscore(SCORE, niveau_difficulte)
                             COMPTEUR_PAUSE += 1
                             SCORE = 0
                             enintro = True

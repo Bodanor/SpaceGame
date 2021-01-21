@@ -1,4 +1,4 @@
-from Variable import *
+from Source.Variable import *
 
 ##### Définition ENTITE #####
 
