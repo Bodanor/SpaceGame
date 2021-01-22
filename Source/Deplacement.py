@@ -53,4 +53,22 @@ def deplace_trou_noir(vitesse_jeu, couloir_utilise_trou_noir, COMPTEUR_PAUSE, TR
                 TROU_NOIR_EN_LISTE.remove(trou_noir)
                 couloir_trou_noir = afficherCouloir(trou_noir)
                 couloir_utilise_trou_noir.remove(couloir_trou_noir)
+
+
+def deplace_bonus(vitesse_jeu, couloir_utilise_bonus, COMPTEUR_PAUSE, BONUS_EN_LISTE, FENETRE_HAUTEUR):
+    # Si en pause alors on freeze le trou noir
+    if COMPTEUR_PAUSE % 2 != 0:
+        vitesse_jeu = 0
+    else:
+
+        for bonus in BONUS_EN_LISTE:
+            x, y = position(bonus)
+            couloir_bonus = afficherCouloir(bonus)
+            place(bonus, x, y + vitesse_jeu, couloir_bonus)
+            # Si l'UFO sort de la fenetre alors on met un nombre random de pixel avant une nouvelle apparition
+            if position(bonus)[1] > FENETRE_HAUTEUR + random.randint(100, 9000):
+                BONUS_EN_LISTE.remove(bonus)
+                couloir_bonus = afficherCouloir(bonus)
+                couloir_utilise_bonus.remove(couloir_bonus)
+
 ###FIN DEPLACEMENT###

@@ -1,5 +1,10 @@
 [EN DEVELOPPEMENT] :
 
-Changer image trou noir
+1) Changer bruitage exploser et collision
+2) jouer son quand on choppe une etoile
+3) Faire changer le vaisseau de couleur
+
+4) Ajouter variable EN BONUS qui d&ésactive la perte de vie, ne fais plus apparaitre d'autre bonus
+
 
 

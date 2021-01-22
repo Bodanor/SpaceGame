@@ -16,5 +16,13 @@ Votre meilleur score sera enregistré au fil de vos parties.
 
 ![](https://media.discordapp.net/attachments/775135760676421632/790311011495968778/unknown.png?width=787&height=552)
 
+
+**EN DEVELOPPEMENT :** 
+- Creation d'un serveur pour sauvegarder les meilleurs scores.
+
+![](https://media.discordapp.net/attachments/775135760676421632/790310544983982100/unknown.png?width=788&height=553)
+
+![](https://media.discordapp.net/attachments/775135760676421632/790311011495968778/unknown.png?width=787&height=552)
+
 **EN DEVELOPPEMENT :** 
 - Creation d'un serveur pour sauvegarder les meilleurs scores.

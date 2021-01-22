@@ -86,4 +86,37 @@ def spawn_trou_noir(niveau_difficulte, couloir_utilise_trou_noir, FREQUENCE_APPA
 
                                 TROU_NOIR_EN_LISTE.append(LISTE_TROU_NOIR[trou_noir_random])
                                 couloir_utilise_trou_noir.append(couloir_random)
+
+def spawn_bonus(niveau_difficulte, couloir_utilise_bonus, FREQUENCE_APPARITION_BONUS, BONUS_EN_LISTE, BONUS_LISTE, PLANETE_EN_LISTE, COULOIRS, TAILLE_PLANETE):
+
+    random_timer = random.randint(0, FREQUENCE_APPARITION_BONUS)
+    if random_timer == 2:
+        if len(BONUS_EN_LISTE) < niveau_difficulte +1:
+
+            couloir_random = random.randint(0, 4)
+            bonus_random = random.randint(0, 4)
+            hauteur_random = random.randint(-200, -80)
+
+            # On verifie qu'il n'existe pas deja une planete a l'emplacement du trou noir
+            if couloir_random in couloir_utilise_bonus:
+                pass
+            else:
+                if BONUS_LISTE[bonus_random] in BONUS_EN_LISTE:
+                    pass
+                else:
+
+                    for planete in PLANETE_EN_LISTE:
+
+
+                        couloir_planete = afficherCouloir(planete)
+                        if couloir_planete == couloir_random:
+
+                            if hauteur_random > position(planete)[1] + TAILLE_PLANETE or hauteur_random < position(planete)[1] - TAILLE_PLANETE:
+                                place(BONUS_LISTE[bonus_random], COULOIRS[couloir_random][0], hauteur_random,
+                                      couloir_random)
+
+                                BONUS_EN_LISTE.append(BONUS_LISTE[bonus_random])
+                                couloir_utilise_bonus.append(couloir_random)
+
 ###FIN SPAWN###
+

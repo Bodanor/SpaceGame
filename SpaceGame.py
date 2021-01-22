@@ -236,6 +236,18 @@ for i in range(NOMBRE_UFO):
     LISTE_UFO.append(ufo)
 print("[LOG] L'UFO EST CHARGE")
 
+print("[LOG] CHARGEMENT DES BONUS")
+
+for i in range(NOMBRE_BONUS):
+    chemin = 'Images/bonus.png'
+    image = pygame.image.load(chemin).convert_alpha(fenetre)
+    image = pygame.transform.scale(image, (BONUS_TAILLE, BONUS_TAILLE))
+    bonus = nouvelleEntite()
+    ajouteImage(bonus, 'bonus{}'.format(i), image)
+    prendsPose(bonus, 'bonus{}'.format(i))
+    BONUS_LISTE.append(bonus)
+
+print("[LOG] BONUS CHARGE")
 print("[LOG] CHARGEMENT DU TROU NOIR")
 
 for i in range(NOMBRE_TROU_NOIR):
@@ -277,6 +289,7 @@ creation_couloirs_planete(COULOIRS, FENETRE_LARGEUR)
 couloir_utilise = []
 couloir_utilise_ufo = []
 couloir_utilise_trou_noir = []
+couloir_utilise_bonus = []
 
 #Activation des collisions
 collision_active = True
@@ -302,7 +315,6 @@ while enintro:
 
     #Positionnement du vaisseau
     visible(vaisseau)
-
     prendsPose(vaisseau, POSE_VAISSEAU[0])
     place(vaisseau, (FENETRE_LARGEUR / 2) - VAISSEAU_LARGEUR / 2,
           FENETRE_HAUTEUR - VAISSEAU_HAUTEUR, 0)
@@ -312,6 +324,7 @@ while enintro:
 
         # Changement de taille d'écran
         if event.type == pygame.VIDEORESIZE:
+
             #Changement de la taille des couloirs, des etoiles, et repositionnement du vaisseau
             FENETRE_LARGEUR, FENETRE_HAUTEUR = fenetre.get_size()
             COULOIRS =[]
@@ -446,8 +459,8 @@ while enintro:
 
     #####BOUCLE DU JEU#####
     while enjeu:
-        Premiere_fois = False
 
+        Premiere_fois = False
 
         if SON_EN_PAUSE == False: #Joue la bande son
             if SON_EN_COURS == True:
@@ -475,6 +488,7 @@ while enintro:
             BOUTON = 0
             MISSILE_UFO_EN_LISTE = []
             TROU_NOIR_EN_LISTE = []
+            BONUS_EN_LISTE = []
             missiles = []
             etoiles.clear()
             etoiles = cree_etoiles(NOMBRE_ETOILES, FENETRE_LARGEUR, FENETRE_HAUTEUR)
@@ -491,6 +505,8 @@ while enintro:
         spawn_trou_noir(niveau_difficulte, couloir_utilise_trou_noir, FREQUENCE_APPARITION_TROU_NOIR, TROU_NOIR_EN_LISTE, LISTE_TROU_NOIR, PLANETE_EN_LISTE, COULOIRS, TAILLE_PLANETE)
         deplace_ufo(VITESSE_JEU, couloir_utilise_ufo, COMPTEUR_PAUSE, UFO_EN_LISTE, FENETRE_HAUTEUR)
         deplace_trou_noir(VITESSE_JEU, couloir_utilise_trou_noir, COMPTEUR_PAUSE, TROU_NOIR_EN_LISTE, FENETRE_HAUTEUR)
+        spawn_bonus(niveau_difficulte, couloir_utilise_bonus, FREQUENCE_APPARITION_BONUS, BONUS_EN_LISTE, BONUS_LISTE, PLANETE_EN_LISTE, COULOIRS, TAILLE_PLANETE)
+        deplace_bonus(VITESSE_JEU, couloir_utilise_bonus, COMPTEUR_PAUSE, BONUS_EN_LISTE, FENETRE_HAUTEUR)
 
         #pose du vaisseau
         prendsPose(vaisseau, POSE_VAISSEAU[0])
@@ -548,6 +564,7 @@ while enintro:
                 affiche(PLANETE_EN_LISTE, fenetre)
                 affiche(UFO_EN_LISTE, fenetre)
                 affiche(TROU_NOIR_EN_LISTE, fenetre)
+                affiche(BONUS_EN_LISTE, fenetre)
                 score(fenetre, police, SCORE, FENETRE_HAUTEUR)
                 afficher_munition(fenetre, police,MUNITIONS, FENETRE_HAUTEUR)
                 vie(fenetre, vie_image, NOMBRE_VIE, FENETRE_HAUTEUR, FENETRE_LARGEUR)
@@ -648,6 +665,7 @@ while enintro:
                             BOUTON = 0
                             MISSILE_UFO_EN_LISTE = []
                             TROU_NOIR_EN_LISTE = []
+                            BONUS_EN_LISTE = []
                             missiles = []
                             etoiles.clear()
                             etoiles = cree_etoiles(NOMBRE_ETOILES, FENETRE_LARGEUR, FENETRE_HAUTEUR)
@@ -749,6 +767,7 @@ while enintro:
             affiche(PLANETE_EN_LISTE, fenetre)
             affiche(UFO_EN_LISTE, fenetre)
             affiche(TROU_NOIR_EN_LISTE, fenetre)
+            affiche(BONUS_EN_LISTE, fenetre)
             score(fenetre, police, SCORE, FENETRE_HAUTEUR)
             afficher_munition(fenetre, police,MUNITIONS, FENETRE_HAUTEUR)
             NOMBRE_VIE, COMPTEUR_COLLISION, collision_active, SCORE = collision_entite(PLANETE_EN_LISTE,  NOMBRE_VIE, COMPTEUR_COLLISION, collision_active, SCORE, vaisseau, VAISSEAU_HAUTEUR, VAISSEAU_LARGEUR, TAILLE_PLANETE, SON_EN_PAUSE, moinsvie, couloir_utilise, missile, MISSILE_UFO_EN_LISTE, UFO_EN_LISTE, explosion_ufo, couloir_utilise_ufo, UFO_TAILLE, TROU_NOIR_EN_LISTE, TROU_NOIR_TAILLE, couloir_utilise_trou_noir,BONUS_TAILLE, BONUS_EN_LISTE,couloir_utilise_bonus)
