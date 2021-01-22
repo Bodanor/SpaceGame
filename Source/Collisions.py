@@ -15,7 +15,7 @@ def distance_objets(objet1, HAUTEUR_OBJET1,LARGEUR_OBJET1, objet2, HAUTEUR_OBJET
     return distance
 
 #Collisions entre toutes les entités
-def collision_entite(PLANETE_EN_LISTE,  nombre_vie, COMPTEUR_COLLISION, collision_active, SCORE, vaisseau, VAISSEAU_HAUTEUR, VAISSEAU_LARGEUR, TAILLE_PLANETE, SON_EN_PAUSE, moinsvie, couloir_utilise, missile, MISSILE_UFO_EN_LISTE, UFO_EN_LISTE, explosion_ufo, couloir_utilise_ufo, UFO_TAILLE, TROU_NOIR_EN_LISTE, TROU_NOIR_TAILLE, couloir_utilise_trou_noir):
+def collision_entite(PLANETE_EN_LISTE,  nombre_vie, COMPTEUR_COLLISION, collision_active, SCORE, vaisseau, VAISSEAU_HAUTEUR, VAISSEAU_LARGEUR, TAILLE_PLANETE, SON_EN_PAUSE, moinsvie, couloir_utilise, missile, MISSILE_UFO_EN_LISTE, UFO_EN_LISTE, explosion_ufo, couloir_utilise_ufo, UFO_TAILLE, TROU_NOIR_EN_LISTE, TROU_NOIR_TAILLE, couloir_utilise_trou_noir, BONUS_TAILLE, BONUS_EN_LISTE,couloir_utilise_bonus):
     compteur = COMPTEUR_COLLISION
     vies = nombre_vie
     collision = collision_active
@@ -144,6 +144,26 @@ def collision_entite(PLANETE_EN_LISTE,  nombre_vie, COMPTEUR_COLLISION, collisio
 
                     return vies, compteur, collision, score
 
+
+        # COLLISIONS BONUS
+        for bonus in BONUS_EN_LISTE:
+
+            distance_vaisseau_bonus = distance_objets(vaisseau, VAISSEAU_LARGEUR, VAISSEAU_HAUTEUR, bonus, BONUS_TAILLE,
+                                                    BONUS_TAILLE)
+
+            # Collisions entre le vaisseau et le bonus
+            if distance_vaisseau_bonus < 55:  # Si on percute un UFO, on enlève une vie, on joue le son de perte de vie et de destruction de l'UFO (et on enlève l'UFO)(et on désactive les collisions pendant 3 secondes)
+                if SON_EN_PAUSE == False:
+                    moinsvie.play()
+                    explosion_ufo.play()
+                vies = vies - 1
+                compteur = 180
+                collision = False
+                BONUS_EN_LISTE.remove(bonus)
+
+                couloir_bonus = afficherCouloir(bonus)
+                couloir_utilise_bonus.remove(couloir_bonus)
+                return vies, compteur, collision, score
     else:
         return vies, compteur, collision, score
     return vies, compteur, collision, score

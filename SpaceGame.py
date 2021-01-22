@@ -751,7 +751,7 @@ while enintro:
             affiche(TROU_NOIR_EN_LISTE, fenetre)
             score(fenetre, police, SCORE, FENETRE_HAUTEUR)
             afficher_munition(fenetre, police,MUNITIONS, FENETRE_HAUTEUR)
-            NOMBRE_VIE, COMPTEUR_COLLISION, collision_active, SCORE = collision_entite(PLANETE_EN_LISTE,  NOMBRE_VIE, COMPTEUR_COLLISION, collision_active, SCORE, vaisseau, VAISSEAU_HAUTEUR, VAISSEAU_LARGEUR, TAILLE_PLANETE, SON_EN_PAUSE, moinsvie, couloir_utilise, missile, MISSILE_UFO_EN_LISTE, UFO_EN_LISTE, explosion_ufo, couloir_utilise_ufo, UFO_TAILLE, TROU_NOIR_EN_LISTE, TROU_NOIR_TAILLE, couloir_utilise_trou_noir)
+            NOMBRE_VIE, COMPTEUR_COLLISION, collision_active, SCORE = collision_entite(PLANETE_EN_LISTE,  NOMBRE_VIE, COMPTEUR_COLLISION, collision_active, SCORE, vaisseau, VAISSEAU_HAUTEUR, VAISSEAU_LARGEUR, TAILLE_PLANETE, SON_EN_PAUSE, moinsvie, couloir_utilise, missile, MISSILE_UFO_EN_LISTE, UFO_EN_LISTE, explosion_ufo, couloir_utilise_ufo, UFO_TAILLE, TROU_NOIR_EN_LISTE, TROU_NOIR_TAILLE, couloir_utilise_trou_noir,BONUS_TAILLE, BONUS_EN_LISTE,couloir_utilise_bonus)
             vie(fenetre, vie_image, NOMBRE_VIE, FENETRE_HAUTEUR, FENETRE_LARGEUR)
 
             #Afficher les notifications
