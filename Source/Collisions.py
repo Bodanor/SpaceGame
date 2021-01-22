@@ -169,4 +169,5 @@ def collision_entite(PLANETE_EN_LISTE,  nombre_vie, COMPTEUR_COLLISION, collisio
     return vies, compteur, collision, score
 ###FIN COLLISIONS
 
+
 ######### FIN  SPAWN, COLLISIONS ET DEPLACEMENT DES OBSTACLES ##########

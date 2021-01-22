@@ -765,6 +765,7 @@ while enintro:
             COMPTEUR_BOUCLE += 1
 
 
+
 pygame.display.quit()
 pygame.quit()
 exit()

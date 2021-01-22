@@ -10,6 +10,7 @@ def cree_etoiles(NOMBRE_ETOILES, FENETRE_LARGEUR, FENETRE_HAUTEUR):
     return etoile
 
 
+
 def afficher_etoiles(ecran, vitesse_etoile, etoiles, FENETRE_HAUTEUR, FENETRE_LARGEUR):
     for etoile in etoiles:
         pygame.draw.line(ecran, (255, 255, 255), (etoile[0], etoile[1]), (etoile[0], etoile[1]))

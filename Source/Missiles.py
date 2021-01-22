@@ -57,6 +57,7 @@ def dessine_missile_ufo(fenetre, MISSILE_UFO_EN_LISTE, VITESSE_JEU):
             if estVisible(missiles_ufo):
 
 
+
                 deplace_missile_ufo(missiles_ufo, positionMissile(missiles_ufo) , VITESSE_JEU*2)
                 pygame.draw.circle(fenetre, ROUGE, list(map(int, positionMissile(missiles_ufo))), 7)
                 pygame.draw.circle(fenetre, ROUGE, list(map(int, positionMissile(missiles_ufo))), 10, width=1)

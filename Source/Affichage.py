@@ -14,6 +14,7 @@ def afficher_controles(fenetre, police):
     controle_espace = pygame.transform.scale(controle_espace, (120, 30))
 
 
+
     fenetre.blit(controle_echap, (0, FENETRE_HAUTEUR*(6.5/8)))
     fenetre.blit(controle_mute, (0, FENETRE_HAUTEUR * (7 / 8)))
     fenetre.blit(fleche_vie, (FENETRE_LARGEUR - 6*VIE_LARGEUR, FENETRE_HAUTEUR - VIE_HAUTEUR + 5))

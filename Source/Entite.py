@@ -12,6 +12,7 @@ def nouvelleEntite():
     }
 
 
+
 def visible(entite):
     entite['visible'] = True
 

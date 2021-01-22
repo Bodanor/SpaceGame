@@ -9,6 +9,7 @@ def deplace_planete(vitesse_jeu, COMPTEUR_PAUSE, PLANETE_EN_LISTE, couloir_utili
         VITESSE_JEU = 0
     else:
 
+
         #Déplacment des planètes
         for planete in PLANETE_EN_LISTE:
             x, y = position(planete)
