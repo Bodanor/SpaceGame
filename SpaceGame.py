@@ -221,7 +221,17 @@ for nom_image, nom_fichier in (('Planete1', 'planete1.png'),
 print("[LOG] TOUTES LES PLANETES SONT CHARGEES")
 print("[LOG] CHARGEMENT DES VAISSEAUX....")
 for nom_image, nom_fichier in (('vaisseau_jaune_sans_flamme', 'vaisseau_jaune_sans_flamme.png'),
-                               ('vaisseau_jaune_avec_flamme', 'vaisseau_jaune_avec_flamme.png')):
+                               ('vaisseau_jaune_avec_flamme', 'vaisseau_jaune_avec_flamme.png'),
+                               ('vaisseau_rouge_avec_flamme', 'vaisseau_rouge_avec_flamme.png'),
+                               ('vaisseau_rouge_sans_flamme', 'vaisseau_rouge_sans_flamme.png'),
+                               ('vaisseau_blanc_avec_flamme', 'vaisseau_blanc_avec_flamme.png'),
+                               ('vaisseau_blanc_sans_flamme', 'vaisseau_blanc_sans_flamme.png'),
+                               ('vaisseau_bleu_avec_flamme', 'vaisseau_bleu_avec_flamme.png'),
+                               ('vaisseau_bleu_sans_flamme', 'vaisseau_bleu_sans_flamme.png'),
+                               ('vaisseau_rose_avec_flamme', 'vaisseau_rose_avec_flamme.png'),
+                               ('vaisseau_rose_sans_flamme', 'vaisseau_rose_sans_flamme.png'),
+                               ('vaisseau_vert_avec_flamme', 'vaisseau_vert_avec_flamme.png'),
+                               ('vaisseau_vert_sans_flamme', 'vaisseau_vert_sans_flamme.png')):
     chemin = 'Images/' + nom_fichier
     image = pygame.image.load(chemin).convert_alpha(fenetre)
     image = pygame.transform.scale(image, (VAISSEAU_LARGEUR, VAISSEAU_HAUTEUR))
@@ -320,7 +330,7 @@ while enintro:
 
     #Positionnement du vaisseau
     visible(vaisseau)
-    prendsPose(vaisseau, POSE_VAISSEAU[0])
+    prendsPose(vaisseau, POSE_VAISSEAU_FLAMME[0])
     place(vaisseau, (FENETRE_LARGEUR / 2) - VAISSEAU_LARGEUR / 2,
           FENETRE_HAUTEUR - VAISSEAU_HAUTEUR, 0)
 
@@ -612,6 +622,9 @@ while enintro:
 
                         SON_EN_PAUSE = False
                         SON_EN_COURS = True
+
+                        if enbonus == True:
+                            sonBonus.play()
                     else:
 
                         COMPTEUR_NOTIF = 180
@@ -619,6 +632,8 @@ while enintro:
 
                         SON_EN_PAUSE = True
                         SON_EN_COURS = False
+
+
 
                 ######## Touche dans le menu Pause########
                 # Entrer ou sortir du menu pause
@@ -679,6 +694,9 @@ while enintro:
                             etoiles.clear()
                             etoiles = cree_etoiles(NOMBRE_ETOILES, FENETRE_LARGEUR, FENETRE_HAUTEUR)
                             afficher_etoiles(fenetre, VITESSE_JEU, etoiles, FENETRE_HAUTEUR, FENETRE_LARGEUR)
+                            COMPTEUR_BONUS = 0
+                            sonBonus.stop()
+                            enbonus = False
 
                             # Reprise des paramètres de la difficulté choisie dans le menu
                             MENU, AJOUT_MUNITION, MUNITIONS, VITESSE_JEU, VITESSE_MISSILE, NOMBRE_VIE, DEPLACEMENT_VAISSEAU, FREQUENCE_APPARITION_TROU_NOIR = difficulte(
@@ -751,21 +769,29 @@ while enintro:
                 if COMPTEUR_BOUCLE % 12000 == 0:
                     NOMBRE_VIE += 1
 
+            for bonus in BONUS_EN_LISTE:
+                print(bonus)
+
             if enbonus == True:
+                if COMPTEUR_BONUS == 600:
+                    sonBonus.play()
+                if SON_EN_PAUSE == True:
+                    sonBonus.stop()
 
-                if COMPTEUR_COLLISION == 180 or COMPTEUR_COLLISION == 150 or COMPTEUR_COLLISION == 120 or COMPTEUR_COLLISION == 90 or COMPTEUR_COLLISION == 60 or COMPTEUR_COLLISION == 30:
-                    invisible(vaisseau)
+                if COMPTEUR_BONUS % 10 == 0:
+                    vaisseau_random = random.randint(0,len(POSE_VAISSEAU_SANS_FLAMME)-1)
+                prendsPose(vaisseau, POSE_VAISSEAU_SANS_FLAMME[vaisseau_random])
 
-                if COMPTEUR_COLLISION == 165 or COMPTEUR_COLLISION == 135 or COMPTEUR_COLLISION == 105 or COMPTEUR_COLLISION == 75 or COMPTEUR_COLLISION == 45 or COMPTEUR_COLLISION == 15:
-                    visible(vaisseau)
+                COMPTEUR_BONUS -= 1
 
 
-                if COMPTEUR_COLLISION == 0: #Rendre le vaisseau visible quand les trois secondes sont passées
+                if COMPTEUR_BONUS == 0:
                     collision_active = True
+                    enbonus = False
                     visible(vaisseau)
                     sonBonus.stop()
 
-                COMPTEUR_COLLISION -= 1
+
 
             # Faire clignoter le vaisseau si collision
             if collision_active == False:
@@ -795,7 +821,7 @@ while enintro:
             affiche(BONUS_EN_LISTE, fenetre)
             score(fenetre, police, SCORE, FENETRE_HAUTEUR)
             afficher_munition(fenetre, police,MUNITIONS, FENETRE_HAUTEUR)
-            NOMBRE_VIE, COMPTEUR_COLLISION, collision_active, SCORE, enbonus = collision_entite(PLANETE_EN_LISTE,  NOMBRE_VIE, COMPTEUR_COLLISION, collision_active, SCORE, vaisseau, VAISSEAU_HAUTEUR, VAISSEAU_LARGEUR, TAILLE_PLANETE, SON_EN_PAUSE, moinsvie, couloir_utilise, missile, MISSILE_UFO_EN_LISTE, UFO_EN_LISTE, explosion_ufo, couloir_utilise_ufo, UFO_TAILLE, TROU_NOIR_EN_LISTE, TROU_NOIR_TAILLE, couloir_utilise_trou_noir,BONUS_TAILLE, BONUS_EN_LISTE,couloir_utilise_bonus, enbonus, sonBonus)
+            NOMBRE_VIE, COMPTEUR_COLLISION, collision_active, SCORE, enbonus, COMPTEUR_BONUS = collision_entite(PLANETE_EN_LISTE,  NOMBRE_VIE, COMPTEUR_COLLISION,COMPTEUR_BONUS, collision_active, SCORE, vaisseau, VAISSEAU_HAUTEUR, VAISSEAU_LARGEUR, TAILLE_PLANETE, SON_EN_PAUSE, moinsvie, couloir_utilise, missile, MISSILE_UFO_EN_LISTE, UFO_EN_LISTE, explosion_ufo, couloir_utilise_ufo, UFO_TAILLE, TROU_NOIR_EN_LISTE, TROU_NOIR_TAILLE, couloir_utilise_trou_noir,BONUS_TAILLE, BONUS_EN_LISTE,couloir_utilise_bonus, enbonus, sonBonus)
             vie(fenetre, vie_image, NOMBRE_VIE, FENETRE_HAUTEUR, FENETRE_LARGEUR)
 
             #Afficher les notifications
@@ -807,6 +833,8 @@ while enintro:
             # Temps
             temps.tick(60)
             COMPTEUR_BOUCLE += 1
+
+
 
 
 

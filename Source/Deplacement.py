@@ -65,9 +65,10 @@ def deplace_bonus(vitesse_jeu, couloir_utilise_bonus, COMPTEUR_PAUSE, BONUS_EN_L
             x, y = position(bonus)
             couloir_bonus = afficherCouloir(bonus)
             place(bonus, x, y + vitesse_jeu, couloir_bonus)
-            # Si l'UFO sort de la fenetre alors on met un nombre random de pixel avant une nouvelle apparition
+            # Si le bonus sort de la fenetre alors on met un nombre random de pixel avant une nouvelle apparition
             if position(bonus)[1] > FENETRE_HAUTEUR + random.randint(100, 9000):
                 BONUS_EN_LISTE.remove(bonus)
+                print('remove')
                 couloir_bonus = afficherCouloir(bonus)
                 couloir_utilise_bonus.remove(couloir_bonus)
 

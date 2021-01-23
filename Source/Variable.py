@@ -53,7 +53,8 @@ POSE_PLANETE = (
     'Planete1', 'Planete2', 'Planete3', 'Planete4', 'Planete5', 'Planete6', 'Planete7', 'Planete8', 'Planete9',
     'Planete10',
     'Planete11', 'Planete12', 'Planete13', 'Planete14', 'Planete15', 'Planete16')
-POSE_VAISSEAU = ('vaisseau_jaune_sans_flamme', 'vaisseau_jaune_avec_flamme')
+POSE_VAISSEAU_SANS_FLAMME = ('vaisseau_jaune_sans_flamme','vaisseau_bleu_sans_flamme', 'vaisseau_vert_sans_flamme','vaisseau_rose_sans_flamme', 'vaisseau_blanc_sans_flamme','vaisseau_rouge_sans_flamme')
+POSE_VAISSEAU_FLAMME = ('vaisseau_jaune_avec_flamme','vaisseau_bleu_avec_flamme', 'vaisseau_vert_avec_flamme','vaisseau_rose_avec_flamme', 'vaisseau_blanc_avec_flamme','vaisseau_rouge_avec_flamme')
 
 # Vitesse du Jeu
 VITESSE_JEU = 3
@@ -71,6 +72,7 @@ COMPTEUR_PAUSE = 0
 COMPTEUR_COLLISION = 0
 COMPTEUR_NOTIF = 180
 COMPTEUR_MUTE = 1
+COMPTEUR_BONUS = 0
 NOMBRE_VIE = 3
 
 

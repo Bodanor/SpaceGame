@@ -91,7 +91,7 @@ def spawn_bonus(niveau_difficulte, couloir_utilise_bonus, FREQUENCE_APPARITION_B
 
     random_timer = random.randint(0, FREQUENCE_APPARITION_BONUS)
     if random_timer == 2:
-        if len(BONUS_EN_LISTE) < niveau_difficulte +1:
+        if len(BONUS_EN_LISTE) <1:
 
             couloir_random = random.randint(0, 4)
             bonus_random = random.randint(0, 4)
