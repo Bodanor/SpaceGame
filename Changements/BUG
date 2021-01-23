@@ -1,9 +1,8 @@
 1) Lorsque menu pause et qu'on redimenssione le jeu fait n'imp
+2) Si on reste trop longtemps dans le menu et qu'on clique sur jouer, la vitesse du jeu ne se remet pas a celle de base
+ce qui rend le jeu un peu compliquer
+3) Les etoiles spawn sur les ufo donc il fait faire une verification dans le fichier "Spawn.py" comme pour les planetes
 
-3) Corriger menu avec touche et clavier ainsi que souris
-4) trou noir sur planete
-
-7) Choix difficulté ne parche pas quand don clique avec souris
 
 
 SI on met en plein écran il suffit de se mettre entre les couloirs pour passer

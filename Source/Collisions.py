@@ -15,7 +15,7 @@ def distance_objets(objet1, HAUTEUR_OBJET1,LARGEUR_OBJET1, objet2, HAUTEUR_OBJET
     return distance
 
 #Collisions entre toutes les entités
-def collision_entite(PLANETE_EN_LISTE,  nombre_vie, COMPTEUR_COLLISION, collision_active, SCORE, vaisseau, VAISSEAU_HAUTEUR, VAISSEAU_LARGEUR, TAILLE_PLANETE, SON_EN_PAUSE, moinsvie, couloir_utilise, missile, MISSILE_UFO_EN_LISTE, UFO_EN_LISTE, explosion_ufo, couloir_utilise_ufo, UFO_TAILLE, TROU_NOIR_EN_LISTE, TROU_NOIR_TAILLE, couloir_utilise_trou_noir, BONUS_TAILLE, BONUS_EN_LISTE,couloir_utilise_bonus):
+def collision_entite(PLANETE_EN_LISTE,  nombre_vie, COMPTEUR_COLLISION, collision_active, SCORE, vaisseau, VAISSEAU_HAUTEUR, VAISSEAU_LARGEUR, TAILLE_PLANETE, SON_EN_PAUSE, moinsvie, couloir_utilise, missile, MISSILE_UFO_EN_LISTE, UFO_EN_LISTE, explosion_ufo, couloir_utilise_ufo, UFO_TAILLE, TROU_NOIR_EN_LISTE, TROU_NOIR_TAILLE, couloir_utilise_trou_noir, BONUS_TAILLE, BONUS_EN_LISTE,couloir_utilise_bonus, enbonus, sonBonus):
     compteur = COMPTEUR_COLLISION
     vies = nombre_vie
     collision = collision_active
@@ -41,7 +41,7 @@ def collision_entite(PLANETE_EN_LISTE,  nombre_vie, COMPTEUR_COLLISION, collisio
                     PLANETE_EN_LISTE.remove(planete)
                     couloir_planete = afficherCouloir(planete)
                     couloir_utilise.remove(couloir_planete)
-                    return vies, compteur, collision, score
+                    return vies, compteur, collision, score, enbonus
 
                 for missiles in missile:
                     distance_missile_planete = distance_objets(missiles, 10, 10, planete, TAILLE_PLANETE, TAILLE_PLANETE)
@@ -49,7 +49,7 @@ def collision_entite(PLANETE_EN_LISTE,  nombre_vie, COMPTEUR_COLLISION, collisio
                     if distance_missile_planete < 92: #On test si les missiles rentrent en contact avec une planete. Si c'est le cas, on enlève le missile
                         missile.remove(missiles)
 
-                        return vies, compteur, collision, score
+                        return vies, compteur, collision, score, enbonus
 
                 for missile_ufo in MISSILE_UFO_EN_LISTE:
                     distance_missileUFO_planete = distance_objets(missile_ufo, 10, 10, planete, TAILLE_PLANETE, TAILLE_PLANETE)
@@ -57,7 +57,7 @@ def collision_entite(PLANETE_EN_LISTE,  nombre_vie, COMPTEUR_COLLISION, collisio
                     if distance_missileUFO_planete < 92:#On test si les missiles UFO rentrent en contact avec une planete. Si c'est le cas, on enlève le missile
                         MISSILE_UFO_EN_LISTE.remove(missile_ufo)
 
-                        return vies, compteur, collision, score
+                        return vies, compteur, collision, score, enbonus
 
 
         #COLLISION UFO
@@ -77,21 +77,7 @@ def collision_entite(PLANETE_EN_LISTE,  nombre_vie, COMPTEUR_COLLISION, collisio
 
                 couloir_ufo = afficherCouloir(ufo)
                 couloir_utilise_ufo.remove(couloir_ufo)
-                return vies, compteur, collision, score
-
-            #Collision entre l'ufo et les missiles
-            for missiles in missile:
-                distance_missile_ufo = distance_objets(missiles, 10, 10, ufo, UFO_TAILLE, UFO_TAILLE)
-
-                if distance_missile_ufo < 43: #Si un de nos missiles touche un UFO, l'UFO disparait, le missile aussi, on joue le son de destructionde l'UFO, et on ajoute 25 points
-                    if SON_EN_PAUSE == False:
-                        explosion_ufo.play()
-                    missile.remove(missiles)
-                    UFO_EN_LISTE.remove(ufo)
-                    couloir_ufo = afficherCouloir(ufo)
-                    couloir_utilise_ufo.remove(couloir_ufo)
-                    score += 25
-                    return vies, compteur, collision, score
+                return vies, compteur, collision, score, enbonus
 
 
         #COLLISIONS TROU NOIR
@@ -106,7 +92,7 @@ def collision_entite(PLANETE_EN_LISTE,  nombre_vie, COMPTEUR_COLLISION, collisio
                 collision = False
                 couloir_trou_noir = afficherCouloir(trou_noir)
                 couloir_utilise_trou_noir.remove(couloir_trou_noir)
-                return vies, compteur, collision, score
+                return vies, compteur, collision, score, enbonus
 
             # Collisions entre les missiles et les trous noirs
             for missiles in missile:
@@ -114,7 +100,7 @@ def collision_entite(PLANETE_EN_LISTE,  nombre_vie, COMPTEUR_COLLISION, collisio
                                                              TROU_NOIR_TAILLE)
                 if distance_missile_trou_noir < 43:#Si collisions avec le missile, on remove le missile
                     missile.remove(missiles)
-                    return vies, compteur, collision, score
+                    return vies, compteur, collision, score, enbonus
 
             #Collisions entre les missiles de l'ufo et le trou noir
             for missiles_ufo in MISSILE_UFO_EN_LISTE:
@@ -124,7 +110,7 @@ def collision_entite(PLANETE_EN_LISTE,  nombre_vie, COMPTEUR_COLLISION, collisio
                 if distance_missileUFO_trou_noir < 43:#Si collisions avec le missile de l'ufo, on remove le missile de l'ufo
 
                     MISSILE_UFO_EN_LISTE.remove(missiles_ufo)
-                    return vies, compteur, collision, score
+                    return vies, compteur, collision, score, enbonus
 
 
 
@@ -142,7 +128,7 @@ def collision_entite(PLANETE_EN_LISTE,  nombre_vie, COMPTEUR_COLLISION, collisio
                     collision = False
                     MISSILE_UFO_EN_LISTE.remove(missile_ufo)
 
-                    return vies, compteur, collision, score
+                    return vies, compteur, collision, score, enbonus
 
 
         # COLLISIONS BONUS
@@ -154,19 +140,34 @@ def collision_entite(PLANETE_EN_LISTE,  nombre_vie, COMPTEUR_COLLISION, collisio
             # Collisions entre le vaisseau et le bonus
             if distance_vaisseau_bonus < 55:  # Si on percute un UFO, on enlève une vie, on joue le son de perte de vie et de destruction de l'UFO (et on enlève l'UFO)(et on désactive les collisions pendant 3 secondes)
                 if SON_EN_PAUSE == False:
-                    moinsvie.play()
-                    explosion_ufo.play()
-                vies = vies - 1
+                    sonBonus.play()
                 compteur = 180
                 collision = False
                 BONUS_EN_LISTE.remove(bonus)
-
+                enbonus = True
                 couloir_bonus = afficherCouloir(bonus)
                 couloir_utilise_bonus.remove(couloir_bonus)
-                return vies, compteur, collision, score
+                return vies, compteur, collision, score, enbonus
     else:
-        return vies, compteur, collision, score
-    return vies, compteur, collision, score
+        return vies, compteur, collision, score, enbonus
+
+    if (collision == True) or (collision == False):
+        for ufo in UFO_EN_LISTE:
+            # Collision entre l'ufo et les missiles
+            for missiles in missile:
+                distance_missile_ufo = distance_objets(missiles, 10, 10, ufo, UFO_TAILLE, UFO_TAILLE)
+
+                if distance_missile_ufo < 43:  # Si un de nos missiles touche un UFO, l'UFO disparait, le missile aussi, on joue le son de destructionde l'UFO, et on ajoute 25 points
+                    if SON_EN_PAUSE == False:
+                        explosion_ufo.play()
+                    missile.remove(missiles)
+                    print("test")
+                    UFO_EN_LISTE.remove(ufo)
+                    couloir_ufo = afficherCouloir(ufo)
+                    couloir_utilise_ufo.remove(couloir_ufo)
+                    score += 25
+                    return vies, compteur, collision, score, enbonus
+    return vies, compteur, collision, score, enbonus
 ###FIN COLLISIONS
 
 

@@ -163,6 +163,10 @@ no_bullets.set_volume(0.15)
 moinsvie = pygame.mixer.Sound("Son/moinsvie.wav")
 moinsvie.set_volume(0.2)
 
+sonBonus = pygame.mixer.Sound("Son/bonus.wav")
+sonBonus.set_volume(0.4)
+
+
 start = pygame.mixer.Sound("Son/start.wav")
 start.set_volume(0.2)
 back = pygame.mixer.Sound("Son/back.wav")
@@ -293,6 +297,7 @@ couloir_utilise_bonus = []
 
 #Activation des collisions
 collision_active = True
+enbonus = False
 
 #Premiere fois
 Premiere_fois = True
@@ -742,6 +747,22 @@ while enintro:
                 if COMPTEUR_BOUCLE % 12000 == 0:
                     NOMBRE_VIE += 1
 
+            if enbonus == True:
+
+                if COMPTEUR_COLLISION == 180 or COMPTEUR_COLLISION == 150 or COMPTEUR_COLLISION == 120 or COMPTEUR_COLLISION == 90 or COMPTEUR_COLLISION == 60 or COMPTEUR_COLLISION == 30:
+                    invisible(vaisseau)
+
+                if COMPTEUR_COLLISION == 165 or COMPTEUR_COLLISION == 135 or COMPTEUR_COLLISION == 105 or COMPTEUR_COLLISION == 75 or COMPTEUR_COLLISION == 45 or COMPTEUR_COLLISION == 15:
+                    visible(vaisseau)
+
+
+                if COMPTEUR_COLLISION == 0: #Rendre le vaisseau visible quand les trois secondes sont passées
+                    collision_active = True
+                    visible(vaisseau)
+                    sonBonus.stop()
+
+                COMPTEUR_COLLISION -= 1
+
             # Faire clignoter le vaisseau si collision
             if collision_active == False:
 
@@ -770,7 +791,7 @@ while enintro:
             affiche(BONUS_EN_LISTE, fenetre)
             score(fenetre, police, SCORE, FENETRE_HAUTEUR)
             afficher_munition(fenetre, police,MUNITIONS, FENETRE_HAUTEUR)
-            NOMBRE_VIE, COMPTEUR_COLLISION, collision_active, SCORE = collision_entite(PLANETE_EN_LISTE,  NOMBRE_VIE, COMPTEUR_COLLISION, collision_active, SCORE, vaisseau, VAISSEAU_HAUTEUR, VAISSEAU_LARGEUR, TAILLE_PLANETE, SON_EN_PAUSE, moinsvie, couloir_utilise, missile, MISSILE_UFO_EN_LISTE, UFO_EN_LISTE, explosion_ufo, couloir_utilise_ufo, UFO_TAILLE, TROU_NOIR_EN_LISTE, TROU_NOIR_TAILLE, couloir_utilise_trou_noir,BONUS_TAILLE, BONUS_EN_LISTE,couloir_utilise_bonus)
+            NOMBRE_VIE, COMPTEUR_COLLISION, collision_active, SCORE, enbonus = collision_entite(PLANETE_EN_LISTE,  NOMBRE_VIE, COMPTEUR_COLLISION, collision_active, SCORE, vaisseau, VAISSEAU_HAUTEUR, VAISSEAU_LARGEUR, TAILLE_PLANETE, SON_EN_PAUSE, moinsvie, couloir_utilise, missile, MISSILE_UFO_EN_LISTE, UFO_EN_LISTE, explosion_ufo, couloir_utilise_ufo, UFO_TAILLE, TROU_NOIR_EN_LISTE, TROU_NOIR_TAILLE, couloir_utilise_trou_noir,BONUS_TAILLE, BONUS_EN_LISTE,couloir_utilise_bonus, enbonus, sonBonus)
             vie(fenetre, vie_image, NOMBRE_VIE, FENETRE_HAUTEUR, FENETRE_LARGEUR)
 
             #Afficher les notifications
