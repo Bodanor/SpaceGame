@@ -18,11 +18,11 @@ def distance_objets(objet1, HAUTEUR_OBJET1,LARGEUR_OBJET1, objet2, HAUTEUR_OBJET
 def collision_entite(PLANETE_EN_LISTE,  nombre_vie, COMPTEUR_COLLISION, collision_active, SCORE, vaisseau, VAISSEAU_HAUTEUR, VAISSEAU_LARGEUR, TAILLE_PLANETE, SON_EN_PAUSE, moinsvie, couloir_utilise, missile, MISSILE_UFO_EN_LISTE, UFO_EN_LISTE, explosion_ufo, couloir_utilise_ufo, UFO_TAILLE, TROU_NOIR_EN_LISTE, TROU_NOIR_TAILLE, couloir_utilise_trou_noir, BONUS_TAILLE, BONUS_EN_LISTE,couloir_utilise_bonus, enbonus, sonBonus):
     compteur = COMPTEUR_COLLISION
     vies = nombre_vie
-    collision = collision_active
     score = SCORE
 
     #Test si les collisions sont activées
-    if collision == True:
+
+    if collision_active == True:
         vies = nombre_vie
 
 
@@ -161,7 +161,6 @@ def collision_entite(PLANETE_EN_LISTE,  nombre_vie, COMPTEUR_COLLISION, collisio
                     if SON_EN_PAUSE == False:
                         explosion_ufo.play()
                     missile.remove(missiles)
-                    print("test")
                     UFO_EN_LISTE.remove(ufo)
                     couloir_ufo = afficherCouloir(ufo)
                     couloir_utilise_ufo.remove(couloir_ufo)

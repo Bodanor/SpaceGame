@@ -498,6 +498,9 @@ while enintro:
             etoiles.clear()
             etoiles = cree_etoiles(NOMBRE_ETOILES, FENETRE_LARGEUR, FENETRE_HAUTEUR)
             afficher_etoiles(fenetre, VITESSE_JEU, etoiles, FENETRE_HAUTEUR, FENETRE_LARGEUR)
+            sonBonus.stop()
+            COMPTEUR_BONUS = 0
+            enbonus = False
 
             # Reprise des paramètres de la difficulté choisie dans le menu
             MENU, AJOUT_MUNITION, MUNITIONS, VITESSE_JEU, VITESSE_MISSILE, NOMBRE_VIE, DEPLACEMENT_VAISSEAU, FREQUENCE_APPARITION_TROU_NOIR = difficulte(
@@ -514,7 +517,7 @@ while enintro:
         deplace_bonus(VITESSE_JEU, couloir_utilise_bonus, COMPTEUR_PAUSE, BONUS_EN_LISTE, FENETRE_HAUTEUR)
 
         #pose du vaisseau
-        prendsPose(vaisseau, POSE_VAISSEAU[0])
+        prendsPose(vaisseau, POSE_VAISSEAU_SANS_FLAMME[0])
         evenement = pygame.event.get()
 
         for event in evenement:
@@ -652,6 +655,7 @@ while enintro:
                         # Revenir au menu principal
                         if BOUTON == 1:
                             if SON_EN_PAUSE == False:
+                                sonBonus.stop()
                                 back.play()
 
                             #Réinitialisation des variables, sauvegarde du meilleur score
@@ -699,17 +703,17 @@ while enintro:
                 if position(vaisseau)[0] + VAISSEAU_LARGEUR > FENETRE_LARGEUR:
                     None
                 else:
-                    prendsPose(vaisseau, POSE_VAISSEAU[1])
+                    prendsPose(vaisseau, POSE_VAISSEAU_FLAMME[0])
                     position_vaisseau = position(vaisseau)
                     place(vaisseau, position_vaisseau[0] + DEPLACEMENT_VAISSEAU, position_vaisseau[1], 0)
 
             # GAUCHE
             if keys[pygame.K_LEFT]:
                 if position(vaisseau)[0] <= 0:
-                    prendsPose(vaisseau, POSE_VAISSEAU[1])
+                    prendsPose(vaisseau, POSE_VAISSEAU_SANS_FLAMME[0])
                     position_vaisseau = position(vaisseau)
                 else:
-                    prendsPose(vaisseau, POSE_VAISSEAU[1])
+                    prendsPose(vaisseau, POSE_VAISSEAU_SANS_FLAMME[0])
                     position_vaisseau = position(vaisseau)
                     place(vaisseau, position_vaisseau[0] - DEPLACEMENT_VAISSEAU, position_vaisseau[1], 0)
 
@@ -718,7 +722,7 @@ while enintro:
                 if position(vaisseau)[1] > FENETRE_HAUTEUR - VAISSEAU_HAUTEUR:
                     None
                 else:
-                    prendsPose(vaisseau, POSE_VAISSEAU[0])
+                    prendsPose(vaisseau, POSE_VAISSEAU_SANS_FLAMME[0])
                     position_vaisseau = position(vaisseau)
                     place(vaisseau, position_vaisseau[0], position_vaisseau[1] + DEPLACEMENT_VAISSEAU, 0)
 
@@ -727,7 +731,7 @@ while enintro:
                 if position(vaisseau)[1] < 0:
                     None
                 else:
-                    prendsPose(vaisseau, POSE_VAISSEAU[1])
+                    prendsPose(vaisseau, POSE_VAISSEAU_FLAMME[0])
                     position_vaisseau = position(vaisseau)
                     place(vaisseau, position_vaisseau[0], position_vaisseau[1] - DEPLACEMENT_VAISSEAU, 0)
             ########FIN CONTROLE DU VAISSEAU#######
