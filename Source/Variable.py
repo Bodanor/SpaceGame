@@ -39,7 +39,7 @@ FREQUENCE_APPARITION_TROU_NOIR = 500
 
 #Données bonus
 BONUS_TAILLE = 40
-FREQUENCE_APPARITION_BONUS = 3
+FREQUENCE_APPARITION_BONUS = 1000
 
 # Apparence vie
 VIE_LARGEUR = 30
@@ -58,7 +58,7 @@ POSE_VAISSEAU_FLAMME = ('vaisseau_jaune_avec_flamme','vaisseau_bleu_avec_flamme'
 
 # Vitesse du Jeu
 VITESSE_JEU = 3
-
+VITESSE_JEU_AVANT_BONUS = VITESSE_JEU
 # Données tir (en facile de base)
 MUNITIONS = 20
 AJOUT_MUNITION = 20

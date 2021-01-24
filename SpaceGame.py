@@ -776,11 +776,15 @@ while enintro:
 
             if enbonus == True:
                 if COMPTEUR_BONUS == 600:
+                    VITESSE_JEU_AVANT_BONUS = VITESSE_JEU
                     sonBonus.play()
+
+                VITESSE_JEU = VITESSE_JEU_AVANT_BONUS + 3
                 if SON_EN_PAUSE == True:
                     sonBonus.stop()
 
                 if COMPTEUR_BONUS % 10 == 0:
+
                     vaisseau_random = random.randint(0,len(POSE_VAISSEAU_SANS_FLAMME)-1)
                 prendsPose(vaisseau, POSE_VAISSEAU_SANS_FLAMME[vaisseau_random])
 
@@ -788,6 +792,7 @@ while enintro:
 
 
                 if COMPTEUR_BONUS == 0:
+                    VITESSE_JEU = VITESSE_JEU_AVANT_BONUS
                     collision_active = True
                     enbonus = False
                     visible(vaisseau)

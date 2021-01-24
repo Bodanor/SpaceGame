@@ -49,14 +49,15 @@ def collision_entite(PLANETE_EN_LISTE,  nombre_vie, COMPTEUR_COLLISION, COMPTEUR
                 if distance_vaisseau_planete < 125: #Si il y a collision avec une planète, on enlève une vie, on joue un son et on désactive les collisions pendant 3 secondes
                     if enbonus == False:
                         nombre_vie = nombre_vie - 1
-                        compteur = 180
-                        collision = False
+                        COMPTEUR_COLLISION = 180
+                        collision_active = False
 
                         if SON_EN_PAUSE == False:
                             moinsvie.play()
                     PLANETE_EN_LISTE.remove(planete)
                     couloir_planete = afficherCouloir(planete)
                     couloir_utilise.remove(couloir_planete)
+
                     return nombre_vie, COMPTEUR_COLLISION, collision_active, SCORE, enbonus, COMPTEUR_BONUS
 
                 for missiles in missile:
@@ -87,8 +88,8 @@ def collision_entite(PLANETE_EN_LISTE,  nombre_vie, COMPTEUR_COLLISION, COMPTEUR
                     explosion_ufo.play()
                 if enbonus == False:
                     nombre_vie = nombre_vie - 1
-                    compteur = 180
-                    collision = False
+                    COMPTEUR_COLLISION = 180
+                    collision_active = False
 
                     if SON_EN_PAUSE == False:
                         moinsvie.play()
@@ -107,12 +108,12 @@ def collision_entite(PLANETE_EN_LISTE,  nombre_vie, COMPTEUR_COLLISION, COMPTEUR
             distance_vaisseau_trou_noir = distance_objets(trou_noir,TROU_NOIR_TAILLE,TROU_NOIR_TAILLE, vaisseau, VAISSEAU_LARGEUR, VAISSEAU_HAUTEUR )
 
             if distance_vaisseau_trou_noir < 70:
-                vies = 0
-                compteur = 180
-                collision = False
+                nombre_vie = 0
+                COMPTEUR_COLLISION = 180
+                collision_active = False
                 couloir_trou_noir = afficherCouloir(trou_noir)
                 couloir_utilise_trou_noir.remove(couloir_trou_noir)
-                return nombre_vie, compteur, collision, SCORE, enbonus, COMPTEUR_BONUS
+                return nombre_vie, COMPTEUR_COLLISION, collision_active, SCORE, enbonus, COMPTEUR_BONUS
 
             # Collisions entre les missiles et les trous noirs
             for missiles in missile:
@@ -143,8 +144,8 @@ def collision_entite(PLANETE_EN_LISTE,  nombre_vie, COMPTEUR_COLLISION, COMPTEUR
                 if distance_missileUFO_vaisseau < 45: #Si le missile UFO nous touche, on perd une vie, on enlève le missile, on joue le son de perte de vie, et on désactive les collisions pendant 3 secondes
                      if enbonus == False:
                          nombre_vie = nombre_vie - 1
-                         compteur = 180
-                         collision = False
+                         COMPTEUR_COLLISION = 180
+                         collision_active = False
 
                          if SON_EN_PAUSE == False:
                              moinsvie.play()
@@ -154,7 +155,6 @@ def collision_entite(PLANETE_EN_LISTE,  nombre_vie, COMPTEUR_COLLISION, COMPTEUR
                 return nombre_vie, COMPTEUR_COLLISION, collision_active, SCORE, enbonus, COMPTEUR_BONUS
 
 
-        # COLLISIONS BONUS
     else:
         return nombre_vie, COMPTEUR_COLLISION, collision_active, SCORE, enbonus, COMPTEUR_BONUS
 
