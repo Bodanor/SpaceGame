@@ -12,10 +12,6 @@ Vous gagnerez un point pour chaque seconde passée à survivre à bord du vaisse
 
 Votre meilleur score sera enregistré au fil de vos parties.
 
-![](https://media.discordapp.net/attachments/775135760676421632/790310544983982100/unknown.png?width=788&height=553)
-
-![](https://media.discordapp.net/attachments/775135760676421632/790311011495968778/unknown.png?width=787&height=552)
-
 
 **EN DEVELOPPEMENT :** 
 1) Creation d'un serveur pour sauvegarder les meilleurs scores.
@@ -28,3 +24,9 @@ Votre meilleur score sera enregistré au fil de vos parties.
 **A faire :**
 1) Changer bruitage exploser et collision
 2) Changer la couleur du vaisseaux avec les flammes quand on est en bonus
+
+
+![](https://media.discordapp.net/attachments/775135760676421632/790310544983982100/unknown.png?width=788&height=553)
+
+![](https://media.discordapp.net/attachments/775135760676421632/790311011495968778/unknown.png?width=787&height=552)
+
