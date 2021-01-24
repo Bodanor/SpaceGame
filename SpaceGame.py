@@ -777,6 +777,7 @@ while enintro:
             if enbonus == True:
                 if COMPTEUR_BONUS == 600:
                     VITESSE_JEU_AVANT_BONUS = VITESSE_JEU
+                    musique.set_volume(0)
                     sonBonus.play()
 
                 VITESSE_JEU = VITESSE_JEU_AVANT_BONUS + 3
@@ -795,6 +796,7 @@ while enintro:
                     VITESSE_JEU = VITESSE_JEU_AVANT_BONUS
                     collision_active = True
                     enbonus = False
+                    musique.set_volume(0.3)
                     visible(vaisseau)
                     sonBonus.stop()
 
