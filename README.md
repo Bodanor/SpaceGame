@@ -19,3 +19,13 @@ Votre meilleur score sera enregistré au fil de vos parties.
 
 **EN DEVELOPPEMENT :** 
 - Creation d'un serveur pour sauvegarder les meilleurs scores.
+
+**BUG:**
+1) Lorsque menu pause et qu'on redimenssione le jeu fait n'imp
+2) Les etoiles spawn sur les ufo donc il fait faire une verification dans le fichier "Spawn.py" comme pour les planetes
+3) SI on met en plein écran il suffit de se mettre entre les couloirs pour passer
+
+**A faire :**
+
+1) Changer bruitage exploser et collision
+2) Changer la couleur du vaisseaux avec les flammes quand on est en bonus

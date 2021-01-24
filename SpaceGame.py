@@ -407,6 +407,9 @@ while enintro:
                     SCORE = 0
                     COMPTEUR_BOUCLE = 1
                     BOUTON = 0
+                    MENU, AJOUT_MUNITION, MUNITIONS, VITESSE_JEU, VITESSE_MISSILE, NOMBRE_VIE, DEPLACEMENT_VAISSEAU, FREQUENCE_APPARITION_TROU_NOIR = difficulte(
+                        niveau_difficulte)
+
 
                 # Quitter le programme
                 if BOUTON == 2:

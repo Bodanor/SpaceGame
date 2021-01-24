@@ -1,8 +1,0 @@
-1) Lorsque menu pause et qu'on redimenssione le jeu fait n'imp
-2) Si on reste trop longtemps dans le menu et qu'on clique sur jouer, la vitesse du jeu ne se remet pas a celle de base
-ce qui rend le jeu un peu compliquer
-3) Les etoiles spawn sur les ufo donc il fait faire une verification dans le fichier "Spawn.py" comme pour les planetes
-
-
-
-SI on met en plein écran il suffit de se mettre entre les couloirs pour passer
