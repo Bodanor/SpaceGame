@@ -769,8 +769,7 @@ while enintro:
                 if COMPTEUR_BOUCLE % 12000 == 0:
                     NOMBRE_VIE += 1
 
-            for bonus in BONUS_EN_LISTE:
-                print(bonus)
+
 
             if enbonus == True:
                 if COMPTEUR_BONUS == 600:

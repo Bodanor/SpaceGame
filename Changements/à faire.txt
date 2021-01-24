@@ -3,6 +3,7 @@
 1) Changer bruitage exploser et collision
 2) jouer son quand on choppe une etoile
 3) Faire changer le vaisseau de couleur
+4) Changer la couleur du vaisseaux avec les flammes quand on est en bonus
 
 4) Ajouter variable EN BONUS qui d&ésactive la perte de vie, ne fais plus apparaitre d'autre bonus
 
