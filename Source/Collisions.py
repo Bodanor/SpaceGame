@@ -38,7 +38,20 @@ def collision_entite(PLANETE_EN_LISTE,  nombre_vie, COMPTEUR_COLLISION, COMPTEUR
                 couloir_utilise_bonus.remove(couloir_bonus)
                 return nombre_vie, COMPTEUR_COLLISION, collision_active, SCORE, enbonus, COMPTEUR_BONUS
 
+        for ufo in UFO_EN_LISTE:
+            # Collision entre l'ufo et les missiles
+            for missiles in missile:
+                distance_missile_ufo = distance_objets(missiles, 10, 10, ufo, UFO_TAILLE, UFO_TAILLE)
 
+                if distance_missile_ufo < 43:  # Si un de nos missiles touche un UFO, l'UFO disparait, le missile aussi, on joue le son de destructionde l'UFO, et on ajoute 25 points
+                    if SON_EN_PAUSE == False:
+                        explosion_ufo.play()
+                    missile.remove(missiles)
+                    UFO_EN_LISTE.remove(ufo)
+                    couloir_ufo = afficherCouloir(ufo)
+                    couloir_utilise_ufo.remove(couloir_ufo)
+                    SCORE += 25
+                    return nombre_vie, COMPTEUR_COLLISION, collision_active, SCORE, enbonus, COMPTEUR_BONUS
 
         #COllISION PLANETE
         for planete in PLANETE_EN_LISTE:
@@ -158,21 +171,6 @@ def collision_entite(PLANETE_EN_LISTE,  nombre_vie, COMPTEUR_COLLISION, COMPTEUR
     else:
         return nombre_vie, COMPTEUR_COLLISION, collision_active, SCORE, enbonus, COMPTEUR_BONUS
 
-    if collision_active == True :
-        for ufo in UFO_EN_LISTE:
-            # Collision entre l'ufo et les missiles
-            for missiles in missile:
-                distance_missile_ufo = distance_objets(missiles, 10, 10, ufo, UFO_TAILLE, UFO_TAILLE)
-
-                if distance_missile_ufo < 43:  # Si un de nos missiles touche un UFO, l'UFO disparait, le missile aussi, on joue le son de destructionde l'UFO, et on ajoute 25 points
-                    if SON_EN_PAUSE == False:
-                        explosion_ufo.play()
-                    missile.remove(missiles)
-                    UFO_EN_LISTE.remove(ufo)
-                    couloir_ufo = afficherCouloir(ufo)
-                    couloir_utilise_ufo.remove(couloir_ufo)
-                    SCORE += 25
-                    return nombre_vie, COMPTEUR_COLLISION, collision_active, SCORE, enbonus, COMPTEUR_BONUS
     return nombre_vie, COMPTEUR_COLLISION, collision_active, SCORE, enbonus, COMPTEUR_BONUS
 ###FIN COLLISIONS
 
