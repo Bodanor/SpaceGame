@@ -24,6 +24,8 @@ Votre meilleur score sera enregistré au fil de vos parties.
 **A faire :**
 1) Changer bruitage exploser et collision
 2) Changer la couleur du vaisseaux avec les flammes quand on est en bonus
+3) Niveau de difficulte hardcore qui fait buger tout le jeu si on perd
+4) Desactiver ou baisser le volume lorsque on a une etoile par rapport au son du menu principal
 
 
 **IDEES :**
