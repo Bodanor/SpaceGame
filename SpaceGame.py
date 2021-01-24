@@ -734,7 +734,7 @@ while enintro:
                     prendsPose(vaisseau, POSE_VAISSEAU_SANS_FLAMME[0])
                     position_vaisseau = position(vaisseau)
                 else:
-                    prendsPose(vaisseau, POSE_VAISSEAU_SANS_FLAMME[0])
+                    prendsPose(vaisseau, POSE_VAISSEAU_FLAMME[0])
                     position_vaisseau = position(vaisseau)
                     place(vaisseau, position_vaisseau[0] - DEPLACEMENT_VAISSEAU, position_vaisseau[1], 0)
 
@@ -840,6 +840,7 @@ while enintro:
             # Temps
             temps.tick(60)
             COMPTEUR_BOUCLE += 1
+
 
 
 
