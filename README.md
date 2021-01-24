@@ -26,6 +26,10 @@ Votre meilleur score sera enregistré au fil de vos parties.
 2) Changer la couleur du vaisseaux avec les flammes quand on est en bonus
 
 
+**IDEES :**
+1) Affichage d'un compteur vitesse en KM/H du vaisseau qui s'incremente en fonction de la vitesse du jeu
+2) Base le score sur la vitesse du jeu
+
 ![](https://media.discordapp.net/attachments/775135760676421632/790310544983982100/unknown.png?width=788&height=553)
 
 ![](https://media.discordapp.net/attachments/775135760676421632/790311011495968778/unknown.png?width=787&height=552)
