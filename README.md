@@ -19,3 +19,5 @@ Votre meilleur score sera enregistré au fil de vos parties.
 
 **EN DEVELOPPEMENT :** 
 - Creation d'un serveur pour sauvegarder les meilleurs scores.
+
+**BUGS**
