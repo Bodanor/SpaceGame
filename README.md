@@ -19,7 +19,7 @@ Votre meilleur score sera enregistré au fil de vos parties.
 **BUGS :**
 1) Lorsque menu pause et qu'on redimenssione le jeu fait n'imp
 2) Les etoiles spawn sur les ufo donc il fait faire une verification dans le fichier "Spawn.py" comme pour les planetes
-3) SI on met en plein écran il suffit de se mettre entre les couloirs pour passer
+3) Si on met en plein écran il suffit de se mettre entre les couloirs pour passer
 
 **A faire :**
 1) Changer bruitage exploser et collision
@@ -31,6 +31,7 @@ Votre meilleur score sera enregistré au fil de vos parties.
 **IDEES :**
 1) Affichage d'un compteur vitesse en KM/H du vaisseau qui s'incremente en fonction de la vitesse du jeu
 2) Base le score sur la vitesse du jeu
+3) Possibilité de buy des munitions mais alors le score diminie un petit peu
 
 ![](https://media.discordapp.net/attachments/775135760676421632/790310544983982100/unknown.png?width=788&height=553)
 
