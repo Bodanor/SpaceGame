@@ -526,7 +526,7 @@ while enintro:
         spawn_trou_noir(niveau_difficulte, couloir_utilise_trou_noir, FREQUENCE_APPARITION_TROU_NOIR, TROU_NOIR_EN_LISTE, LISTE_TROU_NOIR, PLANETE_EN_LISTE, COULOIRS, TAILLE_PLANETE)
         deplace_ufo(VITESSE_JEU, couloir_utilise_ufo, COMPTEUR_PAUSE, UFO_EN_LISTE, FENETRE_HAUTEUR)
         deplace_trou_noir(VITESSE_JEU, couloir_utilise_trou_noir, COMPTEUR_PAUSE, TROU_NOIR_EN_LISTE, FENETRE_HAUTEUR)
-        spawn_bonus(niveau_difficulte, couloir_utilise_bonus, FREQUENCE_APPARITION_BONUS, BONUS_EN_LISTE, BONUS_LISTE, PLANETE_EN_LISTE, COULOIRS, TAILLE_PLANETE)
+        spawn_bonus(niveau_difficulte, couloir_utilise_bonus, FREQUENCE_APPARITION_BONUS, BONUS_EN_LISTE, BONUS_LISTE, PLANETE_EN_LISTE, COULOIRS, TAILLE_PLANETE, enbonus)
         deplace_bonus(VITESSE_JEU, couloir_utilise_bonus, COMPTEUR_PAUSE, BONUS_EN_LISTE, FENETRE_HAUTEUR)
 
         #pose du vaisseau

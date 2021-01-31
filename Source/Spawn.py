@@ -87,11 +87,11 @@ def spawn_trou_noir(niveau_difficulte, couloir_utilise_trou_noir, FREQUENCE_APPA
                                 TROU_NOIR_EN_LISTE.append(LISTE_TROU_NOIR[trou_noir_random])
                                 couloir_utilise_trou_noir.append(couloir_random)
 
-def spawn_bonus(niveau_difficulte, couloir_utilise_bonus, FREQUENCE_APPARITION_BONUS, BONUS_EN_LISTE, BONUS_LISTE, PLANETE_EN_LISTE, COULOIRS, TAILLE_PLANETE):
+def spawn_bonus(niveau_difficulte, couloir_utilise_bonus, FREQUENCE_APPARITION_BONUS, BONUS_EN_LISTE, BONUS_LISTE, PLANETE_EN_LISTE, COULOIRS, TAILLE_PLANETE, enbonus):
 
     random_timer = random.randint(0, FREQUENCE_APPARITION_BONUS)
     if random_timer == 2:
-        if len(BONUS_EN_LISTE) <1 :
+        if len(BONUS_EN_LISTE) <1 and (enbonus == False):
 
             couloir_random = random.randint(0, 4)
             bonus_random = random.randint(0, 4)
