@@ -499,6 +499,7 @@ while enintro:
             couloir_utilise = []
             PLANETE_EN_LISTE = []
             UFO_EN_LISTE = []
+            couloir_utilise_ufo =[]
             spawn_planete(couloir_utilise, PLANETE_EN_LISTE, LISTE_PLANETE, COULOIRS, TAILLE_PLANETE)
             deplace_planete(VITESSE_JEU, COMPTEUR_PAUSE, PLANETE_EN_LISTE, couloir_utilise, FENETRE_HAUTEUR)
             visible(vaisseau)
@@ -506,7 +507,9 @@ while enintro:
             BOUTON = 0
             MISSILE_UFO_EN_LISTE = []
             TROU_NOIR_EN_LISTE = []
+            couloir_utilise_trou_noir = []
             BONUS_EN_LISTE = []
+            couloir_utilise_bonus = []
             missiles = []
             etoiles.clear()
             etoiles = cree_etoiles(NOMBRE_ETOILES, FENETRE_LARGEUR, FENETRE_HAUTEUR)
@@ -685,6 +688,7 @@ while enintro:
                             couloir_utilise = []
                             PLANETE_EN_LISTE = []
                             UFO_EN_LISTE = []
+                            couloir_utilise_ufo=[]
                             spawn_planete(couloir_utilise, PLANETE_EN_LISTE, LISTE_PLANETE, COULOIRS, TAILLE_PLANETE)
                             deplace_planete(VITESSE_JEU, COMPTEUR_PAUSE, PLANETE_EN_LISTE, couloir_utilise, FENETRE_HAUTEUR)
                             visible(vaisseau)
@@ -692,6 +696,7 @@ while enintro:
                             BOUTON = 0
                             MISSILE_UFO_EN_LISTE = []
                             TROU_NOIR_EN_LISTE = []
+                            couloir_utilise_trou_noir = []
                             BONUS_EN_LISTE = []
                             missiles = []
                             etoiles.clear()
@@ -699,6 +704,7 @@ while enintro:
                             afficher_etoiles(fenetre, VITESSE_JEU, etoiles, FENETRE_HAUTEUR, FENETRE_LARGEUR)
                             COMPTEUR_BONUS = 0
                             sonBonus.stop()
+                            couloir_utilise_bonus = []
                             enbonus = False
 
                             # Reprise des paramètres de la difficulté choisie dans le menu
@@ -842,6 +848,8 @@ while enintro:
             # Temps
             temps.tick(60)
             COMPTEUR_BOUCLE += 1
+
+            print((NOMBRE_UFO))
 
 
 
