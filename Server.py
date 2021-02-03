@@ -10,31 +10,28 @@ server = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
 server.setsockopt(socket.SOL_SOCKET, socket.SO_REUSEADDR, 1)
 server.bind((IP, PORT))
 
-lock = threading.Lock()
-scores = [0,0,0]
+lo = threading.Lock()
+scores = []
 
-def ReceveurClient(conn):
+def ReceveurClient(conn, lo):
     while True:
         try:
+            with lo:
+                global scores
+                best_score_client = conn.recv(1024)
+                best_score_client = pickle.loads(best_score_client)
+                with open('../../Desktop/spacegame/scoreboard.txt', 'w+') as fichier:
+                    print(len(scores))
+                    new_best_score = []
 
-            global scores
-            print(len(scores))
-            best_score_client = conn.recv(1024)
-            best_score_client = pickle.loads(best_score_client)
-            with open('../../Desktop/spacegame/scoreboard.txt', 'w+') as fichier:
-                print(len(scores))
-                new_best_score = []
-                print(len(scores))
+                    for index,score_client in enumerate(best_score_client):
+                        if score_client > scores[index]:
+                                new_best_score.append(str(score_client) + '\n')
+                        else:
+                            new_best_score.append(str(scores[index]) + '\n')
 
-                print(len(scores))
-                for index,score_client in enumerate(best_score_client):
-                    if score_client > scores[index]:
-                            new_best_score.append(str(score_client) + '\n')
-                    else:
-                        new_best_score.append(str(scores[index]) + '\n')
-
-                fichier.writelines(new_best_score)
-                fichier.close()
+                    fichier.writelines(new_best_score)
+                    fichier.close()
 
 
 
@@ -52,7 +49,7 @@ def EnvoyeurClient(conn):
             packet_type = packet_type.decode("UTF8")
 
             if packet_type == "SpaceGame":
-                receveur_client_thread = threading.Thread(target=ReceveurClient, args=(connexion,))
+                receveur_client_thread = threading.Thread(target=ReceveurClient, args=(connexion,lo))
                 receveur_client_thread.start()
                 while True:
                     score_client = pickle.dumps(scores)
@@ -73,26 +70,29 @@ def EnvoyeurClient(conn):
             pass
 
 
-def update_bestscore():
+def update_bestscore(lo):
 
     #Garde en mémoire le meilleur score
 
     while True:
         with open('../../Desktop/spacegame/scoreboard.txt', 'r+') as fichier: #Ouverture du fichier Scoreboard et lecture de celui-ci
 
-            meilleurs_scores = fichier.readlines()
-            for index,score in enumerate(meilleurs_scores):
-                meilleurs_scores[index] = int(score)
+            with lo:
 
+                global scores
+                meilleurs_scores = fichier.readlines()
+                for index,score in enumerate(meilleurs_scores):
+                    meilleurs_scores[index] = int(score)
 
-            global scores
-            for index,score in enumerate(meilleurs_scores):
-                scores[index] = score
+                scores.clear()
+
+                for score in meilleurs_scores:
+                    scores.append(score)
 
         fichier.close()
 
 
-update_score_thread = threading.Thread(target=update_bestscore)
+update_score_thread = threading.Thread(target=update_bestscore, args=(lo,))
 update_score_thread.start()
 
 print("Demarrage du serveur !")
