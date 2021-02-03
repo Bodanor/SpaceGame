@@ -19,11 +19,11 @@ def ReceveurClient(conn, lo):
             global scores
             best_score_client = conn.recv(1024)
             best_score_client = pickle.loads(best_score_client)
-            with open('scoreboard.txt', 'w+') as fichier:
-                print(len(scores))
-                new_best_score = []
+            with lo:
+                with open('scoreboard.txt', 'w+') as fichier:
+                    print(len(scores))
+                    new_best_score = []
 
-                with lo:
                     for index,score_client in enumerate(best_score_client):
                         if score_client > scores[index]:
                                 new_best_score.append(str(score_client) + '\n')
@@ -43,13 +43,14 @@ def ReceveurClient(conn, lo):
 
 def EnvoyeurClient(conn):
         try:
-            global scores
+            global scores, lo
             packet_type = conn.recv(1024)
             packet_type = packet_type.decode("UTF8")
 
             if packet_type == "SpaceGame":
                 receveur_client_thread = threading.Thread(target=ReceveurClient, args=(connexion,lo))
                 receveur_client_thread.start()
+                print(lo)
                 while True:
                     score_client = pickle.dumps(scores)
                     conn.send(score_client)
