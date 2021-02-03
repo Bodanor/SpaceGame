@@ -3,7 +3,7 @@ import threading
 import time
 import pickle
 
-IP = "192.168.0.7"
+IP = "192.168.0.11"
 PORT = 7654
 
 server = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
@@ -50,7 +50,7 @@ def EnvoyeurClient(conn):
             if packet_type == "SpaceGame":
                 receveur_client_thread = threading.Thread(target=ReceveurClient, args=(connexion,lo))
                 receveur_client_thread.start()
-                print(lo)
+
                 while True:
                     score_client = pickle.dumps(scores)
                     conn.send(score_client)
