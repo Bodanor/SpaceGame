@@ -4,7 +4,7 @@ import pickle
 
 import Source.Variable
 
-IP = "94.106.244.227"
+IP = "192.168.0.7"
 PORT = 7654
 
 connecte = False

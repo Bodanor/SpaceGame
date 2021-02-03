@@ -16,14 +16,14 @@ scores = []
 def ReceveurClient(conn, lo):
     while True:
         try:
-            with lo:
-                global scores
-                best_score_client = conn.recv(1024)
-                best_score_client = pickle.loads(best_score_client)
-                with open('scoreboard.txt', 'w+') as fichier:
-                    print(len(scores))
-                    new_best_score = []
+            global scores
+            best_score_client = conn.recv(1024)
+            best_score_client = pickle.loads(best_score_client)
+            with open('scoreboard.txt', 'w+') as fichier:
+                print(len(scores))
+                new_best_score = []
 
+                with lo:
                     for index,score_client in enumerate(best_score_client):
                         if score_client > scores[index]:
                                 new_best_score.append(str(score_client) + '\n')
@@ -31,7 +31,6 @@ def ReceveurClient(conn, lo):
                             new_best_score.append(str(scores[index]) + '\n')
 
                     fichier.writelines(new_best_score)
-                    fichier.close()
 
 
 
@@ -89,7 +88,8 @@ def update_bestscore(lo):
                 for score in meilleurs_scores:
                     scores.append(score)
 
-        fichier.close()
+
+        print("chris")
 
 
 update_score_thread = threading.Thread(target=update_bestscore, args=(lo,))
@@ -104,8 +104,3 @@ while True:
     print("Nouvelle connexion de {} sur le port {}".format(addresse[0], addresse[1]))
     envoyeur_client_thread = threading.Thread(target=EnvoyeurClient, args=(connexion,))
     envoyeur_client_thread.start()
-
-
-
-
-
