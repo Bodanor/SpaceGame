@@ -20,7 +20,7 @@ def ReceveurClient(conn, lo):
                 global scores
                 best_score_client = conn.recv(1024)
                 best_score_client = pickle.loads(best_score_client)
-                with open('../../Desktop/spacegame/scoreboard.txt', 'w+') as fichier:
+                with open('scoreboard.txt', 'w+') as fichier:
                     print(len(scores))
                     new_best_score = []
 
@@ -75,7 +75,7 @@ def update_bestscore(lo):
     #Garde en mémoire le meilleur score
 
     while True:
-        with open('../../Desktop/spacegame/scoreboard.txt', 'r+') as fichier: #Ouverture du fichier Scoreboard et lecture de celui-ci
+        with open('scoreboard.txt', 'r+') as fichier: #Ouverture du fichier Scoreboard et lecture de celui-ci
 
             with lo:
 
