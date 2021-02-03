@@ -89,9 +89,6 @@ def update_bestscore(lo):
                     scores.append(score)
 
 
-        print("chris")
-
-
 update_score_thread = threading.Thread(target=update_bestscore, args=(lo,))
 update_score_thread.start()
 
