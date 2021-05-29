@@ -1,6 +1,0 @@
-Il va falloir remplacer les import par le chamin absolu. Parce que le import * fait des merde et des noms sont duplique ce qui fait qu'on a des variable vide
-Exemple avec MEILLEURS_SCORE qui depuis Spacegame vaut [] alors que autre part il vaut bien le bon tableau
-
-Faire en sorte que la viarble globale ne change pas et ne pas mettre de fixed size au score = [0,0,0]
-
-Gérer les erreurs de déconnexion !
