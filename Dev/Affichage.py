@@ -81,3 +81,7 @@ class SpaceWindow:
             image = pygame.image.load(chemin).convert_alpha(self.fenetre)
             image = pygame.transform.scale(image, (self.VAISSEAU_LARGEUR, self.VAISSEAU_HAUTEUR))
             self.images[nom_image] = image
+
+    def dessiner(self, entite):
+        if entite.visible == True:
+            self.fenetre.blit(entite.image, entite.position)
