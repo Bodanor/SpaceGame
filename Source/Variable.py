@@ -102,7 +102,7 @@ missile = []
 BONUS_LISTE = []
 BONUS_EN_LISTE = []
 
-#Son
+#Bruitages
 SON_EN_PAUSE = False
 SON_EN_COURS = False
 

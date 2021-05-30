@@ -1,8 +1,11 @@
 import pygame
 import Affichage
+import Sound
 
 print("Initialisation...")
-SpaceWindow = Affichage.SpaceWindow()
+pygame.mixer.init()
+SpaceWindow = Affichage.SpaceWindow('Space Game')
+SpaceSound = Sound.SpaceSound()
 while True:
-    None
+    pygame.display.flip()
 

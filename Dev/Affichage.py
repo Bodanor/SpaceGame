@@ -1,7 +1,9 @@
 import pygame
 
 class SpaceWindow:
-    def __init__(self):
+    def __init__(self, GameName):
+        pygame.init()
+        self.GameName = GameName
         self.images = {}
         self.ESPACE = (0, 0, 15)
         self.BLANC = (255, 255, 255)
@@ -29,7 +31,7 @@ class SpaceWindow:
     def initialisation(self):
         self.charger_images()
         pygame.display.set_icon(self.images['GameIcon'])
-        pygame.display.set_caption('Space Game')
+        pygame.display.set_caption(self.GameName)
     def charger_images(self):
         self.images["GameIcon"] = pygame.image.load("Images/vaisseau_jaune_avec_flamme.png")
         self.images["VieImg"] = pygame.image.load('Images/vaisseau_rouge_avec_flamme.png')

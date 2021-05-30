@@ -84,13 +84,13 @@ def coinNotif(fenetre, police, COMPTEUR_NOTIF, COMPTEUR_MUTE, FENETRE_LARGEUR):
 
         if COMPTEUR_NOTIF > 0:
             if COMPTEUR_MUTE % 2 == 1:
-                phrase = str("{}".format("Son Activé"))
+                phrase = str("{}".format("Bruitages Activé"))
                 notification = police.render(phrase, True, ROUGE)
                 longueur_text_x, longueur_text_y =notification.get_size()
                 fenetre.blit(notification, (FENETRE_LARGEUR - longueur_text_x, 0))
 
             else:
-                phrase = str("{}".format("Son Désactivé"))
+                phrase = str("{}".format("Bruitages Désactivé"))
                 notification = police.render(phrase, True, ROUGE)
                 longueur_text_x, longueur_text_y = notification.get_size()
                 fenetre.blit(notification, (FENETRE_LARGEUR - longueur_text_x, 0))

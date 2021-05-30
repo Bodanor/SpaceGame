@@ -98,7 +98,7 @@ vie_image = pygame.image.load('Images/vaisseau_rouge_avec_flamme.png')
 pygame.init()
 
 
-# Son
+# Bruitages
 print("[LOG] CHARGEMENTS DES BRUITAGES... ")
 pygame.mixer.init()
 explosion_ufo = pygame.mixer.Sound("Son/explosion_ufo.wav")
@@ -124,7 +124,7 @@ back = pygame.mixer.Sound("Son/back.wav")
 print("[LOG] BRUITAGES CHARGE !")
 
 print("[LOG] CHARGEMENT BANDE SON...")
-musique = pygame.mixer.Sound("Bande Son/musiquePrincipal.wav")
+musique = pygame.mixer.Sound("Dev/Bande Son/musiquePrincipal.wav")
 musique.set_volume(0.3)
 
 print("[LOG] BANDE SON CHARGEE!")
