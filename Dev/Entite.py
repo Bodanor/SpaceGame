@@ -36,25 +36,3 @@ class Entite():
     def prendsPose(self, pose):
         self.image = pose
 
-
-class EntiteMissile():
-    def __init__(self):
-        self.visible = True
-        self.position = [0, 0]
-        self.vitesse_missile = 0
-
-    def visibleMissile(self):
-        self.visible = True
-
-    def invisibleMissile(self):
-        self.visible = False
-
-    def estVisibleMissile(self):
-        return self.visible
-
-    def placeMissile(self, x, y):
-        self.position[0] = x
-        self.position[1] = y
-
-    def positionMissile(self):
-        return self.position

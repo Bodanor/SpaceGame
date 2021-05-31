@@ -123,3 +123,14 @@ class SpaceWindow:
                              width=1)
             pygame.draw.circle(self.fenetre, self.BLEU, (17, self.FENETRE_HAUTEUR - 25), 10, width=1)
             pygame.draw.circle(self.fenetre, self.BLANC, (17, self.FENETRE_HAUTEUR - 25), 5)
+
+    def dessine_missile(self, SpaceGameplay):
+        for missile in SpaceGameplay.missiles:
+            COULEUR = (random.randint(0, 255), random.randint(0, 255), random.randint(0, 255))
+            if missile.estVisibleMissile():
+                if missile.positionMissile()[1] < 0:
+                    SpaceGameplay.missiles.remove(missile)
+            missile.deplace_missile(SpaceGameplay.VITESSE_MISSILE)
+            pygame.draw.circle(self.fenetre, COULEUR, list(map(int, missile.positionMissile())), 7)
+            pygame.draw.circle(self.fenetre, COULEUR, list(map(int, missile.positionMissile())), 10, width=1)
+            pygame.draw.circle(self.fenetre, self.BLANC, list(map(int, missile.positionMissile())), 5)

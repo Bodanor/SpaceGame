@@ -19,20 +19,6 @@ def deplace_missile(missile, position_missile, vitesse_missile):
     placeMissile(missile, position_missile[0], position_y)
 
 #AFFICHAGE DES MISSILES
-def dessine_missile(fenetre, vitesse_missile):
-
-
-    for missiles in missile:
-        COULEUR = (random.randint(0, 255), random.randint(0, 255), random.randint(0, 255))
-        if estVisible(missiles):
-            if positionMissile(missiles)[1] < 0:
-                missile.remove(missiles)
-            deplace_missile(missiles, positionMissile(missiles), vitesse_missile)
-
-            pygame.draw.circle(fenetre, COULEUR, list(map(int,positionMissile(missiles))), 7)
-            pygame.draw.circle(fenetre, COULEUR, list(map(int, positionMissile(missiles))), 10, width=1)
-            pygame.draw.circle(fenetre, BLANC, list(map(int, positionMissile(missiles))), 5)
-
 
 ## MISSILE POUR L'UFO ##
 
