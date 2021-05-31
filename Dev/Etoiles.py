@@ -11,4 +11,3 @@ class Etoiles():
     def cree_etoiles(self):
         for x in range(self.NOMBRE_ETOILES):
             self.ETOILES.append([random.randint(0, self.FENETRE_LARGEUR), random.randint(0, self.FENETRE_HAUTEUR)])
-

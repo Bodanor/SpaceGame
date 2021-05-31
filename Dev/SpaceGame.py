@@ -1,10 +1,10 @@
 import pygame
+import json
+import os
 import Affichage
 import Sound
 import Entite
-import etoiles
-import json
-import os
+import Etoiles
 import Gameplay
 import Menu
 
@@ -40,14 +40,13 @@ vaisseau.place((SpaceWindow.FENETRE_LARGEUR / 2) - SpaceWindow.VAISSEAU_LARGEUR 
 
 #Variables pour la boucle pricipal du jeu
 ENINTRO = True
-
 temps = pygame.time.Clock()
 
 #Faire jouer la bande son des le début du jeu
 SpaceSound.sounds['musique'].play()
 
 #Creation des etoiles pour le jeu
-SpaceStars = etoiles.Etoiles(SpaceWindow.FENETRE_LARGEUR, SpaceWindow.FENETRE_HAUTEUR)
+SpaceStars = Etoiles.Etoiles(SpaceWindow.FENETRE_LARGEUR, SpaceWindow.FENETRE_HAUTEUR)
 SpaceStars.cree_etoiles()
 etoiles = SpaceStars.ETOILES
 
@@ -58,7 +57,10 @@ while ENINTRO:
             if event.type == pygame.QUIT:
                 ENINTRO = False
 
-            if event.type == pygame.KEYDOWN :
+            if event.type == pygame.KEYDOWN:
+
+                # Changement du bouton dans le menu
+
                 if event.key == pygame.K_DOWN:
                     if SpaceSound.SON_EN_PAUSE == False:
                         SpaceSound.sounds['choix'].play()
@@ -76,6 +78,8 @@ while ENINTRO:
                         SpaceMenu.BOUTON = 2
                     else:
                         SpaceMenu.BOUTON -= 1
+
+                # Changement de niveau dans le deuxieme bouton du menu
 
                 if event.key == pygame.K_RIGHT:
                     if SpaceMenu.BOUTON == 1:
@@ -95,6 +99,8 @@ while ENINTRO:
                             SpaceGamePlay.niveau_difficulte -= 1
                             SpaceGamePlay.changer_difficulte(SpaceMenu)
 
+                #Confirmation du bouton avec la touche Enter
+
                 if event.key == pygame.K_RETURN:
                     if SpaceMenu.BOUTON == 2:
                         ENINTRO = False
@@ -108,6 +114,13 @@ while ENINTRO:
                     else:
                         SpaceSound.sounds['musique'].play()
                         SpaceSound.SON_EN_PAUSE = False
+
+            #Creation d'evenements similaires au touche du clavier mais pour manette
+
+            #FIN
+
+
+
 
 
     except Exception as e:
