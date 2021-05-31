@@ -27,6 +27,7 @@ class SpaceWindow:
         self.BONUS_TAILLE = 40
         self.fenetre = 0
         self.TAILLE_PLANETE = int(self.FENETRE_LARGEUR / 6)
+        self.police = pygame.font.SysFont('monospace', self.FENETRE_HAUTEUR // 40, True)
         self.fenetre = pygame.display.set_mode((self.FENETRE_LARGEUR, self.FENETRE_HAUTEUR), pygame.RESIZABLE)
         self.initialisation()
 
@@ -104,3 +105,21 @@ class SpaceWindow:
         for x in range(0, NOMBRE_VIE + 1):
             self.images['VieImg'] = pygame.transform.scale(self.images['VieImg'], (self.VIE_LARGEUR, self.VIE_HAUTEUR))
             self.fenetre.blit(self.images['VieImg'], (self.FENETRE_LARGEUR - self.VIE_LARGEUR * x, self.FENETRE_HAUTEUR - self.VIE_HAUTEUR))
+
+    def afficher_munition(self,MUNITIONS):
+        if MUNITIONS == 0:  # Afficher les munitions en rouges quand il n'y en a plus
+
+            munition = self.police.render(str(": {}".format(int(MUNITIONS))), True, self.ROUGE)
+            self.fenetre.blit(munition, (35, self.FENETRE_HAUTEUR - 35))
+            pygame.draw.rect(self.fenetre, self.BLANC, pygame.Rect(5, self.FENETRE_HAUTEUR - 40, munition.get_size()[0] + 40, 30),
+                             width=1)
+            pygame.draw.circle(self.fenetre, self.BLEU, (17, self.FENETRE_HAUTEUR - 25), 10, width=1)
+            pygame.draw.circle(self.fenetre, self.BLANC, (17, self.FENETRE_HAUTEUR - 25), 5)
+
+        else:  # Afficher les munitions normalement
+            munition = self.police.render(str(": {}".format(int(MUNITIONS))), True, self.BLANC)
+            self.fenetre.blit(munition, (35, self.FENETRE_HAUTEUR - 35))
+            pygame.draw.rect(self.fenetre, self.BLANC, pygame.Rect(5, self.FENETRE_HAUTEUR - 40, munition.get_size()[0] + 40, 30),
+                             width=1)
+            pygame.draw.circle(self.fenetre, self.BLEU, (17, self.FENETRE_HAUTEUR - 25), 10, width=1)
+            pygame.draw.circle(self.fenetre, self.BLANC, (17, self.FENETRE_HAUTEUR - 25), 5)

@@ -4,6 +4,7 @@ class SpaceSound():
     def __init__(self):
         self.sounds = {}
         self.charger_sons()
+        self.SON_EN_PAUSE = False
 
     def charger_sons(self):
         print("CHARGEMENT DES BRUITAGES...")

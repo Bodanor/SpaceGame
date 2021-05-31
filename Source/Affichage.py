@@ -50,31 +50,7 @@ def pause(fenetre, POLICE_ECRITURE_BOUTON, BOUTON, MENU_PAUSE):
 ######### FIN MENU ##########
 
 #Menu de départ
-def afficherBoutonMenu(fenetre, POLICE_ECRITURE_BOUTON, BOUTON, MENU):
-    for index, text in enumerate(MENU):
 
-        text_afficher = POLICE_ECRITURE_BOUTON.render(text, True, BLANC)
-        texte_largeur, texte_hauteur = text_afficher.get_size()
-
-        # détection de la souris qui passe au dessus des boutons et les afficher en couleur clair si elle est au dessus
-        if index == BOUTON:
-
-
-            pygame.draw.rect(fenetre, BOUTON_COULEUR_CLAIR,
-                             [(FENETRE_LARGEUR / 2) - BOUTON_LARGEUR // 2,
-                              ((FENETRE_HAUTEUR / MENU_LONGUEUR) - BOUTON_HAUTEUR) + (HAUTEUR / 2 * index),
-                              BOUTON_LARGEUR, 40])
-
-        else:  # Afficher les boutons d'une couleur normale
-
-
-            pygame.draw.rect(fenetre, BOUTON_COULEUR_FONCE,
-                             [(FENETRE_LARGEUR / 2) - BOUTON_LARGEUR // 2,
-                              ((FENETRE_HAUTEUR / MENU_LONGUEUR) - BOUTON_HAUTEUR) + (HAUTEUR / 2 * index),
-                              BOUTON_LARGEUR, 40])
-
-        fenetre.blit(text_afficher, ((FENETRE_LARGEUR / 2) - texte_largeur // 2,
-                                     (FENETRE_HAUTEUR / MENU_LONGUEUR) - texte_hauteur + (HAUTEUR * index) / 2))
 
 
 
