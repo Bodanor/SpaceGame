@@ -5,6 +5,13 @@ class SpaceGamePlay:
         self.VITESSE_ETOILE = 3
         self.MUNITIONS = 20
         self.niveau_difficulte = 0
+        self.AJOUT_MUNITION = 20
+        self.MUNITIONS = 20
+        self.VITESSE_JEU = 3
+        self.VITESSE_MISSILE = 15
+        self.DEPLACEMENT_VAISSEAU = 7
+        self.FREQUENCE_APPARITION_TROU_NOIR = 500
+        self.FREQUENCE_TIR = 180
 
     def changer_difficulte(self, SpaceMenu):
         if self.niveau_difficulte == 0:
