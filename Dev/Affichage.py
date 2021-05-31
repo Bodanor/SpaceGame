@@ -1,8 +1,8 @@
 import pygame
+import random
 
 class SpaceWindow:
     def __init__(self, GameName):
-        pygame.init()
         self.GameName = GameName
         self.images = {}
         self.ESPACE = (0, 0, 15)
@@ -33,6 +33,7 @@ class SpaceWindow:
         pygame.display.set_icon(self.images['GameIcon'])
         pygame.display.set_caption(self.GameName)
     def charger_images(self):
+        print("CHARGEMENT D'IMAGES DIVERSES...")
         self.images["GameIcon"] = pygame.image.load("Images/vaisseau_jaune_avec_flamme.png")
         self.images["VieImg"] = pygame.image.load('Images/vaisseau_rouge_avec_flamme.png')
         self.images["TrouImg"] = pygame.image.load('Images/trou_noir.png')
@@ -82,6 +83,17 @@ class SpaceWindow:
             image = pygame.transform.scale(image, (self.VAISSEAU_LARGEUR, self.VAISSEAU_HAUTEUR))
             self.images[nom_image] = image
 
-    def dessiner(self, entite):
+        print("CHARGEMENT IMAGES TERMINE !")
+
+    def afficher(self, entite):
         if entite.visible == True:
             self.fenetre.blit(entite.image, entite.position)
+
+    def afficher_etoiles(self, etoiles, vitesse_etoiles):
+        for etoile in etoiles:
+            pygame.draw.line(self.fenetre, (255, 255, 255), (etoile[0], etoile[1]), (etoile[0], etoile[1]))
+
+            etoile[1] = etoile[1] + vitesse_etoiles / 2
+            if etoile[1] > self.FENETRE_HAUTEUR:
+                etoile[1] = 0
+                etoile[0] = random.randint(0, self.FENETRE_LARGEUR)

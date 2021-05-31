@@ -6,6 +6,7 @@ class SpaceSound():
         self.charger_sons()
 
     def charger_sons(self):
+        print("CHARGEMENT DES BRUITAGES...")
         self.sounds['explosion'] = pygame.mixer.Sound("Bruitages/explosion_ufo.wav")
         self.sounds['choix'] = pygame.mixer.Sound("Bruitages/choix_menu.wav")
         self.sounds['choix_droite_gauche'] = pygame.mixer.Sound("Bruitages/droite_gauche.wav")
@@ -16,4 +17,6 @@ class SpaceSound():
         self.sounds['sonBonus'] = pygame.mixer.Sound("Bruitages/bonus.wav")
         self.sounds['start'] = pygame.mixer.Sound("Bruitages/start.wav")
         self.sounds['back'] = pygame.mixer.Sound("Bruitages/back.wav")
+        print("CHARGEMENT DE LA BANDE SON...")
         self.sounds['musique'] = pygame.mixer.Sound("Bande Son/musiquePrincipal.wav")
+        print("CHARGEMENT SON TERMINE !")
