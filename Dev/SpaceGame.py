@@ -5,6 +5,7 @@ import Entite
 import etoiles
 import json
 import os
+import Gameplay
 
 #Initialisation des images, sons et variables
 print("Initialisation...")
@@ -12,6 +13,7 @@ pygame.mixer.init()
 pygame.init()
 SpaceWindow = Affichage.SpaceWindow('Space Game')
 SpaceSound = Sound.SpaceSound()
+SpaceGamePlay = Gameplay.SpaceGamePlay()
 
 
 #initialisation de la manette ps4
@@ -31,6 +33,7 @@ analog_keys = {0:0, 1:0, 2:0, 3:0, 4:-1, 5:-1}
 #Creation d'une entite pour le vaisseau et chargement d'une image pour celle-ci
 vaisseau = Entite.Entite()
 vaisseau.prendsPose(SpaceWindow.images['vaisseau_jaune_avec_flamme'])
+vaisseau.place((SpaceWindow.FENETRE_LARGEUR / 2) - SpaceWindow.VAISSEAU_LARGEUR / 2, SpaceWindow.FENETRE_HAUTEUR - SpaceWindow.VAISSEAU_HAUTEUR, 0)
 
 #Variables pour la boucle pricipal du jeu
 ENINTRO = True
@@ -69,7 +72,8 @@ while ENINTRO:
 
     SpaceWindow.fenetre.fill(SpaceWindow.ESPACE)
     SpaceWindow.afficher(vaisseau)
-    SpaceWindow.afficher_etoiles(etoiles, 10)
+    SpaceWindow.afficher_etoiles(etoiles, SpaceGamePlay.VITESSE_ETOILE)
+    SpaceWindow.affichervie(SpaceGamePlay.NOMBRE_VIE)
 
     pygame.display.flip()
     temps.tick(60)

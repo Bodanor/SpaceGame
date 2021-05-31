@@ -21,6 +21,8 @@ class SpaceWindow:
         self.FENETRE_HAUTEUR = 720
         self.VAISSEAU_LARGEUR = 70
         self.VAISSEAU_HAUTEUR = 60
+        self.VIE_LARGEUR = 30
+        self.VIE_HAUTEUR = 25
         self.UFO_TAILLE = 80
         self.BONUS_TAILLE = 40
         self.fenetre = 0
@@ -97,3 +99,8 @@ class SpaceWindow:
             if etoile[1] > self.FENETRE_HAUTEUR:
                 etoile[1] = 0
                 etoile[0] = random.randint(0, self.FENETRE_LARGEUR)
+
+    def affichervie(self, NOMBRE_VIE):
+        for x in range(0, NOMBRE_VIE + 1):
+            self.images['VieImg'] = pygame.transform.scale(self.images['VieImg'], (self.VIE_LARGEUR, self.VIE_HAUTEUR))
+            self.fenetre.blit(self.images['VieImg'], (self.FENETRE_LARGEUR - self.VIE_LARGEUR * x, self.FENETRE_HAUTEUR - self.VIE_HAUTEUR))
