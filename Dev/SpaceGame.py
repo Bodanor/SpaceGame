@@ -18,18 +18,6 @@ SpaceSound = Sound.SpaceSound()
 SpaceGamePlay = Gameplay.SpaceGamePlay()
 SpaceMenu = Menu.SpaceMenu(SpaceWindow.fenetre, SpaceWindow.FENETRE_HAUTEUR, SpaceWindow.FENETRE_LARGEUR)
 
-# initialisation de la manette ps4
-joysticks = []
-for i in range(pygame.joystick.get_count()):
-    joysticks.append(pygame.joystick.Joystick(i))
-
-for joystick in joysticks:
-    joystick.init()
-
-with open(os.path.join("controller.json"), 'r+') as file:
-    button_keys = json.load(file)
-
-analog_keys = {0: 0, 1: 0, 2: 0, 3: 0, 4: -1, 5: -1}
 
 # Creation d'une entite pour le vaisseau et chargement d'une image pour celle-ci
 vaisseau = Entite.Entite()
