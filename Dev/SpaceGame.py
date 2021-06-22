@@ -205,12 +205,12 @@ while ENINTRO:
         SpaceSpawner.spawn_planete()
 
         SpaceWindow.fenetre.fill(SpaceWindow.ESPACE)
-        SpaceWindow.affichervie(SpaceGamePlay.NOMBRE_VIE)
         SpaceWindow.afficher_etoiles(etoiles, SpaceGamePlay.VITESSE_ETOILE)
-        SpaceWindow.afficher_munition(SpaceGamePlay.MUNITIONS)
-        SpaceWindow.dessine_missile(SpaceGamePlay)
-        SpaceWindow.afficher_planetes(SpaceGamePlay)
         SpaceWindow.afficher(vaisseau)
+        SpaceWindow.afficher_planetes(SpaceGamePlay)
+        SpaceWindow.affichervie(SpaceGamePlay.NOMBRE_VIE)
+        SpaceWindow.dessine_missile(SpaceGamePlay)
+        SpaceWindow.afficher_munition(SpaceGamePlay.MUNITIONS)
 
         SpaceMouvements.deplace_planete()
         temps.tick(60)
