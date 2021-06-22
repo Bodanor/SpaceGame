@@ -2,8 +2,10 @@
 **DEV :** 
 1) Essayer de tranformer les fichiers en class. De cette façon on a plus de controlle sur chaque chose qui se passe.
 Mais attention a l'utilisation de la mémoire RAM
+   
 **BUGS :**
 1) RIEN JE SUIS UN GÉNIE PTN  !!!
+
 **A faire :**
 1) Changer bruitage exploser et collision
 2) Desactiver ou baisser le volume lorsque on a une etoile par rapport au son du menu principal
