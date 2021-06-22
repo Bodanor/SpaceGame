@@ -1,0 +1,5 @@
+1) Faire en sorte que au debut, les planetes ne sapwn pas sur un meme ligne. Voir Fichoer Spawn.py. J'avais penser à
+enlever le timer du debut, et comparer toute les planetes avec la nouvelles créer et faire une confition avec l'axe des
+Y de chaque planetes.
+
+2) Clear les non-sense (I.E SpaceWindow.afficher_munition(SpaceGamePlay.MUNITIONS) n'est pas la meme chose que SpaceWindow.afficher_munition(SpaceGamePlay))

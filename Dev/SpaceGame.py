@@ -203,6 +203,7 @@ while ENINTRO:
 
 
         SpaceSpawner.spawn_planete()
+
         SpaceWindow.fenetre.fill(SpaceWindow.ESPACE)
         SpaceWindow.affichervie(SpaceGamePlay.NOMBRE_VIE)
         SpaceWindow.afficher_etoiles(etoiles, SpaceGamePlay.VITESSE_ETOILE)
