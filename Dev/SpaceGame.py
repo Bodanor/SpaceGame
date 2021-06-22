@@ -1,14 +1,5 @@
 import pygame
-import Affichage
-import Sound
-import Entite
-import Etoiles
-import Gameplay
-import Menu
-import Missiles
-import Spawner
-import Mouvements
-
+from Dev.Source import Etoiles, Gameplay, Menu, Sound, Entite, Affichage, Missiles, Mouvements, Spawner
 
 # Initialisation des images, sons et variables
 print("Initialisation...")
@@ -206,10 +197,10 @@ while ENINTRO:
 
         SpaceWindow.fenetre.fill(SpaceWindow.ESPACE)
         SpaceWindow.afficher_etoiles(etoiles, SpaceGamePlay.VITESSE_ETOILE)
+        SpaceWindow.dessine_missile(SpaceGamePlay)
         SpaceWindow.afficher(vaisseau)
         SpaceWindow.afficher_planetes(SpaceGamePlay)
         SpaceWindow.affichervie(SpaceGamePlay.NOMBRE_VIE)
-        SpaceWindow.dessine_missile(SpaceGamePlay)
         SpaceWindow.afficher_munition(SpaceGamePlay.MUNITIONS)
 
         SpaceMouvements.deplace_planete()

@@ -8,9 +8,9 @@ def creation_couloirs_planete(COULOIRS, FENETRE_LARGEUR):
         COULOIRS.append(((FENETRE_LARGEUR / 5) * x, (FENETRE_LARGEUR / 5) * (x + 1)))
 
 
-def spawn_planete(couloir_utilise, PLANETE_EN_LISTE, LISTE_PLANETE, COULOIRS, TAILLE_PLANETE):
+def spawn_planete(couloir_utilise, PLANETE_EN_LISTE, LISTE_PLANETE, COULOIRS):
     # Nombre de chances de spawn une planete
-    random_timer = random.randint(0, 14)
+    random_timer = random.randint(1, 16)
     if random_timer == 3:
         # Pas plus de 4 planetes a l'ecran
         if len(PLANETE_EN_LISTE) < 4:

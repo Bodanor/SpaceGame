@@ -1,6 +1,6 @@
 from Source.Entite import *
 import pygame
-import random
+
 
 ##### Tir et Munition #####
 

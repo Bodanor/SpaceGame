@@ -1,6 +1,6 @@
 from Source.Variable import *
 import pygame
-import os
+
 
 #Affichagedes controles quand on lance le jeu (uniquement)
 def afficher_controles(fenetre, police):
