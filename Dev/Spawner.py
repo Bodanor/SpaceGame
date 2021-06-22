@@ -30,6 +30,6 @@ class Spawner():
                     else:
                         EntitePlanete = Entite.Entite()
                         EntitePlanete.image = self.SpaceWindow.images["Planete{}".format(planete_random)]
-                        EntitePlanete.place(self.COULOIRS[couloir_random][0], self.SpaceWindow.TAILLE_PLANETE, couloir_random)
+                        EntitePlanete.place(self.COULOIRS[couloir_random][0], -self.SpaceWindow.TAILLE_PLANETE, couloir_random)
                         self.SpaceGameplay.PLANETE_EN_LISTE.append(EntitePlanete)
                         self.SpaceGameplay.couloir_utilise.append(couloir_random)
