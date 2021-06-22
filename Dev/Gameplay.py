@@ -14,6 +14,8 @@ class SpaceGamePlay:
         self.FREQUENCE_TIR = 180
         self.missiles = []
         self.COMPTEUR_BOUCLE = 0
+        self.PLANETE_EN_LISTE = []
+        self.couloir_utilise = []
 
     def changer_difficulte(self, SpaceMenu):
         if self.niveau_difficulte == 0:

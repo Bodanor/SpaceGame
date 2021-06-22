@@ -8,6 +8,7 @@ import Etoiles
 import Gameplay
 import Menu
 import Missiles
+import Spawner
 
 # Initialisation des images, sons et variables
 print("Initialisation...")
@@ -37,6 +38,11 @@ SpaceSound.sounds['musique'].play()
 SpaceStars = Etoiles.Etoiles(SpaceWindow.FENETRE_LARGEUR, SpaceWindow.FENETRE_HAUTEUR)
 SpaceStars.cree_etoiles()
 etoiles = SpaceStars.ETOILES
+
+#Creation de couloirs pour le jeu
+SpaceSpawner = Spawner.Spawner(SpaceWindow, SpaceGamePlay)
+SpaceSpawner.creation_couloirs_planete()
+
 
 while ENINTRO:
 
@@ -195,13 +201,15 @@ while ENINTRO:
                 vaisseau.place(vaisseau.position[0], vaisseau.position[1] - SpaceGamePlay.DEPLACEMENT_VAISSEAU, 0)
 
 
-
+        SpaceSpawner.spawn_planete()
+        print(SpaceGamePlay.PLANETE_EN_LISTE)
 
         SpaceWindow.fenetre.fill(SpaceWindow.ESPACE)
         SpaceWindow.affichervie(SpaceGamePlay.NOMBRE_VIE)
         SpaceWindow.afficher_etoiles(etoiles, SpaceGamePlay.VITESSE_ETOILE)
         SpaceWindow.afficher_munition(SpaceGamePlay.MUNITIONS)
         SpaceWindow.dessine_missile(SpaceGamePlay)
+        SpaceWindow.afficher_planetes(SpaceGamePlay)
         SpaceWindow.afficher(vaisseau)
 
         temps.tick(60)

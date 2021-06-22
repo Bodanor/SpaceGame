@@ -15,8 +15,6 @@ class SpaceWindow:
         self.VERT_CLAIR = (51, 255, 51)
         self.GRIS = (128, 128, 128)
         self.CYAN = (51, 255, 255)
-        self.BOUTON_COULEUR_CLAIR = (170, 170, 170)
-        self.BOUTON_COULEUR_FONCE = (100, 100, 100)
         self.FENETRE_LARGEUR = 1080
         self.FENETRE_HAUTEUR = 720
         self.VAISSEAU_LARGEUR = 70
@@ -29,6 +27,7 @@ class SpaceWindow:
         self.TAILLE_PLANETE = int(self.FENETRE_LARGEUR / 6)
         self.police = pygame.font.SysFont('monospace', self.FENETRE_HAUTEUR // 40, True)
         self.fenetre = pygame.display.set_mode((self.FENETRE_LARGEUR, self.FENETRE_HAUTEUR), pygame.RESIZABLE)
+
         self.initialisation()
 
     def initialisation(self):
@@ -91,6 +90,10 @@ class SpaceWindow:
     def afficher(self, entite):
         if entite.visible == True:
             self.fenetre.blit(entite.image, entite.position)
+
+    def afficher_planetes(self, SpaceGameplay):
+        for Planete in SpaceGameplay.PLANETE_EN_LISTE:
+            self.fenetre.blit(Planete.image, Planete.position)
 
     def afficher_etoiles(self, etoiles, vitesse_etoiles):
         for etoile in etoiles:
