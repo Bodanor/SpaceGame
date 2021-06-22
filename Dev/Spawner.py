@@ -21,13 +21,7 @@ class Spawner():
                 planete_random = random.randint(1, 16)
 
                 # Une seule planete par couloir
-                if couloir_random in self.SpaceGameplay.couloir_utilise:
-                    pass
-
-                else:
-                    if self.SpaceWindow.images["Planete{}".format(planete_random)] in self.SpaceGameplay.PLANETE_EN_LISTE:
-                        pass
-                    else:
+                if couloir_random not in self.SpaceGameplay.couloir_utilise:
                         EntitePlanete = Entite.Entite()
                         EntitePlanete.image = self.SpaceWindow.images["Planete{}".format(planete_random)]
                         EntitePlanete.place(self.COULOIRS[couloir_random][0], -self.SpaceWindow.TAILLE_PLANETE, couloir_random)
