@@ -15,6 +15,7 @@ class SpaceGamePlay:
         self.missiles = []
         self.COMPTEUR_BOUCLE = 0
         self.PLANETE_EN_LISTE = []
+        self.UFO_EN_LISTE = []
         self.couloir_utilise = []
 
     def changer_difficulte(self, SpaceMenu):

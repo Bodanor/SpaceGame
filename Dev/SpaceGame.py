@@ -1,6 +1,4 @@
 import pygame
-import json
-import os
 import Affichage
 import Sound
 import Entite
@@ -9,6 +7,8 @@ import Gameplay
 import Menu
 import Missiles
 import Spawner
+import Mouvements
+
 
 # Initialisation des images, sons et variables
 print("Initialisation...")
@@ -43,6 +43,7 @@ etoiles = SpaceStars.ETOILES
 SpaceSpawner = Spawner.Spawner(SpaceWindow, SpaceGamePlay)
 SpaceSpawner.creation_couloirs_planete()
 
+SpaceMouvements = Mouvements.SpaceMouvements(SpaceWindow, SpaceGamePlay)
 
 while ENINTRO:
 
@@ -202,8 +203,6 @@ while ENINTRO:
 
 
         SpaceSpawner.spawn_planete()
-        print(SpaceGamePlay.PLANETE_EN_LISTE)
-
         SpaceWindow.fenetre.fill(SpaceWindow.ESPACE)
         SpaceWindow.affichervie(SpaceGamePlay.NOMBRE_VIE)
         SpaceWindow.afficher_etoiles(etoiles, SpaceGamePlay.VITESSE_ETOILE)
@@ -212,5 +211,6 @@ while ENINTRO:
         SpaceWindow.afficher_planetes(SpaceGamePlay)
         SpaceWindow.afficher(vaisseau)
 
+        SpaceMouvements.deplace_planete()
         temps.tick(60)
         pygame.display.flip()
