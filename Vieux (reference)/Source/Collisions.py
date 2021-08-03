@@ -1,5 +1,3 @@
-from Source.Entite import *
-
 import math
 
 ### COLLISIONS ###

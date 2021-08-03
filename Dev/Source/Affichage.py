@@ -23,7 +23,6 @@ class SpaceWindow:
         self.VIE_HAUTEUR = 25
         self.UFO_TAILLE = 80
         self.BONUS_TAILLE = 40
-        self.fenetre = 0
         self.TAILLE_PLANETE = int(self.FENETRE_LARGEUR / 6)
         self.police = pygame.font.SysFont('monospace', self.FENETRE_HAUTEUR // 40, True)
         self.fenetre = pygame.display.set_mode((self.FENETRE_LARGEUR, self.FENETRE_HAUTEUR), pygame.RESIZABLE)
@@ -93,7 +92,13 @@ class SpaceWindow:
 
     def afficher_planetes(self, SpaceGameplay):
         for Planete in SpaceGameplay.PLANETE_EN_LISTE:
+
             self.fenetre.blit(Planete.image, Planete.position)
+
+    def afficher_ufo(self, SpaceGameplay):
+
+        for ufo in SpaceGameplay.UFO_EN_LISTE:
+            self.fenetre.blit(ufo.image, ufo.position)
 
     def afficher_etoiles(self, etoiles, vitesse_etoiles):
         for etoile in etoiles:
@@ -138,19 +143,15 @@ class SpaceWindow:
             pygame.draw.circle(self.fenetre, COULEUR, list(map(int, missile.positionMissile())), 10, width=1)
             pygame.draw.circle(self.fenetre, self.BLANC, list(map(int, missile.positionMissile())), 5)
 
-    def afficher_menu(self):
-        controle_echap = self.police.render(str("ECHAP : Mettre le jeu en pause"), True, self.BLANC)
-        controle_mute = self.police.render(str("M : Couper le son du jeu"), True, self.BLANC)
-        fleche_vie = self.police.render(str("Vies ►"), True, self.BLANC)
-        controle_touche = pygame.image.load("Images/fleche.png")
-        controle_touche = pygame.transform.scale(controle_touche, (80, 50))
-        controle_touche_texte = self.police.render(str("Controles ►"), True, self.BLANC)
-        controle_espace = pygame.image.load("Images/espace.png")
-        controle_espace = pygame.transform.scale(controle_espace, (120, 30))
+        for missile_ufo in SpaceGameplay.missiles_ufo:
 
-        self.fenetre.blit(controle_echap, (0, self.FENETRE_HAUTEUR * (6.5 / 8)))
-        self.fenetre.blit(controle_mute, (0, self.FENETRE_HAUTEUR * (7 / 8)))
-        self.fenetre.blit(fleche_vie, (self.FENETRE_LARGEUR - 6 * self.VIE_LARGEUR, self.FENETRE_HAUTEUR - self.VIE_HAUTEUR + 5))
-        self.fenetre.blit(controle_touche, (self.FENETRE_LARGEUR - 140, self.FENETRE_HAUTEUR * (6 / 8)))
-        self.fenetre.blit(controle_touche_texte, (self.FENETRE_LARGEUR - 280, self.FENETRE_HAUTEUR * (6.3 / 8)))
-        self.fenetre.blit(controle_espace, (self.FENETRE_LARGEUR - 170, self.FENETRE_HAUTEUR * (5 / 8)))
+            COULEUR = (random.randint(0, 255), random.randint(0, 255), random.randint(0, 255))
+            if missile_ufo.estVisibleMissile():
+                if missile_ufo.positionMissile()[1] < 0:
+                    SpaceGameplay.missiles_ufo.remove(missile_ufo)
+            missile_ufo.deplace_missile(-SpaceGameplay.VITESSE_MISSILE)
+            pygame.draw.circle(self.fenetre, COULEUR, list(map(int, missile_ufo.positionMissile())), 7)
+            pygame.draw.circle(self.fenetre, COULEUR, list(map(int, missile_ufo.positionMissile())), 10, width=1)
+            pygame.draw.circle(self.fenetre, self.BLANC, list(map(int, missile_ufo.positionMissile())), 5)
+
+
