@@ -137,3 +137,20 @@ class SpaceWindow:
             pygame.draw.circle(self.fenetre, COULEUR, list(map(int, missile.positionMissile())), 7)
             pygame.draw.circle(self.fenetre, COULEUR, list(map(int, missile.positionMissile())), 10, width=1)
             pygame.draw.circle(self.fenetre, self.BLANC, list(map(int, missile.positionMissile())), 5)
+
+    def afficher_menu(self):
+        controle_echap = self.police.render(str("ECHAP : Mettre le jeu en pause"), True, self.BLANC)
+        controle_mute = self.police.render(str("M : Couper le son du jeu"), True, self.BLANC)
+        fleche_vie = self.police.render(str("Vies ►"), True, self.BLANC)
+        controle_touche = pygame.image.load("Images/fleche.png")
+        controle_touche = pygame.transform.scale(controle_touche, (80, 50))
+        controle_touche_texte = self.police.render(str("Controles ►"), True, self.BLANC)
+        controle_espace = pygame.image.load("Images/espace.png")
+        controle_espace = pygame.transform.scale(controle_espace, (120, 30))
+
+        self.fenetre.blit(controle_echap, (0, self.FENETRE_HAUTEUR * (6.5 / 8)))
+        self.fenetre.blit(controle_mute, (0, self.FENETRE_HAUTEUR * (7 / 8)))
+        self.fenetre.blit(fleche_vie, (self.FENETRE_LARGEUR - 6 * self.VIE_LARGEUR, self.FENETRE_HAUTEUR - self.VIE_HAUTEUR + 5))
+        self.fenetre.blit(controle_touche, (self.FENETRE_LARGEUR - 140, self.FENETRE_HAUTEUR * (6 / 8)))
+        self.fenetre.blit(controle_touche_texte, (self.FENETRE_LARGEUR - 280, self.FENETRE_HAUTEUR * (6.3 / 8)))
+        self.fenetre.blit(controle_espace, (self.FENETRE_LARGEUR - 170, self.FENETRE_HAUTEUR * (5 / 8)))

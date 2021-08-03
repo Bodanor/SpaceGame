@@ -17,7 +17,7 @@ vaisseau.prendsPose(SpaceWindow.images['vaisseau_jaune_sans_flamme'])
 vaisseau.place((SpaceWindow.FENETRE_LARGEUR / 2) - SpaceWindow.VAISSEAU_LARGEUR / 2,
                SpaceWindow.FENETRE_HAUTEUR - SpaceWindow.VAISSEAU_HAUTEUR, 0)
 
-# Variables pour la boucle pricipal du jeu
+# Variables pour la boucle principal du jeu
 ENINTRO = True
 ENJEU = False
 temps = pygame.time.Clock()
@@ -119,6 +119,7 @@ while ENINTRO:
     SpaceWindow.dessine_missile(SpaceGamePlay)
     SpaceWindow.afficher(vaisseau)
     SpaceMenu.afficherBoutonMenu()
+    SpaceWindow.afficher_menu()
 
     if SpaceGamePlay.COMPTEUR_BOUCLE % 60 == 0 and SpaceGamePlay.COMPTEUR_BOUCLE < 3600:
         SpaceGamePlay.VITESSE_JEU += 0.10
